@@ -1,0 +1,6 @@
+sharpen=name(preset_effect_retro), cascade( 50 ), cascade( 137 ), cascade( 233 ), cascade( 300 ), threshold( 0 )
+bwmixer=name(preset_effect_retro), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )
+curves=name(preset_effect_retro), points( 0 : 0, 0.197674 : 0.241733, 0.806202 : 0.754846, 1 : 1 )
+vignette=name(preset_effect_retro), x( 50 ), y( 50 ), strength( -44 ), radius( 42 )
+filmgrain=name(preset_effect_retro), radius( 0.4 ), points( 0 : 0, 0.530466 : 0.2979, 0.853047 : 0.855643, 1 : 1 )
+splittone=name(preset_effect_retro), highlights( 188, 140, 54 ), shadows( 120, 87, 173 ), weight( 100 )

@@ -1,0 +1,29 @@
+IDI_ICON1               ICON    DISCARDABLE     "blacksilk.ico"
+
+#include <windows.h>
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION BLACKSILK_VERSION_MAJOR,BLACKSILK_VERSION_MINOR,BLACKSILK_VERSION_RELEASE,0
+PRODUCTVERSION BLACKSILK_VERSION_MAJOR,BLACKSILK_VERSION_MINOR,BLACKSILK_VERSION_RELEASE,0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4" /* EN-US */
+        BEGIN
+            VALUE "CompanyName", "FD Imaging"
+            VALUE "FileDescription", "Black and white tool kit"
+            VALUE "FileVersion", BLACKSILK_VERSION_STRING_WIN
+            VALUE "InternalName", "Black Silk"
+            VALUE "LegalCopyright", "(C) FD Imaging"
+            VALUE "LegalTrademarks1", "All rights reserved"
+            VALUE "OriginalFilename", "Black Silk"
+            VALUE "ProductName", "Black Silk"
+            VALUE "ProductVersion", BLACKSILK_VERSION_STRING_WIN
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252 /* EN-US with Cp1252*/
+    END    
+END

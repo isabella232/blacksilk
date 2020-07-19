@@ -1,0 +1,1 @@
+bwmixer=name(preset_bwmixer_average),category(Film),highlights(85,85,85),shadows(85,85,85),weight(50)

@@ -1,0 +1,3 @@
+sharpen=name(Normal),cascade(50),cascade(200),cascade(100),cascade(0),threshold(50)
+sharpen=name(Fine),cascade(150),cascade(100),cascade(50),cascade(0),threshold(40)
+sharpen=name(Coarse),cascade(0),cascade(100),cascade(200),cascade(300),threshold(40)

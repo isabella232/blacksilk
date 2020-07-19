@@ -1,0 +1,93 @@
+<RCC>
+    <qresource prefix="/Licenses">
+        <file>Licenses/imagemagick.txt</file>
+        <file>Licenses/lcms2.txt</file>
+        <file>Licenses/libbz2.txt</file>
+        <file>Licenses/libfreetype.txt</file>
+        <file>Licenses/libglew.txt</file>
+        <file>Licenses/libiconv.txt</file>
+        <file>Licenses/libjpeg.txt</file>
+        <file>Licenses/libltdl.txt</file>
+        <file>Licenses/liblzma.txt</file>
+        <file>Licenses/libopenjpeg.txt</file>
+        <file>Licenses/libpng.txt</file>
+        <file>Licenses/libtiff.txt</file>
+        <file>Licenses/libxml2.txt</file>
+        <file>Licenses/libz.txt</file>
+        <file>Licenses/libtinyxml.txt</file>
+        <file>Licenses/qt.txt</file>
+    </qresource>
+    <qresource prefix="/Icons">
+        <file>Icons/filter/mixer.png</file>
+        <file>Icons/filter/grain.png</file>
+        <file>Icons/filter/sharpen.png</file>
+        <file>Icons/filter/vignette.png</file>
+        <file>Icons/filter/split.png</file>
+        <file>Icons/filter/curves.png</file>
+        <file>Icons/noiseMap.png</file>
+        <file>Icons/noiseMap_512x512x3.raw</file>
+        <file>Icons/logo.png</file>
+        <file>Icons/blacksilk.png</file>
+        <file>Icons/logo_bw.png</file>
+    </qresource>
+    <qresource prefix="/Prerender">
+        <file>Icons/Blur/blur_0_0.png</file>
+        <file>Icons/Blur/blur_0_5.png</file>
+        <file>Icons/Blur/blur_1_0.png</file>
+        <file>Icons/Blur/blur_1_5.png</file>
+        <file>Icons/Blur/blur_2_0.png</file>
+        <file>Icons/Blur/blur_2_5.png</file>
+        <file>Icons/Blur/blur_3_0.png</file>
+    </qresource>
+    <qresource prefix="/actions">
+        <file>Icons/actions/exit.png</file>
+        <file>Icons/actions/load.png</file>
+        <file>Icons/actions/save_as.png</file>
+        <file>Icons/actions/save.png</file>
+        <file>Icons/actions/help.png</file>
+        <file>Icons/actions/info.png</file>
+        <file>Icons/actions/prefs.png</file>
+        <file>Icons/actions/web.png</file>
+        <file>Icons/actions/mail.png</file>
+        <file>Icons/actions/update.png</file>
+        <file>Icons/actions/mag_plus.png</file>
+        <file>Icons/actions/mag_minus.png</file>
+        <file>Icons/actions/fit_width.png</file>
+        <file>Icons/actions/fit_height.png</file>
+        <file>Icons/actions/fit_actual.png</file>
+        <file>Icons/actions/closed.png</file>
+        <file>Icons/actions/open.png</file>
+        <file>Icons/actions/bug_report.png</file>
+        <file>Icons/actions/log.png</file>
+    </qresource>
+    <qresource prefix="/Samples">
+        <file>Icons/sample.jpg</file>
+    </qresource>
+    <qresource prefix="/Filters">
+        <file>filters/curvefilter.glsl</file>
+        <file>filters/mixerfilter.glsl</file>
+        <file>filters/standardvertex.glsl</file>
+        <file>filters/usmfilter.glsl</file>
+        <file>filters/vignettefilter.glsl</file>
+        <file>filters/grainfilter.glsl</file>
+        <file>filters/horizontalgaussianblur.glsl</file>
+        <file>filters/splittonefilter.glsl</file>
+        <file>filters/verticalgaussianblur.glsl</file>
+        <file>filters/finalvignettefilter.glsl</file>
+        <file>filters/overlayfilter.glsl</file>
+        <file>filters/cascadedsharpenfilter.glsl</file>
+        <file>filters/variadicverticalgaussianblur.glsl</file>
+        <file>filters/variadichorizontalgaussianblur.glsl</file>
+    </qresource>
+    <qresource prefix="/Presets">
+        <file>Presets/BWAdaptiveMixer.bs</file>
+        <file>Presets/FilmGrain.bs</file>
+        <file>Presets/SplitTone.bs</file>
+        <file>Presets/Curves.bs</file>
+        <file>Presets/CascadedSharpen.bs</file>
+        <file>Presets/Vignette.bs</file>
+    </qresource>
+    <qresource prefix="/GUI">
+        <file>Icons/progress.gif</file>
+    </qresource>
+</RCC>

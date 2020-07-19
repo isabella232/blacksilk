@@ -1,0 +1,2 @@
+sharpen=name(preset_sharpen_fine), cascade( 150 ), cascade( 100 ), cascade( 50 ), cascade( 0 ), threshold( 40 )
+bwmixer=name(preset_sharpen_fine), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )

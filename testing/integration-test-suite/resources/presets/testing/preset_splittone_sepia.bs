@@ -1,0 +1,2 @@
+bwmixer=name(preset_splittone_sepia), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )
+splittone=name(preset_splittone_sepia), highlights( 188, 140, 54 ), shadows( 188, 140, 54 ), weight( 50 )

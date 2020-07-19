@@ -1,0 +1,6 @@
+[INCLUDES]
+..\..\libheif\src
+
+[DEPENDENCIES]
+libheif
+libde265

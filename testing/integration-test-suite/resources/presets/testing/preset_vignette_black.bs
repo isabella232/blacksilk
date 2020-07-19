@@ -1,0 +1,2 @@
+bwmixer=name(preset_vignette_black), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )
+vignette=name(preset_vignette_black), x( 50 ), y( 50 ), strength( 50 ), radius( 14 )

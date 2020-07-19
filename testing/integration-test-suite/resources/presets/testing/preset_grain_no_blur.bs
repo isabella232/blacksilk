@@ -1,0 +1,2 @@
+bwmixer=name(preset_grain_no_blur), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )
+filmgrain=name(preset_grain_no_blur), radius( 0 ), points( 0 : 0, 0.501792 : 1, 1 : 0 )

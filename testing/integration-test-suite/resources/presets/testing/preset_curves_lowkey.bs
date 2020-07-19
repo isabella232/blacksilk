@@ -1,0 +1,2 @@
+bwmixer=name(preset_curves_lowkey), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )
+curves=name(preset_curves_lowkey), points( 0 : 0, 0.75 : 0.3, 1 : 1 )

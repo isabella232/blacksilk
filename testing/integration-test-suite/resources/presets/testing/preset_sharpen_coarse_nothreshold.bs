@@ -1,0 +1,2 @@
+sharpen=name(preset_sharpen_coarse_nothreshold), cascade( 0 ), cascade( 100 ), cascade( 200 ), cascade( 300 ), threshold( 0 )
+bwmixer=name(preset_sharpen_coarse_nothreshold), highlights( 85, 85, 85 ), shadows( 85, 85, 85 ), weight( 50 )

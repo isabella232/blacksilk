@@ -1,0 +1,1 @@
+bwmixer=name(preset_bwmixer_dual), highlights( 164, 45, 37 ), shadows( -73, 187, -86 ), weight( 60 )
