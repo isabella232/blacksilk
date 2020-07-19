@@ -1,0 +1,574 @@
+/**
+    Xc cpp template library **/
+#pragma once
+
+#include <utility>
+
+/// WinDef
+#ifdef WIN32
+#   define _XC_DLL_EXPORT __declspec(dllexport)
+#   define _XC_DLL_IMPORT __declspec(dllimport)
+#   define _XC_EXTERN     extern
+#   define _XC_EXTERNC    extern "C"
+#endif
+
+/// Global
+#ifndef _XC
+#   define _XC _xc::
+#endif
+#ifndef _XBASE
+#   define _XBASE _xbase::
+#endif
+#ifndef _XCONST
+#   define _XCONST    const
+#endif
+#ifndef _XVOLATILE
+#   define _XVOLATILE volatile
+#endif
+#ifndef _XC_DEF
+#   define _XC_DEF namespace _xc
+#endif
+#ifndef _XEND
+#   define _XEND
+#endif
+#ifndef _XBASE_DEF
+#   define _XBASE_DEF namespace _xbase
+#endif
+#ifndef _XIMPL
+#   define _XIMPL _ximpl::
+#endif
+#ifndef _XIMPL_DEF
+#   define _XIMPL_DEF namespace _ximpl
+#endif
+
+/// Constants
+#define _XUNKNOWN 99999
+#define _XINVALID 99999
+#define _XFALSE   0
+#define _XTRUE    1
+
+/// Platform
+#define _XWINDOWS 0
+#define _XUNIX    1
+#define _XOSX     2
+#define _XLINUX   3
+#ifdef WIN32
+#   define _XOS _XWINDOWS
+#elif __linux
+#   define _XOS _XLINUX
+#elif APPLE
+#   define _XOS _XOSX
+#endif
+
+/// Private
+namespace _xc {
+namespace _ximpl {
+/// Tags/Type Tagging
+struct __X_no_tag {
+    typedef void        __X_no_tag_id_type;
+};
+template < class _t_tag >
+struct __X_impl_is_tag {
+    typedef     _t_tag   tag_type;
+    typedef     short    yes;
+    typedef     char     no;
+    static typename _XC _XIMPL __X_impl_is_tag< _t_tag >::no __M_test( __X_no_tag::__X_no_tag_id_type* p = 0 );
+    static typename _XC _XIMPL __X_impl_is_tag< _t_tag >::yes __M_test();
+    enum {
+        value = sizeof(__M_test(0)) == sizeof(yes)
+    };
+};
+template < class _t_first >
+struct __X_impl_tag {
+    typedef _t_first            tag_type;
+};
+template < class _t_tag >
+struct __X_is_tag {
+    typedef _XC _XIMPL __X_impl_is_tag< typename _t_tag::tag_type > tag_type;
+    enum {
+        value = _XC _XIMPL __X_impl_is_tag< typename _t_tag::tag_type >::value
+    };
+};
+namespace _xtags {
+struct __base_tag_meta_type_trait {};
+struct __base_tag_meta_functor {};
+typedef __X_impl_tag< __base_tag_meta_functor >         __X_meta_functor;
+typedef __X_impl_tag< __base_tag_meta_type_trait >      __X_meta_type_trait;
+typedef __X_impl_tag< _XC _XIMPL __X_no_tag >           __X_no;
+}
+template < class _t_tag0, class _t_tag1 >
+struct __X_same_tag {
+    static const bool value = false;
+};
+template < class _t_tag0 >
+struct __X_same_tag< _t_tag0, _t_tag0 > {
+    static const bool value = __X_is_tag< _t_tag0 >::value;
+};
+template < class _t_t1 = _XC _XIMPL _xtags::__X_no, class _t_t2 = _XC _XIMPL _xtags::__X_no,
+           class _t_t3 = _XC _XIMPL _xtags::__X_no, class _t_t4 = _XC _XIMPL _xtags::__X_no,
+           class _t_t5 = _XC _XIMPL _xtags::__X_no, class _t_t6 = _XC _XIMPL _xtags::__X_no,
+           class _t_t7 = _XC _XIMPL _xtags::__X_no, class _t_t8 = _XC _XIMPL _xtags::__X_no,
+           class _t_t9 = _XC _XIMPL _xtags::__X_no, class _t_t10 = _XC _XIMPL _xtags::__X_no >
+struct __X_tag_collection {
+    typedef _t_t1       t1_type;
+    typedef _t_t2       t2_type;
+    typedef _t_t3       t3_type;
+    typedef _t_t4       t4_type;
+    typedef _t_t5       t5_type;
+    typedef _t_t6       t6_type;
+    typedef _t_t7       t7_type;
+    typedef _t_t8       t8_type;
+    typedef _t_t9       t9_type;
+    typedef _t_t10      t10_type;
+    static const bool __M_empty = !__X_is_tag<t1_type>::value && !__X_is_tag<t2_type>::value && !__X_is_tag<t3_type>::value &&
+                                  !__X_is_tag<t4_type>::value && !__X_is_tag<t5_type>::value && !__X_is_tag<t6_type>::value &&
+                                  !__X_is_tag<t7_type>::value && !__X_is_tag<t8_type>::value && !__X_is_tag<t9_type>::value &&
+                                  !__X_is_tag<t10_type>::value;
+    static const bool __M_has_tag = !__M_empty;
+    template < class _t_tag >
+    struct has_tag {
+        static const bool value = __X_same_tag< _t_tag, t1_type >::value || __X_same_tag< _t_tag, t1_type >::value || __X_same_tag< _t_tag, t1_type >::value ||
+                                  __X_same_tag< _t_tag, t1_type >::value || __X_same_tag< _t_tag, t1_type >::value || __X_same_tag< _t_tag, t1_type >::value ||
+                                  __X_same_tag< _t_tag, t1_type >::value || __X_same_tag< _t_tag, t1_type >::value || __X_same_tag< _t_tag, t1_type >::value ||
+                                  __X_same_tag< _t_tag, t1_type >::value;
+    };
+};
+typedef __X_tag_collection<>        __X_no_tags;
+template < class _t_type >
+struct __X_is_tagged {
+    enum {
+        value = !_t_type::__M_empty
+    };
+};
+/// Types
+template < class _t_type, _t_type _v_val >
+struct __X_meta_value {
+    typedef __X_tag_collection< _xtags::__X_meta_type_trait >       __X_tags;
+    typedef _t_type                                                 value_type;
+    static const value_type value = _v_val;
+    value_type operator * () const {
+        return value;
+    }
+    value_type get() const {
+        return value;
+    }
+};
+typedef __X_meta_value< bool, false >   __X_meta_false;
+typedef __X_meta_value< bool, true >    __X_meta_true;
+template < class _t_first, class _t_second >
+struct __X_meta_same : __X_meta_value< bool, false > {};
+template < class _t_first >
+struct __X_meta_same< _t_first, _t_first > : __X_meta_value< bool, true > {};
+template < class _t_first >
+struct __X_meta_is_const : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_const< const _t_first > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_volatile : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_volatile< volatile _t_first > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_pointer : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_pointer< _t_first* > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_rref : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_rref< _t_first&& > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_lref : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_lref< _t_first& > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_ref : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_ref< _t_first& > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_ref< _t_first&& > : __X_meta_true {};
+template < class _t_first >
+struct __X_meta_is_array : __X_meta_false {};
+template < class _t_first >
+struct __X_meta_is_array< _t_first[] > : __X_meta_true {};
+
+#if __MSVC
+#define X_IS_CLASS(x)               __is_class(x)
+#define X_HAS_ASSIGN(x)             __has_assign(x)
+#define X_HAS_COPY(x)               __has_copy(x)
+#define X_HAS_FINALIZER(x)          __has_finalizer(x)
+#define X_HAS_NOTHROW_ASSIGN(x)     __has_nothrow_assign(x)
+#define X_HAS_NOTHROW_CONSTRUCTOR(x) __has_nothrow_constructor(x)
+#define X_HAS_NOTHROW_COPY(x)       __has_nothrow_copy(x)
+#define X_HAS_TRIVIAL_ASSIGN(x)     __has_trivial_assign(x)
+#define X_HAS_TRIVIAL_CONSTRUCTOR(x) __has_trivial_constructor(x)
+#define X_HAS_TRIVIAL_COPY(x)       __has_trivial_copy(x)
+#define X_HAS_TRIVIAL_DESTRUCTOR(x) __has_trivial_destructor(x)
+#define X_HAS_USER_DESTRUCTOR(x)    __has_user_destructor(x)
+#define X_HAS_VIRTUAL_DESTRUCTOR(x) __has_virtual_destructor(x)
+#define X_IS_ABSTRACT(x)            __is_abstract(x)
+#define X_IS_BASE_OF(base,derived)  __is_base_of(base,derived)
+#define X_IS_CONVERTIBLE(from,to)   __is_convertible_to(from,to)
+#define X_IS_ENUM(x)                __is_enum(x)
+#define X_IS_EMPTY(x)               __is_empty(x)
+#define X_IS_POD(x)                 __is_pod(x)
+#define X_IS_POLYMORPHIC(x)         __is_polymorphic(x)
+#define X_IS_UNION(x)               __is_union(x)
+#else
+#define X_IS_CLASS(x)               __is_class(x)
+#define X_HAS_ASSIGN(x)             false
+#define X_HAS_COPY(x)               false
+#define X_HAS_FINALIZER(x)          false
+#define X_HAS_NOTHROW_ASSIGN(x)     __has_nothrow_assign(x)
+#define X_HAS_NOTHROW_CONSTRUCTOR(x) __has_nothrow_constructor(x)
+#define X_HAS_NOTHROW_COPY(x)       __has_nothrow_copy(x)
+#define X_HAS_TRIVIAL_ASSIGN(x)     __has_trivial_assign(x)
+#define X_HAS_TRIVIAL_CONSTRUCTOR(x) __has_trivial_constructor(x)
+#define X_HAS_TRIVIAL_COPY(x)       __has_trivial_copy(x)
+#define X_HAS_TRIVIAL_DESTRUCTOR(x) __has_trivial_destructor(x)
+#define X_HAS_USER_DESTRUCTOR(x)    false
+#define X_HAS_VIRTUAL_DESTRUCTOR(x) __has_virtual_destructor(x)
+#define X_IS_ABSTRACT(x)            __is_abstract(x)
+#define X_IS_BASE_OF(base,derived)  __is_base_of(base,derived)
+#ifdef __GNUC__
+#   define X_IS_CONVERTIBLE(from,to)  std::is_convertible<from,to>::value
+#else
+#   define X_IS_CONVERTIBLE(from,to)   __is_convertible_to(from,to)
+#endif
+#define X_IS_ENUM(x)                __is_enum(x)
+#define X_IS_EMPTY(x)               __is_empty(x)
+#define X_IS_POD(x)                 __is_pod(x)
+#define X_IS_POLYMORPHIC(x)         __is_polymorphic(x)
+#define X_IS_UNION(x)               __is_union(x)
+#endif
+
+template < class _t_first >
+struct __X_meta_is_class : __X_meta_value< bool, X_IS_CLASS( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_assign : __X_meta_value< bool, X_HAS_ASSIGN( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_copy : __X_meta_value< bool, X_HAS_COPY( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_finalizer : __X_meta_value< bool, X_HAS_FINALIZER( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_nothrow_assign : __X_meta_value< bool, X_HAS_NOTHROW_ASSIGN( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_nothrow_constructor : __X_meta_value< bool, X_HAS_NOTHROW_CONSTRUCTOR( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_nothrow_copy : __X_meta_value< bool, X_HAS_NOTHROW_COPY( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_trivial_assign : __X_meta_value< bool, X_HAS_TRIVIAL_ASSIGN( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_trivial_constructor : __X_meta_value< bool, X_HAS_TRIVIAL_CONSTRUCTOR( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_trivial_copy : __X_meta_value< bool, X_HAS_TRIVIAL_COPY( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_has_user_destructor : __X_meta_value< bool, X_HAS_USER_DESTRUCTOR( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_is_abstract : __X_meta_value< bool, X_IS_ABSTRACT( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_is_empty : __X_meta_value< bool, X_IS_EMPTY( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_is_enum : __X_meta_value< bool, X_IS_ENUM( _t_first ) > {};
+template < class _t_first, class _t_second >
+struct __X_meta_is_convertible : __X_meta_value< bool, X_IS_CONVERTIBLE( _t_first, _t_second ) > {};
+template < class _t_first, class _t_second >
+struct __X_meta_is_base_of : __X_meta_value< bool, X_IS_BASE_OF( _t_first, _t_second ) > {};
+template < class _t_first >
+struct __X_meta_is_pod : __X_meta_value< bool, X_IS_POD( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_is_polymorphic : __X_meta_value< bool, X_IS_POLYMORPHIC( _t_first ) > {};
+template < class _t_first >
+struct __X_meta_is_union : __X_meta_value< bool, X_IS_UNION( _t_first ) > {};
+
+template < class _t_type >
+struct __X_meta_sizeof : __X_meta_value< size_t, sizeof(_t_type) > {};
+template < class _t_type, size_t _v_alignment = 4 >
+struct __X_meta_aligned_sizeof : __X_meta_value< size_t, sizeof(_t_type) + ( sizeof(_t_type) % _v_alignment ) > {};
+
+template < class _t_type >
+struct __X_meta_is_function : __X_meta_false {};
+template < class _t_ret >
+struct __X_meta_is_function< _t_ret() > : __X_meta_true {};
+template < class _t_ret, class _t_arg0 >
+struct __X_meta_is_function< _t_ret(_t_arg0) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3 ) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3, _t_arg4 ) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3, _t_arg4, _t_arg5 ) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5, class _t_arg6 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3, _t_arg4, _t_arg5, _t_arg6 ) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5, class _t_arg6, class _t_arg7 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3, _t_arg4, _t_arg5, _t_arg6, _t_arg7 ) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5, class _t_arg6, class _t_arg7, class _t_arg8 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3, _t_arg4, _t_arg5, _t_arg6, _t_arg7, _t_arg8 ) > : __X_meta_true {};
+template < class _t_ret, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5, class _t_arg6, class _t_arg7, class _t_arg8, class _t_arg9 >
+struct __X_meta_is_function< _t_ret(_t_arg0,_t_arg1,_t_arg2, _t_arg3, _t_arg4, _t_arg5, _t_arg6, _t_arg7, _t_arg8, _t_arg9 ) > : __X_meta_true {};
+template < bool _b_cond, class _t_arg0, class _t_arg1 >
+struct __X_meta_cond_type {
+    typedef _t_arg0     value_type;
+};
+template < class _t_arg0, class _t_arg1 >
+struct __X_meta_cond_type< false, _t_arg0, _t_arg1 > {
+    typedef _t_arg1     value_type;
+};
+template < class _t_arg0, class _t_arg1 >
+struct  __X_meta_is_same {
+    static const bool   value = false;
+};
+template < class _t_arg0 >
+struct  __X_meta_is_same< _t_arg0, _t_arg0 > {
+    static const bool   value = true;
+};
+
+/// Memory
+template < class _t_type >
+struct  __X_base_ptr {
+    typedef _t_type             value_type;
+    typedef value_type*         pointer;
+    typedef const pointer       const_pointer;
+    typedef value_type&         reference;
+    typedef const value_type&   const_reference;
+    template < class _t >
+    __X_base_ptr( _t* yval = nullptr ) {
+        M_tidy();
+        M_reset( yval );
+    }
+    virtual ~__X_base_ptr() {
+        M_tidy();
+    }
+    template < class _t >
+    _t*     get() const {
+        return static_cast< _t* >( M_val );
+    }
+    template < class _t >
+    _t*     operator * () const {
+        return static_cast< _t* >( M_val );
+    }
+private:
+    void M_tidy() {
+        M_val = nullptr;
+    }
+    template < class _t >
+    void M_reset( _t yval ) {
+        M_val = yval;
+    }
+    pointer     M_val;
+};
+}
+}
+
+/// Public
+namespace xc {
+namespace object_type {
+enum t {
+    enum_t,
+    class_t,
+    integer_t,
+    float_t,
+    union_t
+};
+}
+template < bool _b_cond, class _t_arg0, class _t_arg1 >
+struct  cond_type {
+    typedef typename _XC _XIMPL __X_meta_cond_type< _b_cond, _t_arg0, _t_arg1 >::value_type     value_type;
+};
+template < class _t_arg0, class _t_arg1 >
+struct  is_same {
+    static const bool   value = _XC _XIMPL __X_meta_is_same< _t_arg0, _t_arg1 >::value;
+};
+template < class _t_type >
+struct  is_fractal : _XC _XIMPL __X_meta_false {};
+template <>
+struct  is_fractal< float > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_fractal< double > : _XC _XIMPL __X_meta_true {};
+template < class _t_type >
+struct  is_integer : _XC _XIMPL __X_meta_false {};
+template <>
+struct  is_integer< char > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< unsigned char > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< short > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< unsigned short > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< int > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< unsigned int > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< unsigned long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< long long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< unsigned long long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_integer< bool > : _XC _XIMPL __X_meta_true {};
+template < class _t_type >
+struct  is_unsigned_integer : _XC _XIMPL __X_meta_false {};
+template <>
+struct  is_unsigned_integer< unsigned char > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_unsigned_integer< unsigned short > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_unsigned_integer< unsigned int > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_unsigned_integer< unsigned long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_unsigned_integer< unsigned long long > : _XC _XIMPL __X_meta_true {};
+template < class _t_type >
+struct  is_signed_integer : _XC _XIMPL __X_meta_false {};
+template <>
+struct  is_signed_integer< char > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_signed_integer< short > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_signed_integer< int > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_signed_integer< long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_signed_integer< long long > : _XC _XIMPL __X_meta_true {};
+template <>
+struct  is_signed_integer< bool > : _XC _XIMPL __X_meta_true {};
+template < class _t_type >
+struct  gen_object_info {
+    typedef _t_type         value_type;
+    typedef _t_type*        pointer;
+    typedef const _t_type*  const_pointer;
+    typedef _t_type&        reference;
+    typedef const _t_type&  const_reference;
+
+    static const size_t         type_size           = _XC _XIMPL __X_meta_sizeof< value_type >::value;
+    static const bool           is_signed           = is_signed_integer< value_type >::value;
+    static const bool           is_unsigned         = is_unsigned_integer< value_type >::value;
+    static const bool           is_int              = is_integer< value_type >::value;
+    static const bool           is_class            = _XC _XIMPL __X_meta_is_class< value_type >::value;
+    static const bool           is_pod              = _XC _XIMPL __X_meta_is_pod< value_type >::value;
+    static const bool           is_enum             = _XC _XIMPL __X_meta_is_enum< value_type >::value;
+    static const bool           is_function         = _XC _XIMPL __X_meta_is_function< value_type >::value;
+    static const bool           is_union            = _XC _XIMPL __X_meta_is_union< value_type >::value;
+    static const bool           is_abstract         = _XC _XIMPL __X_meta_is_abstract< value_type >::value;
+    static const bool           is_polymorphic      = _XC _XIMPL __X_meta_is_polymorphic< value_type >::value;
+    static const bool           is_tagged           = _XC _XIMPL __X_is_tagged< value_type >::value;
+};
+template < class _t_type >
+struct gen_type_info {
+    typedef _t_type         value_type;
+    typedef _t_type*        pointer;
+    typedef const _t_type*  const_pointer;
+    typedef _t_type&        reference;
+    typedef const _t_type&  const_reference;
+
+    static const size_t         type_size           = _XC _XIMPL __X_meta_sizeof< value_type >::value;
+    static const bool           is_lref             = _XC _XIMPL __X_meta_is_lref< value_type >::value;
+    static const bool           is_rref             = _XC _XIMPL __X_meta_is_rref< value_type >::value;
+    static const bool           is_ref              = _XC _XIMPL __X_meta_is_ref< value_type >::value;
+    static const bool           is_const            = _XC _XIMPL __X_meta_is_const< value_type >::value;
+    static const bool           is_volatile         = _XC _XIMPL __X_meta_is_volatile< value_type >::value;
+    static const bool           is_array            = _XC _XIMPL __X_meta_is_array< value_type >::value;
+    static const bool           is_pointer          = _XC _XIMPL __X_meta_is_pointer< value_type >::value;
+};
+template < class _t_type >
+bool    X_base_is_lref( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_lref;
+}
+template < class _t_type >
+bool    X_base_is_rref( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_rref;
+}
+template < class _t_type >
+bool    X_base_is_ref( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_ref;
+}
+template < class _t_type >
+bool    X_base_is_pointer( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_pointer;
+}
+template < class _t_type >
+bool    X_base_is_const( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_const;
+}
+template < class _t_type >
+bool    X_base_is_volatile( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_volatile;
+}
+template < class _t_type >
+bool    X_base_is_array( _t_type* p ) {
+    (void)p;
+    return gen_type_info< _t_type >::is_array;
+}
+template < class _t_type >
+bool    X_base_is_class( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_class;
+}
+template < class _t_type >
+bool    X_base_is_enum( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_enum;
+}
+template < class _t_type >
+bool    X_base_is_union( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_union;
+}
+template < class _t_type >
+bool    X_base_is_abstract( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_abstract;
+}
+template < class _t_type >
+bool    X_base_is_pod( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_pod;
+}
+template < class _t_type >
+bool    X_base_is_function( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_function;
+}
+template < class _t_type >
+bool    X_base_is_polymorphic( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_polymorphic;
+}
+template < class _t_type >
+bool    X_base_is_signed( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_signed;
+}
+template < class _t_type >
+bool    X_base_is_unsigned( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_unsigned;
+}
+template < class _t_type >
+bool    X_base_is_integer( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_integer;
+}
+template < class _t_type >
+size_t  X_base_size( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::type_size;
+}
+template < class _t_type >
+bool    X_base_is_tagged( _t_type* p ) {
+    (void)p;
+    return gen_object_info< _t_type >::is_tagged;
+}
+}
+
