@@ -19,19 +19,19 @@ macx {
 }
 
 linux {
-    # set library search path to ./libBlackSilk
-    QMAKE_LFLAGS += -Wl,--rpath=\\\$\$ORIGIN/libBlackSilk
+    # set library search path to ./lib
+    QMAKE_LFLAGS += -Wl,--rpath=\\\$\$ORIGIN/lib
 
     # reduce binary size
     CONFIG(release, debug|release) { QMAKE_POST_LINK += strip --strip-all $${DESTDIR}/$${TARGET}; }
 
-    QMAKE_POST_LINK += mkdir -p $${DESTDIR}/libBlackSilk/;
-    QMAKE_POST_LINK += cp -H $${MAIN_DIR}/libs/$${IM_PLUGIN}/bin/$${COMPILE_MODE}/$${IM_PLUGIN}.so $${DESTDIR}/libBlackSilk/;
-    QMAKE_POST_LINK += cp -H $${MAIN_DIR}/libs/imagemagick/bin/$${COMPILE_MODE}/*.so.7 $${DESTDIR}/libBlackSilk/;
-    QMAKE_POST_LINK += cp -H $${MAIN_DIR}/libs/imagemagick/bin/$${COMPILE_MODE}/*.so.4 $${DESTDIR}/libBlackSilk/;
+    QMAKE_POST_LINK += mkdir -p $${DESTDIR}/lib/;
+    QMAKE_POST_LINK += cp -H $${MAIN_DIR}/libs/$${IM_PLUGIN}/bin/$${COMPILE_MODE}/$${IM_PLUGIN}.so $${DESTDIR}/lib/;
+    QMAKE_POST_LINK += cp -H $${MAIN_DIR}/libs/imagemagick/bin/$${COMPILE_MODE}/*.so.7 $${DESTDIR}/lib/;
+    QMAKE_POST_LINK += cp -H $${MAIN_DIR}/libs/imagemagick/bin/$${COMPILE_MODE}/*.so.4 $${DESTDIR}/lib/;
 
     # write version number into bundle
-    QMAKE_POST_LINK += echo $$VERSION > $${DESTDIR}/libBlackSilk/version.txt;
+    QMAKE_POST_LINK += echo $$VERSION > $${DESTDIR}/lib/version.txt;
 }
 
 # win: add manifest

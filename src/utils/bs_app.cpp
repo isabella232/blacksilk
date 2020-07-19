@@ -663,7 +663,7 @@ bool App::initialize(
                                                   );
 #elif LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_LINUX
             const auto successfullyLoadedPlugin = this->app->loadIoPluginFromPath(
-                    appDir + "/libBlackSilk/libgraphics.io.plugins.imagemagick.so"
+                    appDir + "/lib/libgraphics.io.plugins.imagemagick.so"
                                                   );
 #endif
 
