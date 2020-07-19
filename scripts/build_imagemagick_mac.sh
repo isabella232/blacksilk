@@ -35,7 +35,7 @@ function doPrepare {
 
 function doDownload {
     if [ ! -f "$DOWNLOAD" ]; then
-        curl "$DL_URL" -o "$DOWNLOAD"
+        curl -k "$DL_URL" -o "$DOWNLOAD"
     fi
 }
 
