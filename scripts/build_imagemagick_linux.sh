@@ -73,22 +73,21 @@ function doConfigure {
             --without-wmf \
             --without-gvc \
             --disable-openmp \
-            --disable-docs \
-            --with-gcc-arch=core2
+            --disable-docs
 }
 
 function doBuild {
     cd "$SRC_DIR/$PROJECT-$VERSION"
 
     # debug
-    (export CXXFLAGS="$CXXFLAGS -g -O0"; \
-    export CFLAGS="$CFLAGS -g -O0"; \
+    (export CXXFLAGS="$CXXFLAGS -g -O0 -Wl,--rpath=\\\$\$ORIGIN"; \
+    export CFLAGS="$CFLAGS -g -O0 -Wl,--rpath=\\\$\$ORIGIN"; \
     doConfigure)
     make -j8 install prefix="$BUILD_DIR/debug"
 
     # release
-    (export CXXFLAGS="$CXXFLAGS -msse2 -Ofast -finline -ffast-math -funsafe-math-optimizations"; \
-    export CFLAGS="$CFLAGS -msse2 -Ofast -finline -ffast-math -funsafe-math-optimizations"; \
+    (export CXXFLAGS="$CXXFLAGS -msse2 -Ofast -finline -ffast-math -funsafe-math-optimizations -Wl,--rpath=\\\$\$ORIGIN"; \
+    export CFLAGS="$CFLAGS -msse2 -Ofast -finline -ffast-math -funsafe-math-optimizations -Wl,--rpath=\\\$\$ORIGIN"; \
     doConfigure)
     make -j8 install prefix="$BUILD_DIR/release"
 }
