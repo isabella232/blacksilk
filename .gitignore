@@ -38,5 +38,6 @@
 !*.sln
 !*.vcxproj
 
-tmp
+bin
 libs
+tmp
