@@ -22,7 +22,7 @@ struct Application::Private : libcommon::PimplPrivate {
     ApplicationConfig                                       config;
     libcommon::ScopedPtr<ApplicationSystemLayer>            systemLayer;
     libcommon::ScopedPtr<ApplicationHardwareInfo>           hardwareInfo;
-    libcommon::SharedPtr<libgraphics::io::Pipeline>         pipeline;
+    std::shared_ptr<libgraphics::io::Pipeline>              pipeline;
 
     bool initialized;
 

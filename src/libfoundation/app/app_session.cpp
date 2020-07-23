@@ -64,7 +64,7 @@ struct ApplicationSession::Private : libcommon::PimplPrivate {
 
     libgraphics::fxapi::ApiBackendDevice*           previewBackend;
 
-    libcommon::SharedPtr<libgraphics::io::Pipeline> pipeline;
+    std::shared_ptr<libgraphics::io::Pipeline>      pipeline;
 
     std::string     name;
     int             maxThreadCount;
@@ -290,10 +290,10 @@ const libgraphics::io::Pipeline*  ApplicationSession::pipeline() const {
 }
 
 void ApplicationSession::setPipeline( libgraphics::io::Pipeline* pipelineObject ) {
-    this->d->pipeline.assign( pipelineObject );
+    this->d->pipeline.reset( pipelineObject );
 }
 
-void ApplicationSession::setPipeline( const libcommon::SharedPtr<libgraphics::io::Pipeline>& pipelineObject ) {
+void ApplicationSession::setPipeline( const std::shared_ptr<libgraphics::io::Pipeline>& pipelineObject ) {
     this->d->pipeline = pipelineObject;
 }
 

@@ -427,7 +427,7 @@ class ApplicationSession : public libcommon::INonCopyable,
         libgraphics::io::Pipeline*          pipeline();
         const libgraphics::io::Pipeline*    pipeline() const;
         void setPipeline( libgraphics::io::Pipeline* pipelineObject );
-        void setPipeline( const libcommon::SharedPtr<libgraphics::io::Pipeline>& pipelineObject );
+        void setPipeline(const std::shared_ptr<libgraphics::io::Pipeline> &pipelineObject );
 
         const libgraphics::Image* previewImage() const;
         const libgraphics::Image* originalImage() const;
