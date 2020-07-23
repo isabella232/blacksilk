@@ -58,9 +58,9 @@ struct ActionRunnable : QRunnable {
 };
 
 struct ApplicationSession::Private : libcommon::PimplPrivate {
-    libcommon::SharedPtr<ApplicationBackend>        backend;
-    libcommon::SharedPtr<libgraphics::Image>        originalImage;
-    libcommon::SharedPtr<libgraphics::Image>        previewImage;
+    std::shared_ptr<ApplicationBackend>             backend;
+    std::shared_ptr<libgraphics::Image>             originalImage;
+    std::shared_ptr<libgraphics::Image>             previewImage;
 
     libgraphics::fxapi::ApiBackendDevice*           previewBackend;
 
@@ -312,7 +312,7 @@ void ApplicationSession::updateBackend( ApplicationBackend* backend ) {
     ///     resources. this is currently only a fast pointer
     ///     exchange.
     if( this->d->backend.get() != backend ) {
-        this->d->backend.assign( backend );
+        this->d->backend.reset( backend );
     }
 }
 
