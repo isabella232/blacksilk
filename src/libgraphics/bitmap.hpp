@@ -1878,7 +1878,7 @@ class LIBCOMMON_API Bitmap {
         libcommon::RecursiveMutex   m_AccessLock;
 
         libgraphics::StdDynamicPoolAllocator*                                   m_InternalAllocator;
-        libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob>        m_InternalMemoryBlob;
+        std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob>        m_InternalMemoryBlob;
 };
 
 struct BitmapException : std::runtime_error {

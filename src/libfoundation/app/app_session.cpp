@@ -14,7 +14,6 @@
 #include <libgraphics/backend/cpu/cpu_imageobject.hpp>
 #include <libcommon/scopedptr.hpp>
 #include <libcommon/scopeguard.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/fileutils.hpp>
 #include <libgraphics/fx/operations/basic.hpp>
 #include <libgraphics/fx/operations/complex.hpp>

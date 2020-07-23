@@ -3,12 +3,12 @@
 #include <libcommon/scopedptr.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/atomics.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/mutex.hpp>
 #include <libcommon/guards.hpp>
 
 #include <algorithm>
 #include <vector>
+#include <memory>
 
 
 namespace libgraphics {
@@ -284,34 +284,34 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         };
         friend struct Blob;
 
-        libcommon::SharedPtr<Blob> alloc( size_t length ) {
+        std::shared_ptr<Blob> alloc( size_t length ) {
             const auto& entry = acquireEntry(
                                     length
                                 );
-            return libcommon::SharedPtr<Blob>(
+            return std::shared_ptr<Blob>(
                        new Blob( entry.data, this )
                    );
         }
         template < class _t_type >
-        libcommon::SharedPtr<_t_type> emplace() {
+        std::shared_ptr<_t_type> emplace() {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc( entry.data )
                    );
         }
         template < class _t_type, class _t_arg0 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -320,13 +320,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -336,13 +336,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -353,13 +353,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -371,13 +371,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -390,13 +390,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4, _t_arg5 arg5 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4, _t_arg5 arg5 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -789,7 +789,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
                 delete []( char* )data;
             }
         };
-        typedef libcommon::SharedPtr<_t_value>  InstanceType;
+        typedef std::shared_ptr<_t_value>  InstanceType;
 
         FixedPoolAllocator() : m_Size( 0 ),
             m_Capacity( 0 ) {}

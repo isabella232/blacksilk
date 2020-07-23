@@ -281,7 +281,7 @@ bool Texture::retrieve(
 
 
     void* intermediateBuffer( nullptr );
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob>    bufBlob;
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob>    bufBlob;
 
     if( bitmap->allocator() != nullptr ) {
         bufBlob = bitmap->allocator()->alloc(
@@ -310,14 +310,14 @@ bool Texture::retrieve(
                    );
         assert( ret );
 
-        if( bufBlob.empty() ) {
+        if( !bufBlob ) {
             delete []( char* )intermediateBuffer;
         }
 
         return ret;
     }
 
-    if( bufBlob.empty() ) {
+    if( !bufBlob ) {
         delete []( char* )intermediateBuffer;
     }
 
@@ -356,7 +356,7 @@ bool Texture::retrieve(
     const size_t bufSize = width() * height() * len;
 
     void* intermediateBuffer( nullptr );
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob>    bufBlob;
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob>    bufBlob;
 
     if( bitmap->allocator() != nullptr ) {
         bufBlob = bitmap->allocator()->alloc(
@@ -384,14 +384,14 @@ bool Texture::retrieve(
 
         bool ret = bitmap->copy( intermediateBuffer, 0, 0, rect.width, rect.height );
 
-        if( bufBlob.empty() ) {
+        if( !bufBlob ) {
             delete []( char* )intermediateBuffer;
         }
 
         return ret;
     }
 
-    if( bufBlob.empty() ) {
+    if( !bufBlob ) {
         delete []( char* )intermediateBuffer;
     }
 
@@ -429,7 +429,7 @@ bool Texture::upload(
     const size_t bufSize = width() * height() * len;
 
     void* intermediateBuffer( nullptr );
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob>    bufBlob;
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob>    bufBlob;
 
     if( bitmap->allocator() != nullptr ) {
         bufBlob = bitmap->allocator()->alloc(
@@ -449,14 +449,14 @@ bool Texture::upload(
                        intermediateBuffer
                    );
 
-        if( bufBlob.empty() ) {
+        if( !bufBlob ) {
             delete []( char* )intermediateBuffer;
         }
 
         return ret;
     }
 
-    if( bufBlob.empty() ) {
+    if( !bufBlob ) {
         delete []( char* )intermediateBuffer;
     }
 

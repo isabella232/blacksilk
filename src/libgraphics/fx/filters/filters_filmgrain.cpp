@@ -347,7 +347,7 @@ void FilmGrain::calculateGrainImage() {
 
         bool grainBufferWasLocallyAllocated( false );
         void* grainBuffer( nullptr );
-        libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob> grainBufferAllocBlob;
+        std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob> grainBufferAllocBlob;
 
         if( m_GrainLayer->containsDataForBackend( FXAPI_BACKEND_CPU ) ) {
             grainBufferAllocBlob = m_GrainLayer->internalDeviceForBackend( FXAPI_BACKEND_CPU )->allocator()->alloc(

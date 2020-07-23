@@ -2397,10 +2397,10 @@ bool Bitmap::reset( libgraphics::StdDynamicPoolAllocator* allocator, const libgr
     this->m_InternalMemoryBlob      = this->m_InternalAllocator->alloc(
                                           blob_size
                                       );
-    assert( !this->m_InternalMemoryBlob.empty() );
+    assert( this->m_InternalMemoryBlob );
     assert( !this->m_InternalMemoryBlob->empty() );
 
-    if( this->m_InternalMemoryBlob.empty() || this->m_InternalMemoryBlob->empty() ) {
+    if( !this->m_InternalMemoryBlob || this->m_InternalMemoryBlob->empty() ) {
 #ifdef LIBGRAPHICS_DEBUG
         qDebug() << "Failed to allocate memory blob of size=" << ( blob_size / 1024 ) << "kb";
 #endif
@@ -2460,10 +2460,10 @@ bool Bitmap::reset( libgraphics::StdDynamicPoolAllocator* allocator, const libgr
     this->m_InternalMemoryBlob      = this->m_InternalAllocator->alloc(
                                           blob_size
                                       );
-    assert( !this->m_InternalMemoryBlob.empty() );
+    assert( this->m_InternalMemoryBlob );
     assert( !this->m_InternalMemoryBlob->empty() );
 
-    if( this->m_InternalMemoryBlob.empty() || this->m_InternalMemoryBlob->empty() ) {
+    if( !this->m_InternalMemoryBlob || this->m_InternalMemoryBlob->empty() ) {
 #ifdef LIBGRAPHICS_DEBUG
         qDebug() << "Failed to allocate memory blob of size=" << ( blob_size / 1024 ) << "kb";
 #endif
@@ -2511,9 +2511,9 @@ bool Bitmap::assignAllocator(
         auto new_allocator_blob         = _allocator->alloc(
                                               blob_size
                                           );
-        assert( new_allocator_blob.empty() || new_allocator_blob->empty() );
+        assert( !new_allocator_blob || new_allocator_blob->empty() );
 
-        if( new_allocator_blob.empty() || new_allocator_blob->empty() ) {
+        if( !new_allocator_blob || new_allocator_blob->empty() ) {
 #ifdef LIBGRAPHICS_DEBUG
             qDebug() << "Failed to assign allocator to bitmap. Couldn't allocate new shared memory blob.";
 #endif
