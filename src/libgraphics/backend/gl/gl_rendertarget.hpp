@@ -2,7 +2,6 @@
 
 #include <assert.h>
 
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/scopedptr.hpp>
 
 #include <libgraphics/fxapi.hpp>

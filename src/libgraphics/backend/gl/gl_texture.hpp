@@ -3,7 +3,6 @@
 #include <assert.h>
 #include <vector>
 
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/scopedptr.hpp>
 
 #include <libgraphics/fxapi.hpp>

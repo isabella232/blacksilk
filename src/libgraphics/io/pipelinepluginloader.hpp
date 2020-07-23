@@ -2,7 +2,6 @@
 
 #include <libgraphics/base.hpp>
 #include <libcommon/scopedptr.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/atomics.hpp>
 
 namespace libgraphics {

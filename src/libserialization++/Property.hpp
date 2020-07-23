@@ -13,8 +13,6 @@
 #include <libserialization++/PropertyAccessor.hpp>
 #include <libserialization++/TypeInfo.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 namespace spp {
 
 class       Property;

@@ -6,7 +6,6 @@
 
 #include <libcommon/atomics.hpp>
 #include <libcommon/scopedptr.hpp>
-#include <libcommon/sharedptr.hpp>
 
 namespace libgraphics {
 namespace backend {
