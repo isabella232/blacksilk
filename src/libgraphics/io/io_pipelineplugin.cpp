@@ -69,7 +69,7 @@ void GenericPipelinePlugin::registerPipelineImporter( PipelineImporter* importer
     d->importers.add( importer );
 }
 
-void GenericPipelinePlugin::registerPipelineImporter( const libcommon::SharedPtr<PipelineImporter>& importer ) {
+void GenericPipelinePlugin::registerPipelineImporter( const std::shared_ptr<PipelineImporter>& importer ) {
     d->importers.add( importer );
 }
 
@@ -77,7 +77,7 @@ void GenericPipelinePlugin::registerPipelineExporter( PipelineExporter* exporter
     d->exporters.add( exporter );
 }
 
-void GenericPipelinePlugin::registerPipelineExporter( const libcommon::SharedPtr<PipelineExporter>& exporter ) {
+void GenericPipelinePlugin::registerPipelineExporter( const std::shared_ptr<PipelineExporter>& exporter ) {
     d->exporters.add( exporter );
 }
 

@@ -71,9 +71,9 @@ class GenericPipelinePlugin : public PipelinePlugin {
 
         /// methods
         void registerPipelineImporter( PipelineImporter* importer );
-        void registerPipelineImporter( const libcommon::SharedPtr<PipelineImporter>& importer );
+        void registerPipelineImporter( const std::shared_ptr<PipelineImporter>& importer );
         void registerPipelineExporter( PipelineExporter* exporter );
-        void registerPipelineExporter( const libcommon::SharedPtr<PipelineExporter>& exporter );
+        void registerPipelineExporter( const std::shared_ptr<PipelineExporter>& exporter );
 
         bool unregisterPipelineImporter( PipelineImporter* importer );
         bool unregisterPipelineExporter( PipelineExporter* exporter );

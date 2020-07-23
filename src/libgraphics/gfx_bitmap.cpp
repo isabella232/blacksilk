@@ -1148,7 +1148,7 @@ class BitmapMemoryContainer {
 
 class BitmapMemoryAllocator {
     public:
-        typedef std::vector< libcommon::SharedPtr<BitmapMemoryContainer > >
+        typedef std::vector< std::shared_ptr<BitmapMemoryContainer > >
         VectorType;
 
         bool free( void* buf ) {
@@ -1203,7 +1203,7 @@ class BitmapMemoryAllocator {
             ( void )_g;
 
             m_Containers.push_back(
-                libcommon::SharedPtr<BitmapMemoryContainer>(
+                std::shared_ptr<BitmapMemoryContainer>(
                     new BitmapMemoryContainer( length )
                 )
             );
@@ -1567,9 +1567,9 @@ Bitmap& Bitmap::operator = ( const Bitmap& rhs ) {
 
 }
 
-libcommon::SharedPtr<Bitmap>    Bitmap::clone() const {
+std::shared_ptr<Bitmap>    Bitmap::clone() const {
 
-    auto ptr = libcommon::SharedPtr<Bitmap>(
+    auto ptr = std::shared_ptr<Bitmap>(
                    new Bitmap()
                );
 
@@ -2035,20 +2035,20 @@ bool Bitmap::write( void* destination, const Rect64UI& dstRect, size_t dstPlaneW
     return true;
 }
 
-libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height ) {
+libcommon::Maybe< std::shared_ptr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height ) {
 
     if( format.family != formats::family::Invalid && format.byteSize != 0 && format.channels != 0 && width != 0 && height != 0 ) {
-        return libcommon::just( libcommon::SharedPtr<Bitmap>( new Bitmap( format, width, height ) ) );
+        return libcommon::just( std::shared_ptr<Bitmap>( new Bitmap( format, width, height ) ) );
     }
 
     return libcommon::nothing();
 
 }
 
-libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data ) {
+libcommon::Maybe< std::shared_ptr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data ) {
 
     if( format.family != formats::family::Invalid && format.byteSize != 0 && format.channels != 0 && width != 0 && height != 0 && data != 0 ) {
-        return libcommon::just( libcommon::SharedPtr<Bitmap>( new Bitmap( format, width, height, data ) ) );
+        return libcommon::just( std::shared_ptr<Bitmap>( new Bitmap( format, width, height, data ) ) );
     }
 
     return libcommon::nothing();
@@ -2056,7 +2056,7 @@ libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const libgraphi
 }
 
 
-libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const BitmapInfo& info ) {
+libcommon::Maybe< std::shared_ptr<Bitmap> > Bitmap::create( const BitmapInfo& info ) {
 
     return create( info.format(), info.width(), info.height() );
 

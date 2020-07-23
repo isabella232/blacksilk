@@ -5,7 +5,6 @@
 #include <libcommon/maybe.hpp>
 #include <libcommon/mutex.hpp>
 #include <libcommon/guards.hpp>
-#include <libcommon/sharedptr.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -13,6 +12,7 @@
 #include <memory.h>
 #include <cmath>
 #include <sstream>
+#include <memory>
 
 #include <libgraphics/allocator.hpp>
 
@@ -1574,7 +1574,7 @@ class LIBCOMMON_API Bitmap {
             \brief
                 Clones the current Bitmap's state and returns the instance.
         */
-        libcommon::SharedPtr<Bitmap>    clone() const;
+        std::shared_ptr<Bitmap>    clone() const;
 
         /**
             \fn     validPixel
@@ -1635,9 +1635,9 @@ class LIBCOMMON_API Bitmap {
 
                 May return nothing, if the supplied parameters are invalid(e.g. invalid data buffer. ).
         */
-        static libcommon::Maybe< libcommon::SharedPtr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height );
-        static libcommon::Maybe< libcommon::SharedPtr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data );
-        static libcommon::Maybe< libcommon::SharedPtr<Bitmap> > create( const BitmapInfo& info );
+        static libcommon::Maybe< std::shared_ptr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height );
+        static libcommon::Maybe< std::shared_ptr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data );
+        static libcommon::Maybe< std::shared_ptr<Bitmap> > create( const BitmapInfo& info );
 
         /**
             \fn         reset
