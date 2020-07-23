@@ -4,6 +4,8 @@
 #include <libcommon/guards.hpp>
 #include <QDebug>
 
+#include <memory>
+
 #include <libcommon/fileutils.hpp>
 
 namespace libfoundation {
@@ -16,7 +18,7 @@ void ApplicationAction::waitForFinished() {
 
 struct Application::Private : libcommon::PimplPrivate {
     ApplicationSession*                                     currentSession;
-    std::vector<libcommon::SharedPtr<ApplicationSession> >  sessions;
+    std::vector<std::shared_ptr<ApplicationSession> >       sessions;
     ApplicationConfig                                       config;
     libcommon::ScopedPtr<ApplicationSystemLayer>            systemLayer;
     libcommon::ScopedPtr<ApplicationHardwareInfo>           hardwareInfo;
@@ -264,7 +266,7 @@ ApplicationSession* Application::createSession( const std::string& name ) {
     assert( session );
 
     this->d->sessions.push_back(
-        libcommon::SharedPtr<ApplicationSession>( session )
+        std::shared_ptr<ApplicationSession>( session )
     );
 
     session->setPipeline(
