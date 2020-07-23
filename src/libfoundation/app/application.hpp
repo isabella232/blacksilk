@@ -383,8 +383,8 @@ class ApplicationBackend : public libcommon::INonCopyable {
         libgraphics::fxapi::ApiBackendDevice* cpuBackend() const;
 
         /// allocator management
-        libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& allocator();
-        const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& allocator() const;
+        std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& allocator();
+        const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& allocator() const;
     private:
         void initializeAllocators();
 
@@ -427,7 +427,7 @@ class ApplicationSession : public libcommon::INonCopyable,
         libgraphics::io::Pipeline*          pipeline();
         const libgraphics::io::Pipeline*    pipeline() const;
         void setPipeline( libgraphics::io::Pipeline* pipelineObject );
-        void setPipeline(const std::shared_ptr<libgraphics::io::Pipeline> &pipelineObject );
+        void setPipeline( const std::shared_ptr<libgraphics::io::Pipeline>& pipelineObject );
 
         const libgraphics::Image* previewImage() const;
         const libgraphics::Image* originalImage() const;

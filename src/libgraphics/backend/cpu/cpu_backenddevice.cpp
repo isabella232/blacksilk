@@ -247,7 +247,7 @@ struct BackendDevice::Private : libcommon::PimplPrivate {
     std::vector< libcommon::ScopedPtr<DataRegion> >         dataRegions;
     std::vector< libcommon::ScopedPtr<PixelArray> >         pixelArrays;
     std::vector< libcommon::ScopedPtr<ImageObject> >        imageObjects;
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator> allocator;
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator>   allocator;
     QThreadPool threadPool;
 
     Private() : allocator( new libgraphics::StdDynamicPoolAllocator() ) {}
@@ -304,7 +304,7 @@ fxapi::ApiResource* BackendDevice::createTexture1D( const fxapi::EPixelFormat::t
 
 ///\todo clean up image object management!11
 fxapi::ApiImageObject* BackendDevice::createTexture2D() {
-    if( this->allocator().empty() ) {
+    if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject();
         this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
 
@@ -319,7 +319,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D() {
 }
 
 fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat::t& format, size_t width, size_t height ) {
-    if( this->allocator().empty() ) {
+    if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject(
                                          format,
                                          width,
@@ -342,7 +342,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
 }
 
 fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat::t& format, size_t width, size_t height, void* data ) {
-    if( this->allocator().empty() ) {
+    if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject(
                                          format,
                                          width,
@@ -523,11 +523,11 @@ int BackendDevice::backendId() {
     return FXAPI_BACKEND_CPU;
 }
 
-libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  BackendDevice::allocator() {
+std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  BackendDevice::allocator() {
     return d->allocator;
 }
 
-void BackendDevice::setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator ) {
+void BackendDevice::setAllocator( const std::shared_ptr<StdDynamicPoolAllocator>& newAllocator ) {
     d->allocator = newAllocator;
 }
 

@@ -117,8 +117,8 @@ class BackendDevice : public libgraphics::fxapi::ApiBackendDevice {
 
         virtual int backendId();
 
-        virtual libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  allocator();
-        virtual void setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
+        virtual std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator();
+        virtual void setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
     protected:
         libcommon::PimplPtr<Private>   d;
 };

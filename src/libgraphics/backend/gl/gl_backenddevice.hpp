@@ -80,8 +80,8 @@ class BackendDevice : public fxapi::ApiBackendDevice {
         virtual const char* name();
         virtual int backendId();
 
-        virtual libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  allocator();
-        virtual void setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
+        virtual std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator();
+        virtual void setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
 
         /// common resource pools
         libgraphics::backend::gl::EffectPool* effectPool();
