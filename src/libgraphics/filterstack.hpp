@@ -12,28 +12,28 @@ namespace libgraphics {
 class Filter;
 class FilterStack : public libcommon::INonCopyable {
     public:
-        typedef std::vector<libcommon::SharedPtr<Filter> > ContainerType;
+        typedef std::vector<std::shared_ptr<Filter> > ContainerType;
 
         FilterStack() {}
         virtual ~FilterStack() {}
 
         size_t  count() const;
 
-        libcommon::SharedPtr<Filter>    top();
-        const libcommon::SharedPtr<Filter>&    top() const;
+        std::shared_ptr<Filter>    top();
+        const std::shared_ptr<Filter>&    top() const;
 
-        libcommon::SharedPtr<Filter>    bottom();
-        const libcommon::SharedPtr<Filter>&    bottom() const;
+        std::shared_ptr<Filter>    bottom();
+        const std::shared_ptr<Filter>&    bottom() const;
 
         void clear();
 
         void pushFront( Filter* filter );
-        void pushFront( const libcommon::SharedPtr<Filter>& filter );
+        void pushFront( const std::shared_ptr<Filter>& filter );
         void pushBack( Filter* filter );
-        void pushBack( const libcommon::SharedPtr<Filter>& filter );
+        void pushBack( const std::shared_ptr<Filter>& filter );
 
         void insert( ContainerType::iterator it, Filter* filter );
-        void insert( ContainerType::iterator it, const libcommon::SharedPtr<Filter>& filter );
+        void insert( ContainerType::iterator it, const std::shared_ptr<Filter>& filter );
 
         ContainerType::iterator begin();
         ContainerType::const_iterator begin() const;
@@ -43,11 +43,11 @@ class FilterStack : public libcommon::INonCopyable {
         ContainerType::const_iterator end() const;
         ContainerType::const_iterator constEnd() const;
 
-        libcommon::SharedPtr<Filter>    byIndex( size_t index ) const;
-        libcommon::SharedPtr<Filter>    byName( const std::string& name ) const;
+        std::shared_ptr<Filter>    byIndex( size_t index ) const;
+        std::shared_ptr<Filter>    byName( const std::string& name ) const;
 
         bool remove( ContainerType::iterator it );
-        bool remove( const libcommon::SharedPtr<Filter>& filter );
+        bool remove( const std::shared_ptr<Filter>& filter );
         bool remove( Filter* filter );
         bool removeByName( const std::string& name );
         bool removeByIndex( size_t index );

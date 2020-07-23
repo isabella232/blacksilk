@@ -12,12 +12,12 @@ namespace libgraphics {
 class Filter;
 class FilterCollection : public libcommon::INonCopyable {
     public:
-        typedef std::vector<libcommon::SharedPtr<Filter> > ContainerType;
+        typedef std::vector<std::shared_ptr<Filter> > ContainerType;
 
         virtual ~FilterCollection() {}
 
         void add( Filter* filter );
-        void add( const libcommon::SharedPtr<Filter>& filter );
+        void add( const std::shared_ptr<Filter>& filter );
 
         bool contains( Filter* filter ) const;
         bool containsByName( const std::string& name ) const;
@@ -37,7 +37,7 @@ class FilterCollection : public libcommon::INonCopyable {
 
         void clear();
 
-        libcommon::SharedPtr<Filter>    byName( const std::string& name );
+        std::shared_ptr<Filter>    byName( const std::string& name );
     protected:
         ContainerType  m_Filters;
 };

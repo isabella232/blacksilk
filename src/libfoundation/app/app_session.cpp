@@ -535,7 +535,7 @@ bool ApplicationSession::addFilter(
         return false;
     }
 
-    libcommon::SharedPtr<libgraphics::Filter>    filterPtr( filter );
+    std::shared_ptr<libgraphics::Filter>    filterPtr( filter );
     this->d->filterCollection.add(
         filterPtr
     );
@@ -1332,7 +1332,7 @@ ApplicationSession* ApplicationSession::clone() {
     clonedSession->d->filterMetaInfo            = this->d->filterMetaInfo;
 
     for( auto it = this->d->filterStack.begin(); it != this->d->filterStack.end(); ++it ) {
-        libcommon::SharedPtr<libgraphics::Filter> clonedFilter( ( *it )->clone() );
+        std::shared_ptr<libgraphics::Filter> clonedFilter( ( *it )->clone() );
 
         clonedSession->d->filterStack.pushBack( clonedFilter );
         clonedSession->d->filterCollection.add( clonedFilter );

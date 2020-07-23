@@ -229,9 +229,9 @@ bool setPresetByIndex( libfoundation::app::ApplicationSession* session, const li
         const libgraphics::FilterPreset& selectedPreset( ( *( filterPresetCollection.constBegin() + index ) ).preset );
         auto filterObj = session->filters()->byName( filterName );
 
-        assert( filterObj.valid() );
+        assert( filterObj );
 
-        if( !filterObj.valid() ) {
+        if( !filterObj ) {
             return false;
         }
 
