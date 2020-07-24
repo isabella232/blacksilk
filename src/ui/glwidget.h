@@ -32,8 +32,8 @@ class GLWidget : public QGLWidget {
         enum enumFitTo { enumFitToHeight, enumFitToWidth, enumFitToActualPixels, enumFitToAutomatic };
 
         /// new vars
-        libcommon::ScopedPtr<libfoundation::app::Application>           m_Application;
-        libcommon::ScopedPtr<libfoundation::app::ApplicationBackend>    m_AppBackend;
+        std::unique_ptr<libfoundation::app::Application>           m_Application;
+        std::unique_ptr<libfoundation::app::ApplicationBackend>    m_AppBackend;
         libfoundation::app::ApplicationSession*                         m_CurrentSession;
 
         libgraphics::fx::filters::BWAdaptiveMixer*                      m_FilterBWMixer;

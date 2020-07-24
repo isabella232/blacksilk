@@ -55,8 +55,8 @@ class BackgroundTaskGroup : public libcommon::INonCopyable {
             \since 1.0
             \brief Returns the internal thread pool.
         */
-        libcommon::ScopedPtr<QThreadPool>& threadPool();
-        const libcommon::ScopedPtr<QThreadPool>& threadPool() const;
+        std::unique_ptr<QThreadPool>& threadPool();
+        const std::unique_ptr<QThreadPool>& threadPool() const;
 
         /**
             \fn setMaximalThreadCount
@@ -82,7 +82,7 @@ class BackgroundTaskGroup : public libcommon::INonCopyable {
         */
         size_t threadCount() const;
     private:
-        libcommon::ScopedPtr<QThreadPool> m_ThreadPool;
+        std::unique_ptr<QThreadPool> m_ThreadPool;
 };
 
 }

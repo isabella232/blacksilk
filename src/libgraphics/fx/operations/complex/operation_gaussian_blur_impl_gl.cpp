@@ -203,7 +203,7 @@ void horizontalGaussianBlur_GL(
                               destination,
                               source,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -230,7 +230,7 @@ void verticalGaussianBlur_GL(
                               destination,
                               source,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 

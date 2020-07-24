@@ -313,7 +313,7 @@ struct ImageLayer::Private : libcommon::PimplPrivate {
     std::string name;
 
     /// backend image objects
-    std::vector< libcommon::ScopedPtr<BackendImageObj> > objects;
+    std::vector< std::unique_ptr<BackendImageObj> > objects;
 
 
 
@@ -332,7 +332,7 @@ struct ImageLayer::Private : libcommon::PimplPrivate {
 
         for( auto it = rhs.d->objects.begin(); it != rhs.d->objects.end(); ++it ) {
             objects.emplace_back(
-                libcommon::ScopedPtr<BackendImageObj>( new BackendImageObj( ( *it )->device ) )
+                std::unique_ptr<BackendImageObj>( new BackendImageObj( ( *it )->device ) )
             );
 
             const auto sucessfullyCreated = objects.back()->imageObject->create(
@@ -383,7 +383,7 @@ ImageLayer::ImageLayer( libgraphics::fxapi::ApiBackendDevice* backendDevice, std
     d->name = _name;
 
     d->objects.emplace_back(
-        libcommon::ScopedPtr<Private::BackendImageObj>( new Private::BackendImageObj( backendDevice ) )
+        std::unique_ptr<Private::BackendImageObj>( new Private::BackendImageObj( backendDevice ) )
     );
 
     LIBGRAPHICS_MEMORY_LOG_ALLOCATE( this );

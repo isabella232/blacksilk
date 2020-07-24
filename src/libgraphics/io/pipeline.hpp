@@ -3,7 +3,6 @@
 #include <libgraphics/base.hpp>
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/io/pipelineinfo.hpp>
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 
@@ -178,7 +177,7 @@ class Pipeline : public libcommon::INonCopyable {
 class StdPipeline : public Pipeline {
     public:
         struct Private : libcommon::PimplPrivate {
-            std::vector< libcommon::ScopedPtr< PipelineProcessingStage > >  stages;
+            std::vector< std::unique_ptr< PipelineProcessingStage > >  stages;
             PipelineImporterGroup importers;
             PipelineExporterGroup exporters;
         };

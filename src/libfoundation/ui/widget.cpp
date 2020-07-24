@@ -67,7 +67,7 @@ public:
 
     }
 protected:
-    libcommon::ScopedPtr<QGraphicsScene>    m_InternalScene;
+    std::unique_ptr<QGraphicsScene>    m_InternalScene;
     QWidget*    m_BaseWidget;
     QGraphicsPixmapItem*    m_SceneItem;
     libgraphics::ImageLayer*    m_Layer;

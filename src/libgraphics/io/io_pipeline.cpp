@@ -15,7 +15,7 @@ bool StdPipeline::addProcessingStage(
     assert( stage );
 
     d->stages.push_back(
-        libcommon::ScopedPtr< PipelineProcessingStage >( stage )
+        std::unique_ptr< PipelineProcessingStage >( stage )
     );
 
     return true;

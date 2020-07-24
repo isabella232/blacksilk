@@ -810,9 +810,9 @@ const std::string& GLErr::errorType() const {
 /** GL **/
 struct GL::GLPriv : libcommon::PimplPrivate {
     bool    initialized;
-    libcommon::ScopedPtr<GLDbgContext>  dbgContext;
-    libcommon::ScopedPtr< libgraphics::SystemInfo > sysInfo;
-    std::vector< libcommon::ScopedPtr< GLErr > > errors;
+    std::unique_ptr<GLDbgContext>  dbgContext;
+    std::unique_ptr< libgraphics::SystemInfo > sysInfo;
+    std::vector< std::unique_ptr< GLErr > > errors;
 
     bool texture1DEnabled;
     bool texture2DEnabled;
@@ -888,7 +888,7 @@ GLDbgContext* GL::currentDbgContext() {
 }
 
 bool GL::hasDbgContext() const {
-    return !d->dbgContext.empty();
+    return !!d->dbgContext;
 }
 
 void GL::newError( t_int errorType, const std::string& errorMessage ) {
@@ -942,7 +942,7 @@ void GL::newError( t_int errorType, const std::string& errorMessage ) {
 
 void GL::newError( const std::string& errorType, const std::string& errorMessage ) {
     this->d->errors.push_back(
-        libcommon::ScopedPtr<GLErr>( new GLErr() )
+        std::unique_ptr<GLErr>( new GLErr() )
     );
     this->d->errors.back()->d->errorMessage = errorMessage;
     this->d->errors.back()->d->errorType = errorType;
@@ -952,7 +952,7 @@ void GL::newError( const std::string& errorType, const std::string& errorMessage
     qDebug() << "OpenGL Error: " << errorType.c_str() << ": " << errorMessage.c_str();
 #endif
 
-    if( !d->dbgContext.empty() ) {
+    if( d->dbgContext ) {
         d->dbgContext->reportError(
             this,
             d->errors.back().get()

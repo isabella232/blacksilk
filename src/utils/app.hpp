@@ -60,13 +60,13 @@ struct App {
 
         /// core application
         /// objects
-        libcommon::ScopedPtr<libfoundation::app::Application>                                   app;
+        std::unique_ptr<libfoundation::app::Application>                                   app;
         libfoundation::app::ApplicationBackend*                                                 appBackend;
         libfoundation::app::ApplicationSession*                                                 currentSession;
-        libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview>                actionRenderPreview;
+        std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview>                actionRenderPreview;
 
         /// ui
-        libcommon::ScopedPtr<blacksilk::GraphicsView>                       view;
+        std::unique_ptr<blacksilk::GraphicsView>                       view;
         bool                                                                shouldRender;
 
         /// image properties
@@ -88,8 +88,8 @@ struct App {
 
         /// background tasks and
         /// status reports
-        libcommon::ScopedPtr<libfoundation::app::BackgroundTaskGroup>       backgroundTasks;
-        libcommon::ScopedPtr<blacksilk::ResponsiveBackgroundTaskListener>   taskListener;
+        std::unique_ptr<libfoundation::app::BackgroundTaskGroup>       backgroundTasks;
+        std::unique_ptr<blacksilk::ResponsiveBackgroundTaskListener>   taskListener;
 
         /// filter objects
         libgraphics::fx::filters::BWAdaptiveMixer*                      filterBWMixer;

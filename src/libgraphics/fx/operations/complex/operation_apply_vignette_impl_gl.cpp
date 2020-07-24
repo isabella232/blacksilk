@@ -187,7 +187,7 @@ void applyVignette_GL(
                               dst,
                               src,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 

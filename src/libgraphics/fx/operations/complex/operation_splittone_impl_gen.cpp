@@ -43,21 +43,21 @@ void splittone_GEN(
     };
 
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> highlightIntensityMap( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> highlightIntensityMap( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::multiply(
-            highlightIntensityMap,
+            highlightIntensityMap.get(),
             source,
             area,
             weight
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> topLayer( makeImageLayer( device, destination ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> intermediateLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> topLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> intermediateLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::overlay(
-            intermediateLayer,
+            intermediateLayer.get(),
             source,
             area,
             libgraphics::makeRGBA32F(
@@ -66,35 +66,35 @@ void splittone_GEN(
         );
 
         libgraphics::fx::operations::multiply(
-            topLayer,
-            intermediateLayer,
-            highlightIntensityMap,
+            topLayer.get(),
+            intermediateLayer.get(),
+            highlightIntensityMap.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> shadowsIntensityMap( makeImageLayer( device, destination ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> negatedIntensityLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> shadowsIntensityMap( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> negatedIntensityLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::negate(
-            negatedIntensityLayer,
-            highlightIntensityMap,
+            negatedIntensityLayer.get(),
+            highlightIntensityMap.get(),
             area
         );
 
         libgraphics::fx::operations::multiply(
-            shadowsIntensityMap,
-            negatedIntensityLayer,
-            negatedIntensityLayer,
+            shadowsIntensityMap.get(),
+            negatedIntensityLayer.get(),
+            negatedIntensityLayer.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> mediumLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> mediumLayer( makeImageLayer( device, destination ) );
     {
-        libcommon::ScopedPtr<libgraphics::ImageLayer> intermediateLayer( makeImageLayer( device, destination ) );
+        std::unique_ptr<libgraphics::ImageLayer> intermediateLayer( makeImageLayer( device, destination ) );
         libgraphics::fx::operations::overlay(
-            intermediateLayer,
+            intermediateLayer.get(),
             source,
             area,
             libgraphics::makeRGBA32F(
@@ -103,45 +103,45 @@ void splittone_GEN(
         );
 
         libgraphics::fx::operations::multiply(
-            mediumLayer,
-            intermediateLayer,
-            shadowsIntensityMap,
+            mediumLayer.get(),
+            intermediateLayer.get(),
+            shadowsIntensityMap.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> bottomLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> bottomLayer( makeImageLayer( device, destination ) );
     {
-        libcommon::ScopedPtr<libgraphics::ImageLayer> intensityRest( makeImageLayer( device, destination ) );
+        std::unique_ptr<libgraphics::ImageLayer> intensityRest( makeImageLayer( device, destination ) );
         libgraphics::fx::operations::subtract(
-            intensityRest,
-            negatedIntensityLayer,
-            shadowsIntensityMap,
+            intensityRest.get(),
+            negatedIntensityLayer.get(),
+            shadowsIntensityMap.get(),
             area
         );
 
         libgraphics::fx::operations::multiply(
-            bottomLayer,
+            bottomLayer.get(),
             source,
-            intensityRest,
+            intensityRest.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> composedUpperLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer> composedUpperLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::add(
-            composedUpperLayer,
-            topLayer,
-            mediumLayer,
+            composedUpperLayer.get(),
+            topLayer.get(),
+            mediumLayer.get(),
             area
         );
     }
 
     libgraphics::fx::operations::add(
         destination,
-        composedUpperLayer,
-        bottomLayer,
+        composedUpperLayer.get(),
+        bottomLayer.get(),
         area
     );
 }

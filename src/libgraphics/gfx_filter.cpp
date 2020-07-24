@@ -35,7 +35,7 @@ bool applyFilter(
     assert( filter );
     assert( destination );
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> temporarySource(
+    std::unique_ptr<libgraphics::ImageLayer> temporarySource(
         destination->duplicate()
     );
 
@@ -91,7 +91,7 @@ bool applyFilter(
     assert( destination );
 
     for( size_t i = 0; destination->layerCount() > i; ++i ) {
-        libcommon::ScopedPtr<libgraphics::ImageLayer> temporarySource(
+        std::unique_ptr<libgraphics::ImageLayer> temporarySource(
             destination->layerByIndex( i )->duplicate()
         );
 

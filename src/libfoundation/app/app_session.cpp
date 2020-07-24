@@ -901,7 +901,7 @@ bool ApplicationSession::importImageFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<ApplicationActionImport> importAction(
+    std::unique_ptr<ApplicationActionImport> importAction(
         new ApplicationActionImport(
             this,
             this->d->backend->cpuBackend(),
@@ -927,7 +927,7 @@ bool ApplicationSession::importImageFromPath(
 ) {
     ( void )format;
 
-    libcommon::ScopedPtr<ApplicationActionImport> importAction(
+    std::unique_ptr<ApplicationActionImport> importAction(
         new ApplicationActionImport(
             this,
             this->d->backend->cpuBackend(),
@@ -1000,7 +1000,7 @@ bool ApplicationSession::exportImage(
         qDebug() << "Exporting current image to output buffer";
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionExport>   action(
+    std::unique_ptr<libfoundation::app::ApplicationActionExport>   action(
         new libfoundation::app::ApplicationActionExport(
             this,
             "",
@@ -1052,7 +1052,7 @@ bool ApplicationSession::exportImage(
         qDebug() << "Exporting current image to " << path.c_str();
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionExport>   action(
+    std::unique_ptr<libfoundation::app::ApplicationActionExport>   action(
         new libfoundation::app::ApplicationActionExport(
             this,
             path,
@@ -1113,7 +1113,7 @@ bool ApplicationSession::updatePreview( bool _force ) {
         this->updateAllFilters();
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview>   action(
+    std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview>   action(
         new libfoundation::app::ApplicationActionRenderPreview(
             this,
             this->previewBackend(),
@@ -1166,7 +1166,7 @@ bool ApplicationSession::renderToBitmap(
     libgraphics::Bitmap* destination,
     libgraphics::fxapi::ApiBackendDevice* backendDevice
 ) {
-    libcommon::ScopedPtr<libgraphics::ImageLayer> imageObject(
+    std::unique_ptr<libgraphics::ImageLayer> imageObject(
         new libgraphics::ImageLayer(
             backendDevice
         )
@@ -1184,7 +1184,7 @@ bool ApplicationSession::renderToBitmap(
         return false;
     }
 
-    if( !renderToLayer( imageObject, backendDevice ) ) {
+    if( !renderToLayer( imageObject.get(), backendDevice ) ) {
         assert( false );
 #if LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Error: Failed to render to bitmap.";
@@ -1208,7 +1208,7 @@ bool ApplicationSession::renderToLayer(
 ) {
     assert( destination );
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview> preview( new libfoundation::app::ApplicationActionRenderPreview(
+    std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview> preview( new libfoundation::app::ApplicationActionRenderPreview(
                 this,
                 backendDevice,
                 destination,
@@ -1499,7 +1499,7 @@ bool ApplicationActionRenderPreview::process() {
             return successfullyRendered;
         }
 
-        libcommon::ScopedPtr<libgraphics::ImageLayer>   temporaryLayer( libgraphics::makeImageLayer( this->d->backendDevice, this->d->destination ) );
+        std::unique_ptr<libgraphics::ImageLayer>   temporaryLayer( libgraphics::makeImageLayer( this->d->backendDevice, this->d->destination ) );
         const auto successfullyInitializedTemporaryLayer = !temporaryLayer->empty();
 
         assert( successfullyInitializedTemporaryLayer );

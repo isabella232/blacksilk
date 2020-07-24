@@ -178,19 +178,19 @@ std::pair<std::string, std::string> makeOpDirective( const std::string& operatio
 
 
 #define LIBGRAPHICS_FILTER_INSTANCE(_type,_device,_name) \
-    static libcommon::ScopedPtr< _type > _name; \
+    static std::unique_ptr< _type > _name; \
     static libgraphics::fxapi::ApiBackendDevice* _pf_static_device_ ##_name (nullptr); \
-    if ( _name . empty() || (_pf_static_device_ ##_name  != _device ) ) { \
-        _name . reset( new _type() ); \
-        (void) _name -> initialize( _device ); \
+    if ( !_name || (_pf_static_device_ ##_name  != _device ) ) { \
+        _name.reset( new _type() ); \
+        (void) _name->initialize( _device ); \
         _pf_static_device_ ##_name = _device; \
     }
 
 #define LIBGRAPHICS_FILTER_INSTANCE_EX(_type,_device,_name,_param) \
-    static libcommon::ScopedPtr< _type > _name; \
+    static std::unique_ptr< _type > _name; \
     static libgraphics::fxapi::ApiBackendDevice* _pf_static_device_ ##_name (nullptr); \
-    if ( _name . empty() || (_pf_static_device_ ##_name  != _device ) ) { \
-        _name . reset( new _type( _param ) ); \
-        (void) _name -> initialize( _device ); \
+    if ( !_name || (_pf_static_device_ ##_name  != _device ) ) { \
+        _name.reset( new _type( _param ) ); \
+        (void) _name->initialize( _device ); \
         _pf_static_device_ ##_name  = _device; \
     }

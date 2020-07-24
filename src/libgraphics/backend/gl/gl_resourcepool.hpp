@@ -73,7 +73,7 @@ struct GenericResourcePool : public libcommon::INonCopyable {
 
         void    add( ResourceType* resource ) {
             m_Resources.push_back(
-                libcommon::ScopedPtr<ResourceType>( resource )
+                std::unique_ptr<ResourceType>( resource )
             );
         }
 
@@ -283,7 +283,7 @@ struct GenericResourcePool : public libcommon::INonCopyable {
             return nullptr;
         }
     protected:
-        std::vector< libcommon::ScopedPtr< ResourceType > > m_Resources;
+        std::vector< std::unique_ptr< ResourceType > > m_Resources;
 };
 typedef GenericResourcePool<backend::gl::Resource>  ResourcePool;
 

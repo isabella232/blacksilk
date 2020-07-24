@@ -99,7 +99,7 @@ const size_t&   App::maxFPS() const {
 void App::initializeTaskListener(
     QStatusBar* statusBar
 ) {
-    if( this->taskListener.empty() ) {
+    if( !this->taskListener ) {
         this->taskListener.reset( new blacksilk::ResponsiveBackgroundTaskListener( statusBar ) );
     }
 }
@@ -760,7 +760,7 @@ bool App::loadIoExporterFromPath(
 bool App::writeImage(
     void* destinationBuffer
 ) {
-    libcommon::ScopedPtr<libgraphics::ImageLayer> destinationLayer( currentSession->originalImage()->topLayer()->duplicate() );
+    std::unique_ptr<libgraphics::ImageLayer> destinationLayer( currentSession->originalImage()->topLayer()->duplicate() );
     assert( destinationLayer.get() );
 
     const auto successfullyRendered = currentSession->renderToLayer(
@@ -1021,7 +1021,7 @@ bool App::updatePreview() {
 
         this->shouldRender = false;
 
-        if( this->actionRenderPreview.empty() ) {
+        if( !this->actionRenderPreview ) {
             assert( false );
             this->m_FrameTimer.restart();
             return false; /** no initialized preview object **/
@@ -1216,16 +1216,16 @@ std::string         App::retrieveCurrentLog() {
     return std::string( ( std::istreambuf_iterator<char>( logFile ) ), ( std::istreambuf_iterator<char>() ) );
 }
 
-static libcommon::ScopedPtr<App>    appObject;
+static std::unique_ptr<App>    appObject;
 App* theApp() {
-    if( appObject.empty() ) {
+    if( !appObject ) {
         appObject.reset( new App() );
     }
 
     return appObject.get();
 }
 void resetApp() {
-    if( !appObject.empty() ) {
+    if( appObject ) {
         appObject.reset( nullptr );
     }
 }

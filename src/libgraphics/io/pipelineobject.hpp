@@ -1,7 +1,6 @@
 #pragma once
 
 #include <libgraphics/base.hpp>
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 

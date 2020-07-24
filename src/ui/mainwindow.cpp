@@ -750,7 +750,7 @@ void MainWindow::setupWidgetsForPreview() {
 
     setupHistograms();
 
-    if( theApp()->taskListener.empty() ) {
+    if( !theApp()->taskListener ) {
         theApp()->initializeTaskListener(
             ui->statusbar
         );

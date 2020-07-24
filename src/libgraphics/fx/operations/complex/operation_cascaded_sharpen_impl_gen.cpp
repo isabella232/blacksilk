@@ -21,56 +21,56 @@ void cascadedSharpen_GEN(
     const std::vector< std::tuple< libgraphics::ImageLayer*, float, float > >& cascades,
     float threshold
 ) {
-    libcommon::ScopedPtr<libgraphics::ImageLayer> frontBuffer( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> backBuffer( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> compositeBuffer( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> frontBuffer( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> backBuffer( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> compositeBuffer( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> usmMapCurrent( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> usmMapLast( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> usmMapCurrent( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> usmMapLast( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> blurCompositeFront( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> blurCompositeBack( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> blurCompositeFront( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> blurCompositeBack( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
 
     {
 
         libgraphics::fx::operations::fill(
-            blurCompositeFront,
+            blurCompositeFront.get(),
             area,
             128
         );
 
         libgraphics::fx::operations::fill(
-            blurCompositeBack,
+            blurCompositeBack.get(),
             area,
             128
         );
 
         libgraphics::fx::operations::fill(
-            compositeBuffer,
+            compositeBuffer.get(),
             area,
             128
         );
 
         libgraphics::fx::operations::fill(
-            frontBuffer,
+            frontBuffer.get(),
             area,
             128
         );
 
         libgraphics::fx::operations::fill(
-            backBuffer,
+            backBuffer.get(),
             area,
             128
         );
 
         libgraphics::fx::operations::fill(
-            usmMapCurrent,
+            usmMapCurrent.get(),
             area,
             128
         );
 
         libgraphics::fx::operations::fill(
-            usmMapLast,
+            usmMapLast.get(),
             area,
             128
         );
@@ -85,37 +85,37 @@ void cascadedSharpen_GEN(
         std::tie( cascade, blurRadius, strength ) = cascades[i];
 
         fx::operations::grainExtract(
-            usmMapCurrent,
+            usmMapCurrent.get(),
             cascade,
             source,
             area
         );
 
         fx::operations::max(
-            blurCompositeBack,
-            usmMapCurrent,
-            blurCompositeFront,
+            blurCompositeBack.get(),
+            usmMapCurrent.get(),
+            blurCompositeFront.get(),
             area
         );
 
         fx::operations::grainExtract(
             destination,
-            usmMapCurrent,
-            usmMapLast,
+            usmMapCurrent.get(),
+            usmMapLast.get(),
             area
         );
 
         fx::operations::grainMultiply(
-            compositeBuffer,
+            compositeBuffer.get(),
             destination,
             area,
             ( strength / 100.0f )
         );
 
         fx::operations::grainMerge(
-            backBuffer,
-            frontBuffer,
-            compositeBuffer,
+            backBuffer.get(),
+            frontBuffer.get(),
+            compositeBuffer.get(),
             area
         );
 
@@ -149,59 +149,59 @@ void cascadedSharpen_GEN(
         gl_FragColor   = factor * (basePixel - temp) + (1.0 - factor) * basePixel; */
 
     const float factor = 1.0f - std::max( threshold / 100.0f, 0.01f );//1.0f / ( ( this->m_Threshold / 100.0f ) + 0.05f );
-    libcommon::ScopedPtr<libgraphics::ImageLayer> thresholdMap( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> thresholdMap( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
     {
         libgraphics::fx::operations::multiply(
-            thresholdMap,
-            blurCompositeFront,
+            thresholdMap.get(),
+            blurCompositeFront.get(),
             area,
             factor
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> differenceMap( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> differenceMap( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
     {
         libgraphics::fx::operations::grainExtract(
-            differenceMap,
+            differenceMap.get(),
             source,
-            frontBuffer,
+            frontBuffer.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> basePixelDst( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> basePixelDst( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
     {
         libgraphics::fx::operations::multiply(
-            basePixelDst,
-            differenceMap,
-            thresholdMap,
+            basePixelDst.get(),
+            differenceMap.get(),
+            thresholdMap.get(),
             area
         );
     } /** ==> factor * (basePixel - temp) */
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> negatedThresholdMap( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> negatedThresholdMap( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
     {
         libgraphics::fx::operations::negate(
-            negatedThresholdMap,
-            thresholdMap,
+            negatedThresholdMap.get(),
+            thresholdMap.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> negatedBasePixelDst( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
+    std::unique_ptr<libgraphics::ImageLayer> negatedBasePixelDst( makeImageLayer( device, "default", source->format(), source->width(), source->height() ) );
     {
         libgraphics::fx::operations::multiply(
-            negatedBasePixelDst,
+            negatedBasePixelDst.get(),
             source,
-            negatedThresholdMap,
+            negatedThresholdMap.get(),
             area
         );
     } // ==> (1.0 - factor) * basePixel;
 
     libgraphics::fx::operations::add(
         destination,
-        basePixelDst,
-        negatedBasePixelDst,
+        basePixelDst.get(),
+        negatedBasePixelDst.get(),
         area
     );
 }

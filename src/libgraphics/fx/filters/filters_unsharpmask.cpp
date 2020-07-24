@@ -113,12 +113,12 @@ bool UnsharpMask::process(
     }
 
     /// run the filter
-    libcommon::ScopedPtr<libgraphics::ImageLayer>   baseLayer(
+    std::unique_ptr<libgraphics::ImageLayer>   baseLayer(
         new libgraphics::ImageLayer(
             device
         )
     );
-    libcommon::ScopedPtr<libgraphics::ImageLayer>   sharpMask(
+    std::unique_ptr<libgraphics::ImageLayer>   sharpMask(
         new libgraphics::ImageLayer(
             device
         )

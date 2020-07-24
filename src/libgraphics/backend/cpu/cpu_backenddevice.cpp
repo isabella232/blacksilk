@@ -157,12 +157,12 @@ unsigned short* PixelArray::get16Bit( size_t pos ) {
 
 /// DataRegion
 struct DataRegion::Private : libcommon::PimplPrivate {
-    std::vector<libcommon::ScopedPtr<DataRegionEntry> > entries;
+    std::vector<std::unique_ptr<DataRegionEntry> > entries;
     libcommon::atomics::type32  used;
 
     Private( size_t count, size_t length, void* buffer ) : used( 0 ) {
         for( size_t i = 0; count > i; ++i ) {
-            entries.push_back( libcommon::ScopedPtr<DataRegionEntry>( new DataRegionEntry( buffer, length * i ) ) );
+            entries.push_back( std::unique_ptr<DataRegionEntry>( new DataRegionEntry( buffer, length * i ) ) );
         }
     }
 
@@ -244,9 +244,9 @@ bool DataRegion::isUsed() {
 
 /// BackendDevice
 struct BackendDevice::Private : libcommon::PimplPrivate {
-    std::vector< libcommon::ScopedPtr<DataRegion> >         dataRegions;
-    std::vector< libcommon::ScopedPtr<PixelArray> >         pixelArrays;
-    std::vector< libcommon::ScopedPtr<ImageObject> >        imageObjects;
+    std::vector< std::unique_ptr<DataRegion> >         dataRegions;
+    std::vector< std::unique_ptr<PixelArray> >         pixelArrays;
+    std::vector< std::unique_ptr<ImageObject> >        imageObjects;
     std::shared_ptr<libgraphics::StdDynamicPoolAllocator>   allocator;
     QThreadPool threadPool;
 
@@ -306,12 +306,12 @@ fxapi::ApiResource* BackendDevice::createTexture1D( const fxapi::EPixelFormat::t
 fxapi::ApiImageObject* BackendDevice::createTexture2D() {
     if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject();
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     } else {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject( d->allocator.get() );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     }
@@ -325,7 +325,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
                                          width,
                                          height
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     } else {
@@ -335,7 +335,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
                                          width,
                                          height
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     }
@@ -349,7 +349,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
                                          height,
                                          data
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     } else {
@@ -360,7 +360,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
                                          height,
                                          data
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     }
@@ -464,7 +464,7 @@ DataRegion*    BackendDevice::newDataRegion(
     );
 
     d->dataRegions.push_back(
-        libcommon::ScopedPtr<DataRegion>(
+        std::unique_ptr<DataRegion>(
             region
         )
     );

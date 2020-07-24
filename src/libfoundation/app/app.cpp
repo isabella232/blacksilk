@@ -17,8 +17,8 @@ struct Application::Private : libcommon::PimplPrivate {
     ApplicationSession*                                     currentSession;
     std::vector<std::shared_ptr<ApplicationSession> >       sessions;
     ApplicationConfig                                       config;
-    libcommon::ScopedPtr<ApplicationSystemLayer>            systemLayer;
-    libcommon::ScopedPtr<ApplicationHardwareInfo>           hardwareInfo;
+    std::unique_ptr<ApplicationSystemLayer>            systemLayer;
+    std::unique_ptr<ApplicationHardwareInfo>           hardwareInfo;
     std::shared_ptr<libgraphics::io::Pipeline>              pipeline;
 
     bool initialized;
@@ -101,7 +101,7 @@ bool Application::shutdown() {
 }
 
 bool Application::containsValidHardwareInfo() const {
-    return !( d->hardwareInfo.empty() );
+    return !!d->hardwareInfo;
 }
 
 bool Application::updateHardwareInfo() {
@@ -146,9 +146,9 @@ bool Application::loadIoPluginFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
+    std::unique_ptr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
 
-    if( plugin.empty() ) {
+    if( !plugin ) {
 #ifdef LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Application::loadIoPluginFromPath(): Can't load import object from invalid plugin object.";
 #endif
@@ -184,9 +184,9 @@ bool Application::loadIoImporterFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
+    std::unique_ptr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
 
-    if( plugin.empty() ) {
+    if( !plugin ) {
 #ifdef LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Application::loadIoImporterFromPath(): Can't load import object from invalid plugin object.";
 #endif
@@ -215,9 +215,9 @@ bool Application::loadIoExporterFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
+    std::unique_ptr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
 
-    if( plugin.empty() ) {
+    if( !plugin ) {
 #ifdef LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Application::loadIoExporterFromPath(): Can't load import object from invalid plugin object.";
 #endif

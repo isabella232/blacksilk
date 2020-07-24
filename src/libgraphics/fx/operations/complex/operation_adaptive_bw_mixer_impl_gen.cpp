@@ -48,73 +48,73 @@ void adaptiveBWMixer_GEN(
     };
 
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer>   weightedLuma( makeImageLayer( device, source ) );
-    libcommon::ScopedPtr<libgraphics::ImageLayer>   negatedWeightedLuma( makeImageLayer( device, source ) );
+    std::unique_ptr<libgraphics::ImageLayer>   weightedLuma( makeImageLayer( device, source ) );
+    std::unique_ptr<libgraphics::ImageLayer>   negatedWeightedLuma( makeImageLayer( device, source ) );
     {
-        libcommon::ScopedPtr<libgraphics::ImageLayer>   temp( makeImageLayer( device, source ) );
+        std::unique_ptr<libgraphics::ImageLayer>   temp( makeImageLayer( device, source ) );
 
         libgraphics::fx::operations::convertToMonochrome(
-            temp,
+            temp.get(),
             source,
             area,
             ( float* )luma
         );
 
         libgraphics::fx::operations::add(
-            weightedLuma,
-            temp,
+            weightedLuma.get(),
+            temp.get(),
             area,
             weight
         );
 
         libgraphics::fx::operations::negate(
-            negatedWeightedLuma,
-            weightedLuma,
+            negatedWeightedLuma.get(),
+            weightedLuma.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer>   weightedHighlights( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer>   weightedHighlights( makeImageLayer( device, destination ) );
     {
-        libcommon::ScopedPtr<libgraphics::ImageLayer>   highlightsMonochrome( makeImageLayer( device, destination ) );
+        std::unique_ptr<libgraphics::ImageLayer>   highlightsMonochrome( makeImageLayer( device, destination ) );
 
         libgraphics::fx::operations::convertToMonochrome(
-            highlightsMonochrome,
+            highlightsMonochrome.get(),
             source,
             area,
             ( float* )highlights
         );
         libgraphics::fx::operations::multiply(
-            weightedHighlights,
-            highlightsMonochrome,
-            weightedLuma,
+            weightedHighlights.get(),
+            highlightsMonochrome.get(),
+            weightedLuma.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer>   weightedShadows( makeImageLayer( device, destination ) );
+    std::unique_ptr<libgraphics::ImageLayer>   weightedShadows( makeImageLayer( device, destination ) );
     {
-        libcommon::ScopedPtr<libgraphics::ImageLayer>   shadowMonochrome( makeImageLayer( device, destination ) );
+        std::unique_ptr<libgraphics::ImageLayer>   shadowMonochrome( makeImageLayer( device, destination ) );
 
         libgraphics::fx::operations::convertToMonochrome(
-            shadowMonochrome,
+            shadowMonochrome.get(),
             source,
             area,
             ( float* )shadows
         );
 
         libgraphics::fx::operations::multiply(
-            weightedShadows,
-            shadowMonochrome,
-            negatedWeightedLuma,
+            weightedShadows.get(),
+            shadowMonochrome.get(),
+            negatedWeightedLuma.get(),
             area
         );
     }
 
     libgraphics::fx::operations::add(
         destination,
-        weightedHighlights,
-        weightedShadows,
+        weightedHighlights.get(),
+        weightedShadows.get(),
         area
     );
 }

@@ -74,11 +74,11 @@ void BackgroundTaskGroup::waitForAll() {
     this->m_ThreadPool->waitForDone();
 }
 
-libcommon::ScopedPtr<QThreadPool>& BackgroundTaskGroup::threadPool() {
+std::unique_ptr<QThreadPool>& BackgroundTaskGroup::threadPool() {
     return this->m_ThreadPool;
 }
 
-const libcommon::ScopedPtr<QThreadPool>& BackgroundTaskGroup::threadPool() const {
+const std::unique_ptr<QThreadPool>& BackgroundTaskGroup::threadPool() const {
     return this->m_ThreadPool;
 }
 

@@ -40,10 +40,10 @@ class FilmGrain : public libgraphics::Filter {
             size_t height
         );
         void resetGrain(
-            libcommon::ScopedPtr<libgraphics::ImageLayer>& rhs
+            std::unique_ptr<libgraphics::ImageLayer>& rhs
         );
-        libcommon::ScopedPtr<libgraphics::ImageLayer>&  grainLayer();
-        const libcommon::ScopedPtr<libgraphics::ImageLayer>&   grainLayer() const;
+        std::unique_ptr<libgraphics::ImageLayer>&  grainLayer();
+        const std::unique_ptr<libgraphics::ImageLayer>&   grainLayer() const;
 
         /// curve data
         void assignCurve( const std::vector<libgraphics::Point32F>& points );
@@ -81,7 +81,7 @@ class FilmGrain : public libgraphics::Filter {
         std::vector<float>                      m_CurveData;
         std::vector<libgraphics::Point32F>      m_CurvePoints;
 
-        libcommon::ScopedPtr<libgraphics::ImageLayer>   m_GrainLayer;
+        std::unique_ptr<libgraphics::ImageLayer>   m_GrainLayer;
         bool                                            m_MonoGrain;
         float                                           m_GrainBlurRadius;
 };

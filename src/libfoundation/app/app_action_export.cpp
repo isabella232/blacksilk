@@ -157,7 +157,7 @@ bool ApplicationActionExport::doStreamlinedRendering( const ApplicationBackend* 
         );
     }
 
-    libcommon::ScopedPtr<libgraphics::ImageLayer> destinationLayer( d->layer->duplicate() );
+    std::unique_ptr<libgraphics::ImageLayer> destinationLayer( d->layer->duplicate() );
     assert( !destinationLayer->empty() );
     assert( destinationLayer->containsDataForBackend( FXAPI_BACKEND_OPENGL ) );
 
@@ -174,8 +174,8 @@ bool ApplicationActionExport::doStreamlinedRendering( const ApplicationBackend* 
         return false;
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationSession> clonedSession( d->session->clone() );
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview> renderAction( new libfoundation::app::ApplicationActionRenderPreview(
+    std::unique_ptr<libfoundation::app::ApplicationSession> clonedSession( d->session->clone() );
+    std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview> renderAction( new libfoundation::app::ApplicationActionRenderPreview(
                 clonedSession.get(),
                 gpuBackend,
                 destinationLayer.get(),
@@ -206,7 +206,7 @@ bool ApplicationActionExport::doStreamlinedRendering( const ApplicationBackend* 
     if( ( this->d->seperateAlphaChannel != nullptr ) && ( !this->d->seperateAlphaChannel->empty() ) ) {
         const auto successfullyAppliedAlphaPlane = this->applyAlphaChannel(
                     currentSessionBackend,
-                    destinationLayer,
+                    destinationLayer.get(),
                     this->d->seperateAlphaChannel
                 );
         assert( successfullyAppliedAlphaPlane );
@@ -292,7 +292,7 @@ bool ApplicationActionExport::doCpuRendering( const ApplicationBackend* currentS
     assert( cpuBackend != nullptr );
 
     /// create new render action
-    libcommon::ScopedPtr<libgraphics::ImageLayer> destinationLayer( d->layer->duplicate() );
+    std::unique_ptr<libgraphics::ImageLayer> destinationLayer( d->layer->duplicate() );
     assert( !destinationLayer->empty() );
 
     if( destinationLayer.get() == nullptr ) {
@@ -304,8 +304,8 @@ bool ApplicationActionExport::doCpuRendering( const ApplicationBackend* currentS
         return false;
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationSession> clonedSession( d->session->clone() );
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview> renderAction( new libfoundation::app::ApplicationActionRenderPreview(
+    std::unique_ptr<libfoundation::app::ApplicationSession> clonedSession( d->session->clone() );
+    std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview> renderAction( new libfoundation::app::ApplicationActionRenderPreview(
                 clonedSession.get(),
                 cpuBackend,
                 destinationLayer.get(),
@@ -352,7 +352,7 @@ bool ApplicationActionExport::doCpuRendering( const ApplicationBackend* currentS
     if( ( this->d->seperateAlphaChannel != nullptr ) && ( !this->d->seperateAlphaChannel->empty() ) ) {
         const auto successfullyAppliedAlphaPlane = this->applyAlphaChannel(
                     currentSessionBackend,
-                    destinationLayer,
+                    destinationLayer.get(),
                     this->d->seperateAlphaChannel
                 );
         assert( successfullyAppliedAlphaPlane );

@@ -181,9 +181,9 @@ utils::GLTexture*    PixelArray::texture() {
 }
 
 struct BackendDevice::Private : libcommon::PimplPrivate {
-    libcommon::ScopedPtr<gl::EffectPool>    effectPool;
-    libcommon::ScopedPtr<gl::TexturePool>   texturePool;
-    libcommon::ScopedPtr<gl::RenderTargetPool>  renderTargetPool;
+    std::unique_ptr<gl::EffectPool>    effectPool;
+    std::unique_ptr<gl::TexturePool>   texturePool;
+    std::unique_ptr<gl::RenderTargetPool>  renderTargetPool;
     std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator;
 
     BackendDevice::ERenderingMode                  renderingMode;
@@ -394,11 +394,11 @@ size_t  BackendDevice::cleanUp() {
 }
 
 /// returns the global gl object
-libcommon::ScopedPtr<utils::GL> ctx;
+std::unique_ptr<utils::GL> ctx;
 
 
 void initializeGlobalCtx() {
-    if( ctx.empty() ) {
+    if( !ctx ) {
         ctx.reset( utils::GL::construct() );
 
         ctx->assignDbgContext( new utils::GLDbgContext() );
@@ -406,7 +406,7 @@ void initializeGlobalCtx() {
 }
 
 void resetGlobalCtx() {
-    if( !ctx.empty() ) {
+    if( ctx ) {
         ctx.reset( nullptr );
     }
 }

@@ -226,9 +226,9 @@ struct StandardVertexProgram {
 
     utils::GLShader*    shader;
 };
-static libcommon::ScopedPtr<StandardVertexProgram>  svprogram;
+static std::unique_ptr<StandardVertexProgram>  svprogram;
 utils::GLShader*    getStandardVertexShader() {
-    if( svprogram.empty() ) {
+    if( !svprogram ) {
         svprogram.reset( new StandardVertexProgram() );
     }
 
