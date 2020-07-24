@@ -1,11 +1,12 @@
 #pragma once
 
-#include <libcommon/mutex.hpp>
 #include <libcommon/lockable.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/scopedptr.hpp>
+
 #include <string>
 #include <vector>
+#include <mutex>
 
 #include <libgraphics/fxapi.hpp>
 #include <libgraphics/io/pipeline.hpp>
@@ -244,7 +245,7 @@ class ApplicationAction : public libcommon::INonCopyable {
 
         void waitForFinished();
     protected:
-        libcommon::Mutex    m_FinishedMutex;
+        std::mutex      m_FinishedMutex;
 };
 
 /// base class for session committable actions

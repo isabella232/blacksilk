@@ -3,7 +3,6 @@
 #include <libcommon/def.hpp>
 #include <libcommon/crt.hpp>
 #include <libcommon/maybe.hpp>
-#include <libcommon/mutex.hpp>
 #include <libcommon/guards.hpp>
 
 #include <stdexcept>

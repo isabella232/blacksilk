@@ -12,8 +12,7 @@ namespace libfoundation {
 namespace app {
 
 void ApplicationAction::waitForFinished() {
-    volatile libcommon::LockGuard    g( &this->m_FinishedMutex );
-    ( void )g;
+    std::lock_guard<std::mutex> lock( this->m_FinishedMutex );
 }
 
 struct Application::Private : libcommon::PimplPrivate {

@@ -143,7 +143,7 @@ bool ApplicationActionImport::process() {
 }
 
 bool ApplicationActionImport::finished() {
-    return this->m_FinishedMutex.tryLock();
+    return this->m_FinishedMutex.try_lock();
 }
 
 }

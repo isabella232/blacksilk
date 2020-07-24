@@ -1460,9 +1460,7 @@ bool ApplicationActionRenderPreview::commit() {
 }
 
 bool ApplicationActionRenderPreview::process() {
-    libcommon::LockGuard    _g( &this->m_FinishedMutex );
-    ( void )_g;
-
+    std::lock_guard<std::mutex> lock( this->m_FinishedMutex );
 
 #ifdef _DEBUG
     const unsigned int currentThreadId = libcommon::getCurrentThreadId();
@@ -1579,7 +1577,7 @@ bool ApplicationActionRenderPreview::process() {
 }
 
 bool ApplicationActionRenderPreview::finished() {
-    const auto locked = this->m_FinishedMutex.tryLock();
+    const auto locked = this->m_FinishedMutex.try_lock();
 
     if( locked ) {
         this->m_FinishedMutex.unlock();

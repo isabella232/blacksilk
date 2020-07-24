@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 
-#include <libcommon/mutex.hpp>
 #include <libcommon/lockable.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/scopedptr.hpp>
