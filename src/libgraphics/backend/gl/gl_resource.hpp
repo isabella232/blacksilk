@@ -2,9 +2,8 @@
 
 #include <assert.h>
 
-#include <libcommon/scopedptr.hpp>
-
 #include <libgraphics/fxapi.hpp>
+#include <libcommon/pimpl.hpp>
 
 namespace libgraphics {
 namespace backend {

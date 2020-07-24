@@ -3,8 +3,6 @@
 #include <assert.h>
 #include <vector>
 
-#include <libcommon/scopedptr.hpp>
-
 #include <libgraphics/fxapi.hpp>
 
 #include <libgraphics/backend/gl/gl_resource.hpp>

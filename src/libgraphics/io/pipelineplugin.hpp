@@ -2,6 +2,7 @@
 
 #include <libgraphics/base.hpp>
 #include <libcommon/atomics.hpp>
+#include <libcommon/pimpl.hpp>
 
 #include <libgraphics/io/pipelineexporter.hpp>
 #include <libgraphics/io/pipelineimporter.hpp>

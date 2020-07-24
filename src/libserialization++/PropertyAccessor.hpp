@@ -12,7 +12,6 @@
 #include <memory>
 
 #include <libserialization++/TypeInfo.hpp>
-#include <libcommon/scopedptr.hpp>
 
 namespace spp {
 

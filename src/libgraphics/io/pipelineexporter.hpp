@@ -5,7 +5,6 @@
 #include <libgraphics/io/pipelineobject.hpp>
 #include <libgraphics/io/pipelineobjectgroup.hpp>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 

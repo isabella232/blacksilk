@@ -3,7 +3,6 @@
 #include <string>
 
 #include <libcommon/noncopyable.hpp>
-#include <libcommon/scopedptr.hpp>
 
 
 class QThreadPool;

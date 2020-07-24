@@ -5,7 +5,7 @@
 #include <libgraphics/fxapi.hpp>
 
 #include <libcommon/atomics.hpp>
-#include <libcommon/scopedptr.hpp>
+#include <libcommon/pimpl.hpp>
 
 namespace libgraphics {
 namespace backend {

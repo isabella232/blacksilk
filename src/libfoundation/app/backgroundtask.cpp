@@ -1,5 +1,6 @@
 
 #include <libfoundation/app/backgroundtask.hpp>
+#include <libcommon/atomics.hpp>
 
 namespace libfoundation {
 namespace app {

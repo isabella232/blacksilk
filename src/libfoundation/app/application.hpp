@@ -1,7 +1,6 @@
 #pragma once
 
 #include <libcommon/noncopyable.hpp>
-#include <libcommon/scopedptr.hpp>
 
 #include <string>
 #include <vector>

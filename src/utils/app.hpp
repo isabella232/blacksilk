@@ -1,8 +1,5 @@
 #pragma once
 
-/// common stuff
-#include <libcommon/scopedptr.hpp>
-
 /// basic graphics stuff
 #include <libgraphics/base.hpp>
 #include <libgraphics/bitmap.hpp>

@@ -3,7 +3,7 @@
 #include <libgraphics/base.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
-#include <libcommon/scopedptr.hpp>
+#include <libcommon/pimpl.hpp>
 
 #include <libgraphics/bitmap.hpp>
 

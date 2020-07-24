@@ -1,6 +1,5 @@
 #pragma once
 
-#include <libcommon/scopedptr.hpp>
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/allocator.hpp>
 

@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QGraphicsView>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/noncopyable.hpp>
 
 #include <libfoundation/app/application.hpp>

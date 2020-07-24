@@ -4,7 +4,6 @@
 #include <libgraphics/backend/gl/gl_resourcepool.hpp>
 #include <libgraphics/utils/gl.hpp>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 
 namespace libgraphics {

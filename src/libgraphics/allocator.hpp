@@ -1,6 +1,6 @@
 #pragma once
 
-#include <libcommon/scopedptr.hpp>
+#include <libcommon/weakref.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/atomics.hpp>
 

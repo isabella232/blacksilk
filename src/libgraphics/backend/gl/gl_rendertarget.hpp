@@ -2,8 +2,6 @@
 
 #include <assert.h>
 
-#include <libcommon/scopedptr.hpp>
-
 #include <libgraphics/fxapi.hpp>
 #include <libgraphics/backend/gl/gl_resource.hpp>
 #include <libgraphics/backend/gl/gl_resourcepool.hpp>

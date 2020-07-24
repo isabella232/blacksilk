@@ -3,7 +3,6 @@
 #include <string>
 
 #include <libcommon/noncopyable.hpp>
-#include <libcommon/scopedptr.hpp>
 
 #include <libfoundation/app/backgroundtask.hpp>
 

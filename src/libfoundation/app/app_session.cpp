@@ -12,7 +12,6 @@
 #include <libgraphics/backend/gl/gl_backenddevice.hpp>
 #include <libgraphics/backend/cpu/cpu_backenddevice.hpp>
 #include <libgraphics/backend/cpu/cpu_imageobject.hpp>
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/scopeguard.hpp>
 #include <libcommon/fileutils.hpp>
 #include <libgraphics/fx/operations/basic.hpp>

@@ -4,7 +4,6 @@
 #include <libgraphics/image.hpp>
 #include <libgraphics/bitmap.hpp>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/noncopyable.hpp>
 
 namespace blacksilk {

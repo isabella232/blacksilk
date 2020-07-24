@@ -10,7 +10,6 @@
 #include <libgraphics/backend/gl/gl_imageoperation.hpp>
 #include <libgraphics/backend/gl/gl_rendertarget.hpp>
 #include <libgraphics/backend/gl/gl_backenddevice.hpp>
-#include <libcommon/scopedptr.hpp>
 
 #include <QDebug>
 
