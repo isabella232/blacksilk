@@ -3,13 +3,12 @@
 #include <libcommon/scopedptr.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/atomics.hpp>
-#include <libcommon/mutex.hpp>
 #include <libcommon/guards.hpp>
 
 #include <algorithm>
 #include <vector>
 #include <memory>
-
+#include <mutex>
 
 namespace libgraphics {
 namespace detail {
@@ -412,8 +411,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         void dealloc( void* p ) {
             assert( p );
 
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Entries.begin(); it != m_Entries.end(); ++it ) {
                 if( ( ( size_t )( *it ).data == ( size_t )p ) ) {
@@ -438,8 +436,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
 
         /// info
         size_t queryMemoryCapacity() {
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t capacity( 0 );
 
@@ -450,8 +447,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return capacity;
         }
         size_t queryMemoryConsumption() {
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t consumption( 0 );
 
@@ -473,8 +469,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                 return;
             }
 
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( size_t i = 0; entryCount > i; ++i ) {
                 m_Entries.emplace_back(
@@ -613,8 +608,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t releaseUnused( size_t entries = 0 ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -703,8 +697,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             assert( defaultReallocationCount > 0 );
             assert( alignedLength != 0 );
 
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             if( m_Capacity > m_Size ) {
                 if( fastAlloc ) {
@@ -741,7 +734,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         libcommon::Int32  m_Capacity;
         Policy  m_AllocatorPolicy;
         std::vector<Entry>  m_Entries;
-        libcommon::RecursiveMutex m_Mutex;
+        std::recursive_mutex m_Mutex;
 };
 
 struct AllocatorPolicy {
@@ -974,7 +967,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
             return m_Entries.front();
         }
 
-        libcommon::RecursiveMutex   m_Mutex;
+        std::recursive_mutex    m_Mutex;
         libcommon::atomics::type32  m_Size;
         libcommon::atomics::type32  m_Capacity;
         Allocator<_t_value>     m_Alloc;

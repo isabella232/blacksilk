@@ -89,7 +89,7 @@ struct ApplicationSession::Private : libcommon::PimplPrivate {
 
     QThreadPool                     appThreadPool;
 
-    libcommon::RecursiveMutex       mutex;
+    std::recursive_mutex       mutex;
 
     Private() : maxThreadCount( 0 ), imageOrigin( EImageOrigin::Unknown ), previewBackend( nullptr ) {}
 
@@ -1396,7 +1396,7 @@ void ApplicationSession::lock() {
 }
 
 bool ApplicationSession::tryLock() {
-    return this->d->mutex.tryLock();
+    return this->d->mutex.try_lock();
 }
 
 void ApplicationSession::unlock() {

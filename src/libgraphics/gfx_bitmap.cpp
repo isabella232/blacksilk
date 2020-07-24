@@ -1152,8 +1152,7 @@ class BitmapMemoryAllocator {
         VectorType;
 
         bool free( void* buf ) {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Containers.begin(); it != m_Containers.end(); ++it ) {
                 if( ( *it )->address() == ( libcommon::AddressType )buf ) {
@@ -1167,8 +1166,7 @@ class BitmapMemoryAllocator {
         }
 
         void* find( const libcommon::SizeType& length, libcommon::SizeType allocationBase = 1024 ) {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Containers.begin(); it != m_Containers.end(); ++it ) {
                 if( ( *it )->size() >= length && !( *it )->used() ) {
@@ -1185,8 +1183,7 @@ class BitmapMemoryAllocator {
             return NULL;
         }
         void freeUnused() {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             VectorType ret;
 
@@ -1199,8 +1196,7 @@ class BitmapMemoryAllocator {
             }
         }
         void reserve( const libcommon::SizeType& length ) {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             m_Containers.push_back(
                 std::shared_ptr<BitmapMemoryContainer>(
@@ -1220,7 +1216,7 @@ class BitmapMemoryAllocator {
             return ( libcommon::SizeType )m_Containers.size();
         }
     protected:
-        libcommon::RecursiveMutex       m_Mutex;
+        std::recursive_mutex       m_Mutex;
         VectorType                      m_Containers;
 };
 
@@ -2340,16 +2336,13 @@ BitmapInfo Bitmap::info() const {
            );
 }
 
-libcommon::LockGuard    Bitmap::manualLock() {
-
-    return libcommon::LockGuard( &this->m_AccessLock );
-
+std::lock_guard<std::recursive_mutex> Bitmap::manualLock() {
+    this->m_AccessLock.lock();
+    return { this->m_AccessLock, std::adopt_lock };
 }
 
 void    Bitmap::synchronize() {
-    volatile auto guard = manualLock();
-
-    ( void )guard;
+    std::lock_guard<std::recursive_mutex> lock( this->m_AccessLock );
 }
 
 

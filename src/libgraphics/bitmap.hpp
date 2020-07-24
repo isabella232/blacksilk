@@ -1793,7 +1793,7 @@ class LIBCOMMON_API Bitmap {
                 The Bitmap's mutex can be used for synchronization
                 across multiple threads.
         */
-        libcommon::LockGuard    manualLock();
+        std::lock_guard<std::recursive_mutex> manualLock();
 
         /**
             \fn synchronize
@@ -1874,7 +1874,7 @@ class LIBCOMMON_API Bitmap {
         libcommon::SizeType         m_BitmapHeight;
         libcommon::SizeType         m_BitmapWidth;
         libgraphics::Format         m_Format;
-        libcommon::RecursiveMutex   m_AccessLock;
+        std::recursive_mutex        m_AccessLock;
 
         libgraphics::StdDynamicPoolAllocator*                                   m_InternalAllocator;
         std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob>        m_InternalMemoryBlob;
