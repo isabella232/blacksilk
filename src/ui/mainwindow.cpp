@@ -234,7 +234,6 @@ void MainWindow::openImage( const QString& filename ) {
         // finish.
         ui->statusbar->showMessage( "Waiting for background tasks to complete..." );
         qApp->processEvents();
-        theApp()->backgroundTasks->waitForAll();
 
         // show pointless bar
         emit signalOccupied();

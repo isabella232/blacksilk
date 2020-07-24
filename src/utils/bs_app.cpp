@@ -34,7 +34,6 @@ App::App() :
     app( nullptr ),
     appBackend( nullptr ),
     currentSession( nullptr ),
-    backgroundTasks( nullptr ),
     taskListener( nullptr ),
     filterBWMixer( nullptr ),
     filterCurves( nullptr ),
@@ -524,7 +523,6 @@ bool App::initialize(
 ) {
 
     if( currentSession == nullptr ) {
-        this->backgroundTasks.reset( new libfoundation::app::BackgroundTaskGroup() );
 
         /// reinitialize session
         if( this->app.get() == nullptr ) {
@@ -699,7 +697,6 @@ bool App::shutdown() {
         success = false;
     }
 
-    this->backgroundTasks.reset();
     this->app.reset();
 
     this->currentSession = nullptr;
@@ -715,22 +712,6 @@ bool App::shutdown() {
     this->m_InitializedGraphicsPreview = false;
 
     return success;
-}
-
-void App::enqueBackgroundTask(
-    libfoundation::app::BackgroundTask* task,
-    libfoundation::app::BackgroundTaskListener* listener
-) {
-    assert( currentSession != nullptr );
-    assert( task != nullptr );
-
-    listener = ( listener == nullptr ) ? ( libfoundation::app::BackgroundTaskListener* )this->taskListener.get() : listener;
-
-    this->backgroundTasks->enqueTask(
-        task,
-        currentSession,
-        listener
-    );
 }
 
 bool App::loadIoPluginFromPath(

@@ -16,12 +16,7 @@
 
 /// libfoundation stuff
 #include <libfoundation/app/application.hpp>
-#include <libfoundation/app/backgroundtask.hpp>
-#include <libfoundation/app/backgroundtaskgroup.hpp>
 #include <libfoundation/app/backgroundtasklistener.hpp>
-
-#include <libfoundation/app/tasks/preparesharpen.hpp>
-#include <libfoundation/app/tasks/rendergrain.hpp>
 
 /// core stuff
 #include <utils/hostmachine.hpp>
@@ -85,7 +80,6 @@ struct App {
 
         /// background tasks and
         /// status reports
-        std::unique_ptr<libfoundation::app::BackgroundTaskGroup>       backgroundTasks;
         std::unique_ptr<blacksilk::ResponsiveBackgroundTaskListener>   taskListener;
 
         /// filter objects
@@ -168,17 +162,6 @@ struct App {
                 central subsystems(rendering,image management,plugins, etc.)
         */
         bool shutdown();
-
-        /**
-            \fn enqueBackgroundTask
-            \since 1.0
-            \brief Enques a new global background
-                task.
-        */
-        void enqueBackgroundTask(
-            libfoundation::app::BackgroundTask* task,
-            libfoundation::app::BackgroundTaskListener* listener = nullptr
-        );
 
         /**
             \fn loadIoPluginFromPath
