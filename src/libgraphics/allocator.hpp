@@ -224,12 +224,8 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
         template < class _t_other_policy >
         void assign( DynamicPoolAllocator<_t_other_policy>&& rhs ) {
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
-
-            libcommon::LockGuard _gOther( &rhs.m_Mutex );
-            ( void )_gOther;
-
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
+            std::lock_guard<std::recursive_mutex> other( rhs.m_Mutex );
 
             m_Entries   = std::move( rhs.m_Entries );
             m_Size      = rhs.m_Size;
@@ -482,8 +478,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             sort();
         }
         void ensureCapacity( size_t capacity, size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t totalCapacity = countUnusedOfSize( entrySize ) + countUsedOfSize( entrySize );
 
@@ -492,8 +487,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             }
         }
         void ensureUnused( size_t capacity, size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t unusedOfSize = countUnusedOfSize( entrySize );
 
@@ -503,8 +497,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t countUsedOfSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -517,8 +510,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return count;
         }
         size_t countUsedOfCompatibleSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -532,8 +524,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t countUnusedOfSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -546,8 +537,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return count;
         }
         size_t countUnusedOfCompatibleSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -561,8 +551,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t releaseUnusedOfSize( size_t entries, size_t entryLength ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -584,8 +573,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return freed;
         }
         size_t releaseUnusedOfCompatibleSize( size_t entries, size_t size ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -864,8 +852,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
 
         /// manual dealloc
         void dealloc( Pointer p ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Entries.begin(); it != m_Entries.end(); ++it ) {
                 if( ( ( size_t )( *it ).data == ( size_t )p ) && ( libcommon::atomics::equal32( &( *it ).used, 1 ) ) ) {
@@ -891,8 +878,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
         }
 
         void reset() {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             m_Entries.clear();
             m_Size = 0;
@@ -903,29 +889,25 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
                 return;
             }
 
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             m_Entries.reserve( entries );
             libcommon::atomics::add32( &m_Capacity, ( int )entries );
         }
         void ensureCapacity( size_t capacity ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             reserve( ( capacity > m_Capacity ) ? ( capacity - m_Capacity ) : 0 );
         }
         void ensureUnsued( size_t capacity ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             reserve( ( capacity > ( m_Capacity - m_Size ) ) ? ( capacity - ( m_Capacity - m_Size ) ) : 0 );
         }
 
         size_t releaseUnused() { return releaseUnused( m_Capacity - m_Size ); }
         size_t releaseUnused( size_t entries ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -948,8 +930,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
         }
     private:
         Entry& acquireEntry() {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             while( m_Size >= m_Capacity ) {
                 reserve( 1 );
