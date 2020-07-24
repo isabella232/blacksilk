@@ -3,7 +3,6 @@
 #include <libcommon/scopedptr.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/atomics.hpp>
-#include <libcommon/guards.hpp>
 
 #include <algorithm>
 #include <vector>

@@ -3,7 +3,6 @@
 #include <libcommon/def.hpp>
 #include <libcommon/crt.hpp>
 #include <libcommon/maybe.hpp>
-#include <libcommon/guards.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -1898,16 +1897,6 @@ class BitmapView {
         typedef typename FormatType::t      PixelType;
 
         explicit BitmapView( const libcommon::WeakRef<Bitmap>& bitmap ) : m_Bitmap( bitmap ), m_LockGuard( m_Bitmap->manualLock() ) {}
-        BitmapView( BitmapView&& rhs ) : m_LockGuard( NULL ) {
-            std::swap(
-                rhs.m_Bitmap,
-                m_Bitmap
-            );
-            std::swap(
-                rhs.m_LockGuard,
-                m_LockGuard
-            );
-        }
 
         libcommon::Maybe<const PixelType&>    at( const libcommon::UInt64 x, const libcommon::UInt64 y ) const {
             const PixelType*  pixels = ( const PixelType* )this->m_Bitmap->buffer();
@@ -1967,7 +1956,7 @@ class BitmapView {
         }
     protected:
         libcommon::WeakRef<Bitmap>  m_Bitmap;
-        libcommon::LockGuard        m_LockGuard;
+        std::lock_guard<std::recursive_mutex> m_LockGuard;
 };
 
 template < class _t_pixel_type >
