@@ -85,7 +85,7 @@ bool    PropertyGetter::Bind( const spp::PropertyTypeInfo& info, void* ptr ) {
 
 void    PropertyGetter::SetGetter( spp::AbstractPropertyGetter* getter ) {
 
-    this->m_Getter = libcommon::SharedPtr< spp::AbstractPropertyGetter >( getter );
+    this->m_Getter = std::shared_ptr< spp::AbstractPropertyGetter >( getter );
 }
 
 spp::AbstractPropertyGetter* PropertyGetter::GetGetter() const {
@@ -113,7 +113,7 @@ PropertySetter::PropertySetter( const spp::PropertyTypeInfo& ownerTypeInfo, cons
 }
 
 PropertySetter::PropertySetter( const spp::PropertyTypeInfo& ownerTypeInfo, const spp::PropertyTypeInfo& valueTypeInfo, spp::AbstractPropertySetter* setter ) : m_OwnerTypeInfo( ownerTypeInfo ), m_ValueTypeInfo( valueTypeInfo ),
-    m_ObjectHandle( spp::PropertyObjectHandle( m_OwnerTypeInfo, 0 ) ), m_Setter( libcommon::SharedPtr< spp::AbstractPropertySetter >( setter ) ) {
+    m_ObjectHandle( spp::PropertyObjectHandle( m_OwnerTypeInfo, 0 ) ), m_Setter( std::shared_ptr< spp::AbstractPropertySetter >( setter ) ) {
 
 }
 
@@ -157,7 +157,7 @@ bool    PropertySetter::Bind( const spp::PropertyTypeInfo& info, void* ptr ) {
 
 void    PropertySetter::SetSetter( spp::AbstractPropertySetter* setter ) {
 
-    this->m_Setter = setter;
+    this->m_Setter.reset( setter );
 
 }
 

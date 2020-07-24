@@ -45,7 +45,7 @@ class   Provider {
                 Constructs a new serialization info instance from the
                 given existing provider.
         */
-        virtual libcommon::SharedPtr<SerializationInfo>      CreateSerialization( spp::Stream* stream ) = 0;
+        virtual std::shared_ptr<SerializationInfo>      CreateSerialization( spp::Stream* stream ) = 0;
 };
 
 /**
@@ -55,6 +55,6 @@ class   Provider {
         Constructs a new standard serialization info
         context structure.
 */
-libcommon::SharedPtr<SerializationInfo>      CreateSerialization( const spp::Apis::t& api, Stream* stream );
+std::shared_ptr<SerializationInfo>      CreateSerialization( const spp::Apis::t& api, Stream* stream );
 
 }

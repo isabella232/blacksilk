@@ -123,13 +123,13 @@ const char*             GetStringFromTypeInfo( const spp::PropertyTypeInfo& info
 }
 
 
-libcommon::SharedPtr<SerializationInfo>      spp::formatters::binary::Provider::CreateSerialization( spp::Stream* stream ) {
+std::shared_ptr<SerializationInfo>      spp::formatters::binary::Provider::CreateSerialization( spp::Stream* stream ) {
 
     SerializationInfo* info = new SerializationInfo( stream, new spp::formatters::binary::Formatter() );
 
     info->GetFormatter()->Reset( stream );
 
-    return libcommon::SharedPtr< SerializationInfo >( info );
+    return std::shared_ptr< SerializationInfo >( info );
 
 }
 

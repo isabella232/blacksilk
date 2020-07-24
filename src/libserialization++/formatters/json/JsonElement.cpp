@@ -79,25 +79,25 @@ JsonElement::~JsonElement() {
 
 }
 
-std::vector< libcommon::SharedPtr< JsonElement > >::iterator JsonElement::ChildBegin() {
+std::vector< std::shared_ptr< JsonElement > >::iterator JsonElement::ChildBegin() {
 
     return this->m_Children.begin();
 
 }
 
-std::vector< libcommon::SharedPtr< JsonElement > >::iterator JsonElement::ChildEnd() {
+std::vector< std::shared_ptr< JsonElement > >::iterator JsonElement::ChildEnd() {
 
     return this->m_Children.end();
 
 }
 
-std::vector< libcommon::SharedPtr< JsonElement > >::iterator JsonElement::SiblingBegin() {
+std::vector< std::shared_ptr< JsonElement > >::iterator JsonElement::SiblingBegin() {
 
     return this->m_Siblings.begin();
 
 }
 
-std::vector< libcommon::SharedPtr< JsonElement > >::iterator JsonElement::SiblingEnd() {
+std::vector< std::shared_ptr< JsonElement > >::iterator JsonElement::SiblingEnd() {
 
     return this->m_Siblings.end();
 
@@ -173,7 +173,7 @@ bool            JsonElement::Read( spp::Stream*  stream ) {
         bool result = json::Parse( state, streamData );
 
         if( result ) {
-            libcommon::SharedPtr< JsonElement >                  root     = state.GetRoot();
+            std::shared_ptr< JsonElement >                  root     = state.GetRoot();
 
             if( root.get() == 0 ) {
                 *this = *root.get();
@@ -321,7 +321,7 @@ bool            JsonElement::Write( spp::Stream* stream, bool prettyPrint, size_
 
 }
 
-void            JsonElement::AddSiblingRef( const libcommon::SharedPtr< JsonElement >& sibling ) {
+void            JsonElement::AddSiblingRef( const std::shared_ptr< JsonElement >& sibling ) {
 
     this->m_Siblings.push_back( sibling );
 
@@ -329,7 +329,7 @@ void            JsonElement::AddSiblingRef( const libcommon::SharedPtr< JsonElem
 
 void            JsonElement::AddSiblingRef( JsonElement* sibling ) {
 
-    this->m_Siblings.push_back( libcommon::SharedPtr< JsonElement >( sibling ) );
+    this->m_Siblings.push_back( std::shared_ptr< JsonElement >( sibling ) );
 
 }
 
@@ -339,7 +339,7 @@ void            JsonElement::ClearSiblings() {
 
 }
 
-bool            JsonElement::RemoveSibling( const libcommon::SharedPtr< JsonElement >& sibling ) {
+bool            JsonElement::RemoveSibling( const std::shared_ptr< JsonElement >& sibling ) {
 
     return RemoveSibling(
                sibling.get()
@@ -375,7 +375,7 @@ size_t          JsonElement::CountSiblings() const {
 
 }
 
-void            JsonElement::AddChild( const libcommon::SharedPtr< JsonElement >& child ) {
+void            JsonElement::AddChild( const std::shared_ptr< JsonElement >& child ) {
 
     this->m_Children.push_back( child );
 
@@ -383,7 +383,7 @@ void            JsonElement::AddChild( const libcommon::SharedPtr< JsonElement >
 
 void            JsonElement::AddChild( JsonElement* child ) {
 
-    this->m_Children.push_back( libcommon::SharedPtr< JsonElement >( child ) );
+    this->m_Children.push_back( std::shared_ptr< JsonElement >( child ) );
 
 }
 
@@ -393,7 +393,7 @@ void            JsonElement::ClearChildren() {
 
 }
 
-bool            JsonElement::RemoveChild( const libcommon::SharedPtr< JsonElement >& sibling ) {
+bool            JsonElement::RemoveChild( const std::shared_ptr< JsonElement >& sibling ) {
 
     return RemoveChild(
                sibling.get()

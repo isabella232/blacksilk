@@ -54,7 +54,7 @@ class   Provider : public spp::Provider {
                 Constructs a new serialization info instance from the
                 given existing provider.
         */
-        virtual libcommon::SharedPtr<SerializationInfo>      CreateSerialization( spp::Stream* stream );
+        virtual std::shared_ptr<SerializationInfo>      CreateSerialization( spp::Stream* stream );
 };
 
 
@@ -115,8 +115,8 @@ class   Formatter : public spp::Formatter {
         JsonElement tree.
 
 */
-libcommon::SharedPtr<json::JsonElement>        ReflectPropertyCollection( spp::Property& property );
-void                                      ReflectPropertyCollection( libcommon::SharedPtr<JsonElement> root, spp::Property& property );
+std::shared_ptr<json::JsonElement>        ReflectPropertyCollection( spp::Property& property );
+void                                      ReflectPropertyCollection( std::shared_ptr<JsonElement> root, spp::Property& property );
 
 }
 }

@@ -374,7 +374,7 @@ class   JsonParserState {
                 Registers a new element and assigns the new element to the
                 current scope.
         */
-        void    Register( const libcommon::SharedPtr< JsonElement >& elem );
+        void    Register( const std::shared_ptr< JsonElement >& elem );
 
         /**
             \fn     RegisterErrorType
@@ -417,7 +417,7 @@ class   JsonParserState {
                 Enters the scope of the specified
                 element.
         */
-        void        EnterScope( const libcommon::SharedPtr< JsonElement >& elem );
+        void        EnterScope( const std::shared_ptr< JsonElement >& elem );
 
         /**
             \fn     LeaveScope
@@ -480,7 +480,7 @@ class   JsonParserState {
                 Returns the last
                 element.
         */
-        libcommon::SharedPtr< JsonElement >      GetLast() const;
+        std::shared_ptr< JsonElement >      GetLast() const;
 
         /**
             \fn     GetRoot
@@ -489,7 +489,7 @@ class   JsonParserState {
                 Returns the root
                 element.
         */
-        libcommon::SharedPtr< JsonElement >      GetRoot() const;
+        std::shared_ptr< JsonElement >      GetRoot() const;
 
         /**
             \fn     GetScope
@@ -498,7 +498,7 @@ class   JsonParserState {
                 Returns the current scope
                 element.
         */
-        libcommon::SharedPtr< JsonElement >      GetScope() const;
+        std::shared_ptr< JsonElement >      GetScope() const;
 
         /**
             \fn     GetElements
@@ -506,16 +506,16 @@ class   JsonParserState {
             \brief
                 Returns all elements.
         */
-        std::vector< libcommon::SharedPtr< JsonElement > >      GetElements() const;
+        std::vector< std::shared_ptr< JsonElement > >      GetElements() const;
 
     protected:
-        std::vector< libcommon::SharedPtr< JsonElement > >           m_ScopeStack;
+        std::vector< std::shared_ptr< JsonElement > >           m_ScopeStack;
         std::vector< JsonParserStateFrame >                     m_StateStack;
         std::vector< JsonParserErrorType >                      m_ErrorTypes;
         std::vector< JsonParserError >                          m_Errors;
-        libcommon::SharedPtr< JsonElement >                          m_LastElement;
-        libcommon::SharedPtr< JsonElement >                          m_Root;
-        std::vector< libcommon::SharedPtr< JsonElement > >           m_Elements;
+        std::shared_ptr< JsonElement >                          m_LastElement;
+        std::shared_ptr< JsonElement >                          m_Root;
+        std::vector< std::shared_ptr< JsonElement > >           m_Elements;
 
         size_t                                                  m_Depth;
         size_t                                                  m_Line;

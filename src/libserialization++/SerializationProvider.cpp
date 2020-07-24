@@ -5,7 +5,7 @@
 
 using namespace spp;
 
-libcommon::SharedPtr<SerializationInfo>      spp::CreateSerialization( const spp::Apis::t& api, Stream* stream ) {
+std::shared_ptr<SerializationInfo>      spp::CreateSerialization( const spp::Apis::t& api, Stream* stream ) {
 
     if( api == spp::Apis::Binary ) {
 
@@ -21,6 +21,6 @@ libcommon::SharedPtr<SerializationInfo>      spp::CreateSerialization( const spp
 
     }
 
-    return libcommon::SharedPtr< SerializationInfo >( nullptr );
+    return std::shared_ptr< SerializationInfo >( nullptr );
 
 }
