@@ -41,8 +41,8 @@ class CascadedSharpen : public libgraphics::Filter {
 
         void deleteBlurBuffersForBackend( int backendId );
         void setCascadeBlurBuffer( size_t index, libgraphics::fxapi::EPixelFormat::t format, size_t width, size_t height );
-        void setCascadeBlurBuffer( size_t index, const libcommon::SharedPtr<libgraphics::ImageLayer>& buffer );
-        const libcommon::SharedPtr<libgraphics::ImageLayer>& cascadeBlurBuffer( size_t index );
+        void setCascadeBlurBuffer( size_t index, const std::shared_ptr<libgraphics::ImageLayer>& buffer );
+        const std::shared_ptr<libgraphics::ImageLayer>& cascadeBlurBuffer( size_t index );
 
         void generateCascades( const std::vector<float>& cascades,
                                libgraphics::fxapi::ApiBackendDevice* backend,
@@ -63,7 +63,7 @@ class CascadedSharpen : public libgraphics::Filter {
         struct CascadeEntry {
             float   blurRadius;
             float   strength;
-            libcommon::SharedPtr<libgraphics::ImageLayer> buffer;
+            std::shared_ptr<libgraphics::ImageLayer> buffer;
 
             CascadeEntry() : blurRadius( 1.0f ), strength( 1.0f ) {}
         };

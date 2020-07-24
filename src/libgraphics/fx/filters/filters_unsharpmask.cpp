@@ -33,7 +33,7 @@ void UnsharpMask::generateBlurBuffer(
     assert( format != libgraphics::fxapi::EPixelFormat::Empty );
     assert( blurRadius >= 0.005f );
 
-    if( this->m_BlurBuffer.empty() ) {
+    if( !this->m_BlurBuffer ) {
         this->m_BlurBuffer.reset(
             new libgraphics::ImageLayer(
                 device
@@ -105,7 +105,7 @@ bool UnsharpMask::process(
 
     assert( !this->m_BlurBuffer.empty() );
 
-    if( this->m_BlurBuffer.empty() ) {
+    if( !this->m_BlurBuffer ) {
 #ifdef LIBGRAPHICS_DEBUG_OUTPUT
         qDebug() << "Failed to create blurred base image for unsharp mask.";
 #endif
@@ -231,11 +231,11 @@ void UnsharpMask::setBlurBuffer( const libgraphics::fxapi::EPixelFormat::t forma
     ( void )success;
 }
 
-void UnsharpMask::setBlurBuffer( const libcommon::SharedPtr<libgraphics::ImageLayer>& blurBuffer ) {
+void UnsharpMask::setBlurBuffer( const std::shared_ptr<libgraphics::ImageLayer>& blurBuffer ) {
     this->m_BlurBuffer = blurBuffer;
 }
 
-const libcommon::SharedPtr<libgraphics::ImageLayer>& UnsharpMask::blurBuffer() const {
+const std::shared_ptr<libgraphics::ImageLayer>& UnsharpMask::blurBuffer() const {
     return this->m_BlurBuffer;
 }
 

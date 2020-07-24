@@ -33,8 +33,8 @@ class UnsharpMask : public libgraphics::Filter {
         float& blurRadius();
 
         void setBlurBuffer( const libgraphics::fxapi::EPixelFormat::t format, size_t width, size_t height );
-        void setBlurBuffer( const libcommon::SharedPtr<libgraphics::ImageLayer>& blurBuffer );
-        const libcommon::SharedPtr<libgraphics::ImageLayer>& blurBuffer() const;
+        void setBlurBuffer( const std::shared_ptr<libgraphics::ImageLayer>& blurBuffer );
+        const std::shared_ptr<libgraphics::ImageLayer>& blurBuffer() const;
 
         virtual Filter* clone();
     protected:
@@ -42,7 +42,7 @@ class UnsharpMask : public libgraphics::Filter {
             fxapi::ApiBackendDevice* device, libgraphics::ImageLayer* baseImage, const libgraphics::fxapi::EPixelFormat::t format, size_t width, size_t height, const float& blurRadius
         );
 
-        libcommon::SharedPtr<libgraphics::ImageLayer>   m_BlurBuffer;
+        std::shared_ptr<libgraphics::ImageLayer>   m_BlurBuffer;
         float m_Strength;
         float m_BlurRadius;
 };
