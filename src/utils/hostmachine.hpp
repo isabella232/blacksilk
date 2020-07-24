@@ -2,12 +2,12 @@
 
 #include <libgraphics/base.hpp>
 #include <libgraphics/systeminfo.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/metrics.hpp>
 
 #include <vector>
 #include <string>
 #include <tuple>
+#include <memory>
 
 namespace blacksilk {
 
@@ -26,7 +26,7 @@ struct HostMachineRequirements {
 class HostMachine {
     public:
         /// returns the global HostMachine instance
-        static libcommon::WeakRef<HostMachine>          global();
+        static std::shared_ptr<HostMachine>             global();
 
         bool                                            compatibleWith( const HostMachineRequirements& config );
         libgraphics::SystemInfo&                        systemInfo();

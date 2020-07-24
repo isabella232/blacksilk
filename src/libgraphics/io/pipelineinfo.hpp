@@ -2,7 +2,6 @@
 
 #include <libgraphics/base.hpp>
 
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 

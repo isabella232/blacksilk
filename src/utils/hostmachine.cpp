@@ -16,14 +16,14 @@
 
 namespace blacksilk {
 
-libcommon::WeakRef<HostMachine>    HostMachine::global() {
-    static libcommon::SharedPtr<HostMachine> local( 0 );
+std::shared_ptr<HostMachine>    HostMachine::global() {
+    static std::shared_ptr<HostMachine> local( 0 );
 
-    if( local.empty() ) {
+    if( !local ) {
         local.reset( new HostMachine() );
     }
 
-    return local.weakRef();
+    return local;
 }
 
 bool HostMachine::compatibleWith( const HostMachineRequirements& config ) {
