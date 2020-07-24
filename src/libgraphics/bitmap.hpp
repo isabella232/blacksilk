@@ -2,7 +2,6 @@
 
 #include <libcommon/def.hpp>
 #include <libcommon/crt.hpp>
-#include <libcommon/maybe.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -1627,17 +1626,6 @@ class LIBCOMMON_API Bitmap {
         bool write( void* destination, const int dstWidth, const int dstHeight, const int x, const int y, const int width, const int height );
 
         /**
-            \fn         create
-            \brief
-                Constructs a new Bitmap instance using the given paramters.
-
-                May return nothing, if the supplied parameters are invalid(e.g. invalid data buffer. ).
-        */
-        static libcommon::Maybe< std::shared_ptr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height );
-        static libcommon::Maybe< std::shared_ptr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data );
-        static libcommon::Maybe< std::shared_ptr<Bitmap> > create( const BitmapInfo& info );
-
-        /**
             \fn         reset
             \brief
                     Resets the internal state and creates a new one. Uses the specified allocator to do so.
@@ -1898,36 +1886,6 @@ class BitmapView {
 
         explicit BitmapView( const libcommon::WeakRef<Bitmap>& bitmap ) : m_Bitmap( bitmap ), m_LockGuard( m_Bitmap->manualLock() ) {}
 
-        libcommon::Maybe<const PixelType&>    at( const libcommon::UInt64 x, const libcommon::UInt64 y ) const {
-            const PixelType*  pixels = ( const PixelType* )this->m_Bitmap->buffer();
-
-            if( pixels != NULL ) {
-
-                if( ( m_Bitmap->width() >= x ) && ( m_Bitmap->height() >= y ) ) {
-                    return just( pixels[ y * m_Bitmap->width() + x ] );
-                }
-
-                return libcommon::nothing();
-
-            }
-
-            return libcommon::nothing();
-        }
-        libcommon::Maybe<PixelType&>    at( const libcommon::UInt64 x, const libcommon::UInt64 y ) {
-            PixelType*  pixels = ( PixelType* )this->m_Bitmap->buffer();
-
-            if( pixels != NULL ) {
-
-                if( ( m_Bitmap->width() >= x ) && ( m_Bitmap->height() >= y ) ) {
-                    return just( pixels[ y * m_Bitmap->width() + x ] );
-                }
-
-                return libcommon::nothing();
-
-            }
-
-            return libcommon::nothing();
-        }
         const PixelType&    unsafeAt( const libcommon::UInt64 x, const libcommon::UInt64 y ) const {
             const PixelType*  pixels = ( const PixelType* )this->m_Bitmap->buffer();
 

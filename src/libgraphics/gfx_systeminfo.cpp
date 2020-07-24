@@ -1,9 +1,10 @@
 
 #include <libcommon/metrics.hpp>
 #include <libcommon/crt.hpp>
-#include <libcommon/maybe.hpp>
 #include <libcommon/prelude.hpp>
 #include <libgraphics/systeminfo.hpp>
+
+#include <optional>
 
 #undef major
 #undef minor
@@ -673,18 +674,18 @@ std::string::iterator   until_whitespace_or_delimeter( std::string::iterator cur
     return current - 1;
 }
 
-libcommon::Maybe< std::pair< std::string::iterator, std::pair<std::string, std::string> > >   get_entry( std::string::iterator current, std::string::iterator end ) {
+std::optional< std::pair< std::string::iterator, std::pair<std::string, std::string> > >   get_entry( std::string::iterator current, std::string::iterator end ) {
     current = ignore_whitespaces( current, end );
 
     if( current == end ) {
-        return libcommon::nothing();
+        return std::nullopt;
     }
 
     {
         auto dot = std::find( current, end, ':' );
 
         if( dot == end ) {
-            return libcommon::nothing();
+            return std::nullopt;
         }
 
         std::string raw_name( current, dot - 1 );
@@ -699,7 +700,7 @@ libcommon::Maybe< std::pair< std::string::iterator, std::pair<std::string, std::
         auto endl = std::find( dot + 1, end, '\n' );
 
         if( endl == end ) {
-            return libcommon::nothing();
+            return std::nullopt;
         }
 
         std::string raw_value( dot + 1, endl );
@@ -711,7 +712,7 @@ libcommon::Maybe< std::pair< std::string::iterator, std::pair<std::string, std::
             value.assign( front_it, back_it.base() );
         }
 
-        return libcommon::just( std::pair<std::string::iterator, std::pair<std::string, std::string> >( endl + 1, std::pair<std::string, std::string>( name, value ) ) );
+        return std::make_optional( std::pair<std::string::iterator, std::pair<std::string, std::string> >( endl + 1, std::pair<std::string, std::string>( name, value ) ) );
     }
 
 }
@@ -780,7 +781,7 @@ void SystemInfo::queryCpuInfo() {
         while( true ) {
             auto    entry           = proc_parser::get_entry( current, end );
 
-            if( entry == libcommon::nothing() ) {
+            if( !entry ) {
                 break;
             }
 

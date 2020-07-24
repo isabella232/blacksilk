@@ -2031,33 +2031,6 @@ bool Bitmap::write( void* destination, const Rect64UI& dstRect, size_t dstPlaneW
     return true;
 }
 
-libcommon::Maybe< std::shared_ptr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height ) {
-
-    if( format.family != formats::family::Invalid && format.byteSize != 0 && format.channels != 0 && width != 0 && height != 0 ) {
-        return libcommon::just( std::shared_ptr<Bitmap>( new Bitmap( format, width, height ) ) );
-    }
-
-    return libcommon::nothing();
-
-}
-
-libcommon::Maybe< std::shared_ptr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data ) {
-
-    if( format.family != formats::family::Invalid && format.byteSize != 0 && format.channels != 0 && width != 0 && height != 0 && data != 0 ) {
-        return libcommon::just( std::shared_ptr<Bitmap>( new Bitmap( format, width, height, data ) ) );
-    }
-
-    return libcommon::nothing();
-
-}
-
-
-libcommon::Maybe< std::shared_ptr<Bitmap> > Bitmap::create( const BitmapInfo& info ) {
-
-    return create( info.format(), info.width(), info.height() );
-
-}
-
 bool Bitmap::reset( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height ) {
     assert( width * height != 0 );
 
