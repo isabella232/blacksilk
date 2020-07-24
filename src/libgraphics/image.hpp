@@ -405,10 +405,10 @@ class ImageLayerMask {
 class ImageLayerGroup {
     public:
         struct Private : libcommon::PimplPrivate {
-            std::vector<libcommon::SharedPtr<ImageLayer> >  layers;
+            std::vector<std::shared_ptr<ImageLayer> >  layers;
         };
 
-        typedef std::vector<libcommon::SharedPtr<ImageLayer> > VectorType;
+        typedef std::vector<std::shared_ptr<ImageLayer> > VectorType;
         typedef VectorType::iterator Iterator;
         typedef VectorType::const_iterator ConstIterator;
 
@@ -423,7 +423,7 @@ class ImageLayerGroup {
             ImageLayer* layer
         );
         void append(
-            libcommon::SharedPtr<ImageLayer> layer
+            std::shared_ptr<ImageLayer> layer
         );
 
 
@@ -467,10 +467,10 @@ class ImageLayerGroup {
         ConstIterator end() const;
         ConstIterator constEnd() const;
 
-        libcommon::SharedPtr<ImageLayer>    front() const;
-        libcommon::SharedPtr<ImageLayer>    back() const;
+        std::shared_ptr<ImageLayer>    front() const;
+        std::shared_ptr<ImageLayer>    back() const;
 
-        libcommon::SharedPtr<ImageLayer>    at( size_t index ) const;
+        std::shared_ptr<ImageLayer>    at( size_t index ) const;
     protected:
         libcommon::PimplPtr<Private>   d;
 };

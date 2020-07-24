@@ -8,7 +8,7 @@ namespace io {
 struct PipelineProcessingStage::Private : libcommon::PimplPrivate {
     std::string name;
     bool enabled;
-    std::vector<libcommon::SharedPtr<PipelineProcessor> > processors;
+    std::vector<std::shared_ptr<PipelineProcessor> > processors;
 
     Private() : enabled( false ) {}
 };
@@ -28,7 +28,7 @@ void PipelineProcessingStage::disable() {
 }
 
 void PipelineProcessingStage::addProcessor( PipelineProcessor* processor ) {
-    d->processors.push_back( libcommon::SharedPtr<PipelineProcessor>( processor ) );
+    d->processors.push_back( std::shared_ptr<PipelineProcessor>( processor ) );
 }
 
 bool PipelineProcessingStage::removeProcessor( PipelineProcessor* processor ) {

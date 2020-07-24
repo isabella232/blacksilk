@@ -712,12 +712,12 @@ ImageLayer* Image::createAndAppendLayer(
     }
 
     this->d->layers.push_back(
-        libcommon::SharedPtr<ImageLayer>( imageLayer )
+        std::shared_ptr<ImageLayer>( imageLayer )
     );
     /*
     this->d->layers.insert(
         this->d->layers.begin(),
-        libcommon::SharedPtr<ImageLayer>(imageLayer)
+        std::shared_ptr<ImageLayer>(imageLayer)
     );*/
 
     return imageLayer;
@@ -758,12 +758,12 @@ ImageLayer* Image::createAndAppendLayer(
     }
 
     this->d->layers.push_back(
-        libcommon::SharedPtr<ImageLayer>( imageLayer )
+        std::shared_ptr<ImageLayer>( imageLayer )
     );
     /*
     this->d->layers.insert(
         this->d->layers.begin(),
-        libcommon::SharedPtr<ImageLayer>(imageLayer)
+        std::shared_ptr<ImageLayer>(imageLayer)
     );*/
 
     return imageLayer;
@@ -802,7 +802,7 @@ ImageLayer* Image::createAndAppendLayer(
 
     this->d->layers.insert(
         this->d->layers.begin(),
-        libcommon::SharedPtr<ImageLayer>( imageLayer )
+        std::shared_ptr<ImageLayer>( imageLayer )
     );
 
     return imageLayer;
@@ -815,7 +815,7 @@ bool Image::appendLayer(
     assert( layer );
 
     if( d->format == layer->format() ) {
-        this->d->layers.push_back( libcommon::SharedPtr<ImageLayer>( layer ) );
+        this->d->layers.push_back( std::shared_ptr<ImageLayer>( layer ) );
 
         return true;
     }
@@ -1437,12 +1437,12 @@ void ImageLayerGroup::append(
     ImageLayer* layer
 ) {
     d->layers.push_back(
-        libcommon::SharedPtr<ImageLayer>( layer )
+        std::shared_ptr<ImageLayer>( layer )
     );
 }
 
 void ImageLayerGroup::append(
-    libcommon::SharedPtr<ImageLayer> layer
+    std::shared_ptr<ImageLayer> layer
 ) {
     d->layers.push_back(
         layer
@@ -1623,15 +1623,15 @@ ImageLayerGroup::ConstIterator ImageLayerGroup::constEnd() const {
     return d->layers.cend();
 }
 
-libcommon::SharedPtr<ImageLayer>    ImageLayerGroup::front() const {
+std::shared_ptr<ImageLayer>    ImageLayerGroup::front() const {
     return d->layers.front();
 }
 
-libcommon::SharedPtr<ImageLayer>    ImageLayerGroup::back() const {
+std::shared_ptr<ImageLayer>    ImageLayerGroup::back() const {
     return d->layers.back();
 }
 
-libcommon::SharedPtr<ImageLayer>    ImageLayerGroup::at( size_t index ) const {
+std::shared_ptr<ImageLayer>    ImageLayerGroup::at( size_t index ) const {
     return *( d->layers.begin() + index );
 }
 
