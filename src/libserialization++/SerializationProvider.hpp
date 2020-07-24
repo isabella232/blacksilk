@@ -7,7 +7,6 @@
 */
 #pragma once
 
-#include <libcommon/sharedptr.hpp>
 #include <libserialization++/SerializationInfo.hpp>
 
 namespace spp {

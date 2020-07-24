@@ -20,8 +20,6 @@
 #include <libserialization++/Collections.hpp>
 #include <libserialization++/SerializationProvider.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 namespace spp {
 namespace formatters {
 namespace binary {

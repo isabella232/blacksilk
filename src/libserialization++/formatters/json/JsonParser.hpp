@@ -13,8 +13,6 @@
 #include <libserialization++/PropertyAccessor.hpp>
 #include <libserialization++/TypeInfo.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 #include <libserialization++/formatters/json/JsonElement.hpp>
 
 #define JSON_ERROR_SYNTAX           0

@@ -15,8 +15,6 @@
 #include <libserialization++/TypeInfo.hpp>
 #include <libserialization++/SerializationStream.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 namespace spp {
 namespace formatters {
 namespace json {

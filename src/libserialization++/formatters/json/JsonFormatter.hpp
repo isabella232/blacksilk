@@ -21,8 +21,6 @@
 
 #include <libserialization++/formatters/json/JsonElement.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 namespace spp {
 namespace formatters {
 namespace json {
