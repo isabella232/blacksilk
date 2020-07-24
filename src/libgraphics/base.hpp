@@ -48,52 +48,6 @@ typedef libcommon::Float64              Float64;
 /** general types **/
 typedef libcommon::Boolean              Boolean;
 
-
-
-/** standard helper container types **/
-template < class _t_key, class _t_val >
-struct Pair {
-    typedef _t_key      KeyType;
-    typedef _t_val      ValueType;
-
-    typedef ValueType&          Reference;
-    typedef const ValueType&    ConstReference;
-    typedef ValueType*          Pointer;
-    typedef const ValueType*    ConstPointer;
-
-    explicit Pair( const KeyType& _key ) : key( _key ), value( ValueType() ) {}
-    Pair( const KeyType& _key, const ValueType& _value ) :
-        key( _key ), value( _value ) {}
-    Pair( const Pair<_t_key, _t_val>& rhs ) :
-        key( rhs.key ), value( rhs.value ) {}
-
-    inline void assign( const Pair<_t_key, _t_val>& rhs ) {
-        key = rhs.key;
-        value = rhs.value;
-    }
-    inline void swap( Pair<_t_key, _t_val>& other ) {
-        std::swap(
-            key,
-            other.key
-        );
-        std::swap(
-            value,
-            other.value
-        );
-    }
-
-    inline bool operator == ( const Pair<_t_key, _t_val>& rhs ) const { return ( key == rhs.key ) && ( value == rhs.value ); }
-    inline bool operator != ( const Pair<_t_key, _t_val>& rhs ) const { return ( key != rhs.key ) || ( value != rhs.value ); }
-
-    inline Pair<_t_key, _t_val>& operator = ( const Pair<_t_key, _t_val>& rhs ) {
-        assign( rhs );
-        return *this;
-    }
-
-    KeyType     key;
-    ValueType   value;
-};
-
 }
 
 
