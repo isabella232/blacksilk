@@ -16,12 +16,10 @@
 
 /// libfoundation stuff
 #include <libfoundation/app/application.hpp>
-#include <libfoundation/app/backgroundtasklistener.hpp>
 
 /// core stuff
 #include <utils/hostmachine.hpp>
 #include <utils/graphicsview.hpp>
-#include <utils/responsivebackgroundtasklistener.hpp>
 
 #include <QElapsedTimer>
 
@@ -78,10 +76,6 @@ struct App {
 
         } preview;
 
-        /// background tasks and
-        /// status reports
-        std::unique_ptr<blacksilk::ResponsiveBackgroundTaskListener>   taskListener;
-
         /// filter objects
         libgraphics::fx::filters::BWAdaptiveMixer*                      filterBWMixer;
         libgraphics::fx::filters::Curves*                               filterCurves;
@@ -108,16 +102,6 @@ struct App {
                 initialized.
         */
         bool initialized() const;
-
-        /**
-            \fn initializeTaskListener
-            \since 1.0
-            \brief Initializes the internal background task listener, which reports to the
-                specified QStaturBar control.
-        */
-        void initializeTaskListener(
-            QStatusBar* statusBar
-        );
 
         /**
             \fn initialize

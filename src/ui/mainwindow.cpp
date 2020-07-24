@@ -749,12 +749,6 @@ void MainWindow::setupWidgetsForPreview() {
 
     setupHistograms();
 
-    if( !theApp()->taskListener ) {
-        theApp()->initializeTaskListener(
-            ui->statusbar
-        );
-    }
-
     ui->glWidgetPreview->setupPreview();
     theApp()->triggerRendering();
     this->slotInitializeFilters();

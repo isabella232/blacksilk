@@ -11,14 +11,12 @@ HEADERS += \
             $${SRC_DIR}/utils/graphicsview.hpp \
             $${SRC_DIR}/utils/offscreencontext.hpp \
             $${SRC_DIR}/utils/conv.hpp \
-            $${SRC_DIR}/utils/colorspaces.hpp \
-            $${SRC_DIR}/utils/responsivebackgroundtasklistener.hpp
+            $${SRC_DIR}/utils/colorspaces.hpp
 SOURCES += \
             $${SRC_DIR}/utils/hostmachine.cpp \
             $${SRC_DIR}/utils/bs_app.cpp \
             $${SRC_DIR}/utils/bs_offscreencontext.cpp \
             $${SRC_DIR}/utils/bs_preset.cpp \
             $${SRC_DIR}/utils/bs_curve.cpp \
-            $${SRC_DIR}/utils/bs_graphicsview.cpp \
-            $${SRC_DIR}/utils/responsivebackgroundtasklistener.cpp
+            $${SRC_DIR}/utils/bs_graphicsview.cpp
 

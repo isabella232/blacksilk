@@ -34,7 +34,6 @@ App::App() :
     app( nullptr ),
     appBackend( nullptr ),
     currentSession( nullptr ),
-    taskListener( nullptr ),
     filterBWMixer( nullptr ),
     filterCurves( nullptr ),
     filterVignette( nullptr ),
@@ -93,14 +92,6 @@ size_t&         App::maxFPS() {
 
 const size_t&   App::maxFPS() const {
     return this->m_MaxFPS;
-}
-
-void App::initializeTaskListener(
-    QStatusBar* statusBar
-) {
-    if( !this->taskListener ) {
-        this->taskListener.reset( new blacksilk::ResponsiveBackgroundTaskListener( statusBar ) );
-    }
 }
 
 bool App::initialized() const {
