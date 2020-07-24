@@ -349,16 +349,3 @@ bool MagickExporter::exportToPath(
     return true;
 
 }
-
-void MagickExporter::lock() {
-    ( void )0;
-}
-
-bool MagickExporter::tryLock() {
-    ( void )0;
-    return true;
-}
-
-void MagickExporter::unlock() {
-    ( void )0;
-}

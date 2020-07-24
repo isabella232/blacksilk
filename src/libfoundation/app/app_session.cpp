@@ -1391,18 +1391,6 @@ void ApplicationSession::resetImageState(
     this->d->imagePath = path;
 }
 
-void ApplicationSession::lock() {
-    this->d->mutex.lock();
-}
-
-bool ApplicationSession::tryLock() {
-    return this->d->mutex.try_lock();
-}
-
-void ApplicationSession::unlock() {
-    this->d->mutex.unlock();
-}
-
 /** ApplicationActionRenderPreview **/
 struct ApplicationActionRenderPreview::Private : libcommon::PimplPrivate {
     ApplicationSession*     session;

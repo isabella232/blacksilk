@@ -6,33 +6,6 @@ namespace io {
 struct GenericPipelineExporter : public libgraphics::io::PipelineExporter {
         GenericPipelineExporter( const char* name, const char* extension ) : m_Name( name ), m_Extension( extension ) {}
         virtual ~GenericPipelineExporter() {}
-
-        virtual void lock()  {
-            while( !tryLock() ) {
-                libcommon::sleep( 1 );
-            }
-        }
-        virtual bool tryLock() {
-            const auto threadId = libcommon::getCurrentThreadId();
-
-            if( ( libcommon::atomics::exchange32( &m_Atomic, 0, threadId ) == 0 ) ||
-                    ( libcommon::atomics::equal32( &m_Atomic, threadId ) ) ) {
-                return true;
-            }
-
-            return false;
-        }
-        virtual void unlock() {
-            if( libcommon::atomics::equal32( &m_Atomic, 0 ) ) {
-                return;
-            }
-
-            const auto threadId = libcommon::getCurrentThreadId();
-
-            while( !( libcommon::atomics::exchange32( &m_Atomic, threadId, 0 ) == ( libcommon::Int32 )threadId ) ) {
-                libcommon::sleep( 1 );
-            }
-        }
         virtual const char* name() {
             return m_Name.c_str();
         }
@@ -47,7 +20,6 @@ struct GenericPipelineExporter : public libgraphics::io::PipelineExporter {
     private:
         std::string m_Name;
         std::string m_Extension;
-        libcommon::atomics::type32  m_Atomic;
 };
 
 struct CallbackPipelineExporter : public GenericPipelineExporter {

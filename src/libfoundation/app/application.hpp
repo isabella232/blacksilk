@@ -1,6 +1,5 @@
 #pragma once
 
-#include <libcommon/lockable.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/scopedptr.hpp>
 
@@ -408,8 +407,7 @@ struct ApplicationConfig {
 };
 
 /// user session management
-class ApplicationSession : public libcommon::INonCopyable,
-    public libcommon::ILockable {
+class ApplicationSession : public libcommon::INonCopyable {
     public:
         struct Private;
         friend class ApplicationActionRenderPreview;
@@ -624,11 +622,6 @@ class ApplicationSession : public libcommon::INonCopyable,
         libgraphics::FilterPresetCollection currentActiveStateToPresetCollection();
 
         ApplicationSession* clone();
-
-        /// from ILockable
-        virtual void    lock();
-        virtual bool    tryLock();
-        virtual void    unlock();
 
     private:
         libcommon::PimplPtr<Private>   d;

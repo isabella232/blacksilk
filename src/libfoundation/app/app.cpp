@@ -1,6 +1,5 @@
 #include <libgraphics/io/pipelinepluginloader.hpp>
 #include <libfoundation/app/application.hpp>
-#include <libcommon/lockable.hpp>
 #include <QDebug>
 
 #include <memory>

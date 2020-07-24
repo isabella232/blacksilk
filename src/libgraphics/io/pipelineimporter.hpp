@@ -31,10 +31,6 @@ class PipelineImporter : public libgraphics::io::PipelineObject  {
             libgraphics::Bitmap* out
         ) = 0;
 
-        /// from: libcommon::ILockable
-        virtual void lock() = 0;
-        virtual bool tryLock() = 0;
-        virtual void unlock() = 0;
 };
 typedef libgraphics::io::PipelineObjectGroup<PipelineImporter> PipelineImporterGroup;
 

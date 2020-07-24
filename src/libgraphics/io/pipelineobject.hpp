@@ -3,15 +3,13 @@
 #include <libgraphics/base.hpp>
 #include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
-#include <libcommon/lockable.hpp>
 #include <libcommon/noncopyable.hpp>
 
 namespace libgraphics {
 namespace io {
 
 /// interface: PipelineObject
-class PipelineObject : public libcommon::INonCopyable,
-    public libcommon::ILockable {
+class PipelineObject : public libcommon::INonCopyable {
     public:
         virtual ~PipelineObject() {}
 

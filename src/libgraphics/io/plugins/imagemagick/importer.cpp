@@ -227,21 +227,3 @@ bool MagickImporter::importFromPath(
 
     return false;
 }
-
-/// from: libcommon::ILockable
-void MagickImporter::lock() {
-    /** dummy **/
-    ( void )0;
-}
-
-bool MagickImporter::tryLock() {
-    /** dummy **/
-    ( void )0;
-
-    return true;
-}
-
-void MagickImporter::unlock() {
-    /** dummy **/
-    ( void )0;
-}

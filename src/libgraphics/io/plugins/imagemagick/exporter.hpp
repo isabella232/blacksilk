@@ -31,10 +31,6 @@ class MagickExporter : public libgraphics::io::PipelineExporter {
             libgraphics::Bitmap* toSave
         );
 
-        /// from: libcommon::ILockable
-        virtual void lock();
-        virtual bool tryLock();
-        virtual void unlock();
     protected:
         libcommon::PimplPtr<Private> d;
 };
