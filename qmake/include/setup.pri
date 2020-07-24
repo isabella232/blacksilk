@@ -1,4 +1,4 @@
-CONFIG += c++14
+CONFIG += c++1z
 
 # standard fdi setup
 INCLUDEPATH += $${SRC_DIR}
