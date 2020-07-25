@@ -518,7 +518,7 @@ void CurveFrame::drawGrid( QPainter* painter ) {
 
 void CurveFrame::drawRoundEdges( QPainter* painter ) {
     QRectF rectangle( -1, -1, width() + 1, height() + 1 );
-    painter->setPen( QPen( palette().background(), 5 ) );
+    painter->setPen( QPen( palette().window(), 5 ) );
     painter->drawRoundedRect( rectangle, 6.0, 6.0 );
 }
 

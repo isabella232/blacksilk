@@ -10,7 +10,7 @@
 #   include <stdlib.h>
 #endif
 
-#include <cstdio>
+#include <iostream>
 
 #if ( LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_WINDOWS )
 #   include <Windows.h>
@@ -33,7 +33,7 @@ LIBCOMMON_API void    abort( const libcommon::Char* msg ) {
 LIBCOMMON_API void    stdDump( const libcommon::Char* msg ) {
     assert( msg );
 
-    ( void ) ::printf( msg );
+    std::cout.write( msg, strlen( msg ) );
 }
 
 #if ( LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_MAC ) || ( LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_LINUX )
