@@ -1,8 +1,9 @@
 #include <libgraphics/io/pipelinepluginloader.hpp>
 #include <libfoundation/app/application.hpp>
-#include <libcommon/lockable.hpp>
-#include <libcommon/guards.hpp>
 #include <QDebug>
+
+#include <memory>
+#include <filesystem>
 
 #include <libcommon/fileutils.hpp>
 
@@ -10,17 +11,16 @@ namespace libfoundation {
 namespace app {
 
 void ApplicationAction::waitForFinished() {
-    volatile libcommon::LockGuard    g( &this->m_FinishedMutex );
-    ( void )g;
+    std::lock_guard<std::mutex> lock( this->m_FinishedMutex );
 }
 
-struct Application::Private : libcommon::PimplPrivate {
+struct Application::Private {
     ApplicationSession*                                     currentSession;
-    std::vector<libcommon::SharedPtr<ApplicationSession> >  sessions;
+    std::vector<std::shared_ptr<ApplicationSession> >       sessions;
     ApplicationConfig                                       config;
-    libcommon::ScopedPtr<ApplicationSystemLayer>            systemLayer;
-    libcommon::ScopedPtr<ApplicationHardwareInfo>           hardwareInfo;
-    libcommon::SharedPtr<libgraphics::io::Pipeline>         pipeline;
+    std::unique_ptr<ApplicationSystemLayer>            systemLayer;
+    std::unique_ptr<ApplicationHardwareInfo>           hardwareInfo;
+    std::shared_ptr<libgraphics::io::Pipeline>              pipeline;
 
     bool initialized;
 
@@ -102,7 +102,7 @@ bool Application::shutdown() {
 }
 
 bool Application::containsValidHardwareInfo() const {
-    return !( d->hardwareInfo.empty() );
+    return !!d->hardwareInfo;
 }
 
 bool Application::updateHardwareInfo() {
@@ -133,7 +133,7 @@ bool Application::loadIoPluginFromPath(
     const std::string& path
 ) {
 
-    if( !libcommon::fileutils::fileExists( path ) ) {
+    if( !std::filesystem::exists( path ) ) {
         qWarning() << "Plugin file does not exist '" << path.c_str() << "'.";
         return false;
     }
@@ -147,9 +147,9 @@ bool Application::loadIoPluginFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
+    std::unique_ptr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
 
-    if( plugin.empty() ) {
+    if( !plugin ) {
 #ifdef LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Application::loadIoPluginFromPath(): Can't load import object from invalid plugin object.";
 #endif
@@ -185,9 +185,9 @@ bool Application::loadIoImporterFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
+    std::unique_ptr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
 
-    if( plugin.empty() ) {
+    if( !plugin ) {
 #ifdef LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Application::loadIoImporterFromPath(): Can't load import object from invalid plugin object.";
 #endif
@@ -216,9 +216,9 @@ bool Application::loadIoExporterFromPath(
         return false;
     }
 
-    libcommon::ScopedPtr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
+    std::unique_ptr<libgraphics::io::PipelinePlugin> plugin( loader.instantiatePlugin() );
 
-    if( plugin.empty() ) {
+    if( !plugin ) {
 #ifdef LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Application::loadIoExporterFromPath(): Can't load import object from invalid plugin object.";
 #endif
@@ -264,7 +264,7 @@ ApplicationSession* Application::createSession( const std::string& name ) {
     assert( session );
 
     this->d->sessions.push_back(
-        libcommon::SharedPtr<ApplicationSession>( session )
+        std::shared_ptr<ApplicationSession>( session )
     );
 
     session->setPipeline(

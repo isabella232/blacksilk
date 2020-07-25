@@ -3,7 +3,6 @@
 #include <libgraphics/base.hpp>
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/io/pipelineinfo.hpp>
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 
@@ -39,7 +38,7 @@ class PipelineProcessingStage : public libcommon::INonCopyable {
         void enable();
         void disable();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 }

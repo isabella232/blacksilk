@@ -2,10 +2,6 @@
 
 #include <libcommon/def.hpp>
 #include <libcommon/crt.hpp>
-#include <libcommon/maybe.hpp>
-#include <libcommon/mutex.hpp>
-#include <libcommon/guards.hpp>
-#include <libcommon/sharedptr.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -13,6 +9,7 @@
 #include <memory.h>
 #include <cmath>
 #include <sstream>
+#include <memory>
 
 #include <libgraphics/allocator.hpp>
 
@@ -1574,7 +1571,7 @@ class LIBCOMMON_API Bitmap {
             \brief
                 Clones the current Bitmap's state and returns the instance.
         */
-        libcommon::SharedPtr<Bitmap>    clone() const;
+        std::shared_ptr<Bitmap>    clone() const;
 
         /**
             \fn     validPixel
@@ -1627,17 +1624,6 @@ class LIBCOMMON_API Bitmap {
         bool write( Bitmap* destination, Rect32I sourceRect, const libcommon::SizeType& destinationX, const libcommon::SizeType& destinationY );
         bool write( void* destination, const int x, const int y, const int width, const int height );
         bool write( void* destination, const int dstWidth, const int dstHeight, const int x, const int y, const int width, const int height );
-
-        /**
-            \fn         create
-            \brief
-                Constructs a new Bitmap instance using the given paramters.
-
-                May return nothing, if the supplied parameters are invalid(e.g. invalid data buffer. ).
-        */
-        static libcommon::Maybe< libcommon::SharedPtr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height );
-        static libcommon::Maybe< libcommon::SharedPtr<Bitmap> > create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data );
-        static libcommon::Maybe< libcommon::SharedPtr<Bitmap> > create( const BitmapInfo& info );
 
         /**
             \fn         reset
@@ -1794,7 +1780,7 @@ class LIBCOMMON_API Bitmap {
                 The Bitmap's mutex can be used for synchronization
                 across multiple threads.
         */
-        libcommon::LockGuard    manualLock();
+        std::lock_guard<std::recursive_mutex> manualLock();
 
         /**
             \fn synchronize
@@ -1875,10 +1861,10 @@ class LIBCOMMON_API Bitmap {
         libcommon::SizeType         m_BitmapHeight;
         libcommon::SizeType         m_BitmapWidth;
         libgraphics::Format         m_Format;
-        libcommon::RecursiveMutex   m_AccessLock;
+        std::recursive_mutex        m_AccessLock;
 
         libgraphics::StdDynamicPoolAllocator*                                   m_InternalAllocator;
-        libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob>        m_InternalMemoryBlob;
+        std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob>        m_InternalMemoryBlob;
 };
 
 struct BitmapException : std::runtime_error {
@@ -1899,47 +1885,7 @@ class BitmapView {
         typedef typename FormatType::t      PixelType;
 
         explicit BitmapView( const libcommon::WeakRef<Bitmap>& bitmap ) : m_Bitmap( bitmap ), m_LockGuard( m_Bitmap->manualLock() ) {}
-        BitmapView( BitmapView&& rhs ) : m_LockGuard( NULL ) {
-            std::swap(
-                rhs.m_Bitmap,
-                m_Bitmap
-            );
-            std::swap(
-                rhs.m_LockGuard,
-                m_LockGuard
-            );
-        }
 
-        libcommon::Maybe<const PixelType&>    at( const libcommon::UInt64 x, const libcommon::UInt64 y ) const {
-            const PixelType*  pixels = ( const PixelType* )this->m_Bitmap->buffer();
-
-            if( pixels != NULL ) {
-
-                if( ( m_Bitmap->width() >= x ) && ( m_Bitmap->height() >= y ) ) {
-                    return just( pixels[ y * m_Bitmap->width() + x ] );
-                }
-
-                return libcommon::nothing();
-
-            }
-
-            return libcommon::nothing();
-        }
-        libcommon::Maybe<PixelType&>    at( const libcommon::UInt64 x, const libcommon::UInt64 y ) {
-            PixelType*  pixels = ( PixelType* )this->m_Bitmap->buffer();
-
-            if( pixels != NULL ) {
-
-                if( ( m_Bitmap->width() >= x ) && ( m_Bitmap->height() >= y ) ) {
-                    return just( pixels[ y * m_Bitmap->width() + x ] );
-                }
-
-                return libcommon::nothing();
-
-            }
-
-            return libcommon::nothing();
-        }
         const PixelType&    unsafeAt( const libcommon::UInt64 x, const libcommon::UInt64 y ) const {
             const PixelType*  pixels = ( const PixelType* )this->m_Bitmap->buffer();
 
@@ -1968,7 +1914,7 @@ class BitmapView {
         }
     protected:
         libcommon::WeakRef<Bitmap>  m_Bitmap;
-        libcommon::LockGuard        m_LockGuard;
+        std::lock_guard<std::recursive_mutex> m_LockGuard;
 };
 
 template < class _t_pixel_type >

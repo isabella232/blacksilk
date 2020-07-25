@@ -10,7 +10,6 @@
 
 #include "filedealer.h"
 #include "utils/colorspaces.hpp"
-#include <utils/responsivebackgroundtasklistener.hpp>
 
 
 #ifndef BLACKSILK_STANDALONE

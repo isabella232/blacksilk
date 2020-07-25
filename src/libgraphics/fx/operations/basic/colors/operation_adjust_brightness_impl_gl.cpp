@@ -159,7 +159,7 @@ void adjustBrightness_GL(
                               destination,
                               source,
                               area,
-                              filter
+                              filter.get()
                           );
     filter->curve = nullptr;
 
@@ -194,7 +194,7 @@ struct LinearAdjustBrightness : public libgraphics::backend::gl::ImageOperation 
         backend::gl::EffectParameterFloat       param_factor;
     };
 
-    libcommon::ScopedPtr<backend::gl::Effect>    effect;
+    std::unique_ptr<backend::gl::Effect>    effect;
     Params                                       params;
     bool                                         initialized;
     float                                        adjustment;
@@ -202,7 +202,7 @@ struct LinearAdjustBrightness : public libgraphics::backend::gl::ImageOperation 
     LinearAdjustBrightness() : initialized( false ), adjustment( 0.0f ) {}
 
     void initializeSimpleKernelEffect() {
-        if( !effect.empty() ) {
+        if( effect ) {
             return;
         }
 
@@ -304,9 +304,9 @@ void adjustBrightness_GL(
     assert( destination );
     assert( source );
 
-    static libcommon::ScopedPtr<LinearAdjustBrightness> filter;
+    static std::unique_ptr<LinearAdjustBrightness> filter;
 
-    if( filter.empty() ) {
+    if( !filter ) {
         filter.reset( new LinearAdjustBrightness() );
     }
 

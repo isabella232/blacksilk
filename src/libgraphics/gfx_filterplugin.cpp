@@ -6,11 +6,11 @@ namespace libgraphics {
 
 void GenericFilterPlugin::registerFactory( FilterFactory* factory ) {
     this->m_FilterFactories.push_back(
-        libcommon::SharedPtr<FilterFactory>( factory )
+        std::shared_ptr<FilterFactory>( factory )
     );
 }
 
-void GenericFilterPlugin::registerFactory( const libcommon::SharedPtr<FilterFactory>& factory ) {
+void GenericFilterPlugin::registerFactory( const std::shared_ptr<FilterFactory>& factory ) {
     this->m_FilterFactories.push_back(
         factory
     );
@@ -65,17 +65,17 @@ std::string GenericFilterPlugin::pluginName() const {
 
 void FilterPluginGroup::add( FilterPlugin* plugin ) {
     this->m_Plugins.push_back(
-        libcommon::SharedPtr<FilterPlugin>( plugin )
+        std::shared_ptr<FilterPlugin>( plugin )
     );
 }
 
-void FilterPluginGroup::add( const libcommon::SharedPtr<FilterPlugin>& plugin ) {
+void FilterPluginGroup::add( const std::shared_ptr<FilterPlugin>& plugin ) {
     this->m_Plugins.push_back( plugin );
 }
 
 bool FilterPluginGroup::remove( FilterPlugin* plugin ) {
     for( auto it = this->m_Plugins.begin(); it != this->m_Plugins.end(); ++it ) {
-        if( ( *it ) == plugin ) {
+        if( it->get() == plugin ) {
             this->m_Plugins.erase( it );
 
             return true;
@@ -85,7 +85,7 @@ bool FilterPluginGroup::remove( FilterPlugin* plugin ) {
     return false;
 }
 
-bool FilterPluginGroup::remove( const libcommon::SharedPtr<FilterPlugin>& plugin ) {
+bool FilterPluginGroup::remove( const std::shared_ptr<FilterPlugin>& plugin ) {
     for( auto it = this->m_Plugins.begin(); it != this->m_Plugins.end(); ++it ) {
         if( ( *it ) == plugin ) {
             this->m_Plugins.erase( it );
@@ -150,7 +150,7 @@ FilterPluginGroup::ContainerType::const_iterator FilterPluginGroup::constEnd() c
 
 bool FilterPluginGroup::contains( FilterPlugin* plugin ) const {
     for( auto it = this->m_Plugins.begin(); it != this->m_Plugins.end(); ++it ) {
-        if( ( *it ) == plugin ) {
+        if( it->get() == plugin ) {
             return true;
         }
     }

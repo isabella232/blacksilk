@@ -14,7 +14,7 @@
 
 namespace libgraphics {
 struct Image::Private {
-    std::vector<libcommon::SharedPtr<libgraphics::ImageLayer> >     layers;
+    std::vector<std::shared_ptr<libgraphics::ImageLayer> >     layers;
     ImageMetaInfo   info;
 
     size_t  width;

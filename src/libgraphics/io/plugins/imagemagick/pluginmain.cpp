@@ -17,7 +17,7 @@ struct MagickSession {
 
     bool initialized;
 };
-libcommon::ScopedPtr<MagickSession> __magickSession;
+std::unique_ptr<MagickSession> __magickSession;
 
 
 std::pair< MagickPluginState::ImageOrigin, std::shared_ptr< Magick::Image > >& MagickPluginState::newEntry() {
@@ -151,7 +151,7 @@ libgraphics::Format getFormatFromMagickImage( Magick::Image* image ) {
 }
 
 bool initializePlugin() {
-    if( __magickSession.empty() ) {
+    if( !__magickSession ) {
         __magickSession.reset( new MagickSession() );
         return __magickSession->initialized;
     }

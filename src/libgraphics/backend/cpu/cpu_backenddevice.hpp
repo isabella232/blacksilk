@@ -6,9 +6,7 @@
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/fxapi.hpp>
 
-#include <libcommon/atomics.hpp>
-#include <libcommon/scopedptr.hpp>
-#include <libcommon/sharedptr.hpp>
+#include <atomic>
 
 class QThreadPool;
 
@@ -55,7 +53,7 @@ class PixelArray : public fxapi::ApiResource {
         unsigned char* get8Bit( size_t pos );
         unsigned short* get16Bit( size_t pos );
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 class BackendDevice : public libgraphics::fxapi::ApiBackendDevice {
@@ -117,10 +115,10 @@ class BackendDevice : public libgraphics::fxapi::ApiBackendDevice {
 
         virtual int backendId();
 
-        virtual libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  allocator();
-        virtual void setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
+        virtual std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator();
+        virtual void setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 struct DataRegionEntry {
@@ -132,11 +130,11 @@ struct DataRegionEntry {
             return ( void* )( ( const char* )buf + offset );
         }
         inline bool tryAcquire() {
-            if( libcommon::atomics::exchange32( &used, 0, libcommon::getCurrentThreadId() ) ) {
-                return true;
-            }
 
-            return false;
+            libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+            libcommon::UInt32 zero = 0;
+
+            return used.compare_exchange_weak( zero, threadId );
         }
         inline void acquire() {
             volatile bool acquired( false );
@@ -149,7 +147,7 @@ struct DataRegionEntry {
         const size_t  offset;
         const void*   buffer;
     private:
-        libcommon::atomics::type32  used;
+        std::atomic_uint32_t used;
 };
 
 class DataRegion : public libcommon::INonCopyable {
@@ -178,7 +176,7 @@ class DataRegion : public libcommon::INonCopyable {
         void reset();
         void* alloc( size_t _count, size_t _length );
 
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 

@@ -1,7 +1,6 @@
 // Copyright Filtered Digital Imaging
 
 #include <cstring>
-#include <regex>
 #include <iostream>
 
 #include <QApplication>

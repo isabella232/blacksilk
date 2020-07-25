@@ -7,7 +7,7 @@ namespace libgraphics {
 namespace backend {
 namespace cpu {
 
-struct ImageObject::Private : libcommon::PimplPrivate {
+struct ImageObject::Private {
     libgraphics::Bitmap bitmap;
     fxapi::EPixelFormat::t format;
     libgraphics::StdDynamicPoolAllocator* allocator;

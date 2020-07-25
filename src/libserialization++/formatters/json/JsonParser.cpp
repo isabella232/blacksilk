@@ -137,7 +137,7 @@ bool    JsonParserState::Previous( Iterator& it ) {
 
 }
 
-void    JsonParserState::Register( const libcommon::SharedPtr< JsonElement >& elem ) {
+void    JsonParserState::Register( const std::shared_ptr< JsonElement >& elem ) {
 
     for( auto it = m_Elements.begin(); it != m_Elements.end(); ++it ) {
         if( elem == *it ) {
@@ -198,7 +198,7 @@ std::vector< JsonParserErrorType > JsonParserState::GetErrorTypes() const {
 
 }
 
-void        JsonParserState::EnterScope( const libcommon::SharedPtr< JsonElement >& elem ) {
+void        JsonParserState::EnterScope( const std::shared_ptr< JsonElement >& elem ) {
 
     this->m_ScopeStack.push_back( elem );
 
@@ -278,19 +278,19 @@ bool    JsonParserState::Good() const {
 
 }
 
-libcommon::SharedPtr< JsonElement >      JsonParserState::GetLast() const {
+std::shared_ptr< JsonElement >      JsonParserState::GetLast() const {
 
     return this->m_LastElement;
 
 }
 
-libcommon::SharedPtr< JsonElement >      JsonParserState::GetRoot() const {
+std::shared_ptr< JsonElement >      JsonParserState::GetRoot() const {
 
     return this->m_Root;
 
 }
 
-libcommon::SharedPtr< JsonElement >      JsonParserState::GetScope() const {
+std::shared_ptr< JsonElement >      JsonParserState::GetScope() const {
 
     if( this->m_ScopeStack.size() > 0 ) {
 
@@ -298,10 +298,10 @@ libcommon::SharedPtr< JsonElement >      JsonParserState::GetScope() const {
 
     }
 
-    return libcommon::SharedPtr< JsonElement >();
+    return std::shared_ptr< JsonElement >();
 }
 
-std::vector< libcommon::SharedPtr< JsonElement > >      JsonParserState::GetElements() const {
+std::vector< std::shared_ptr< JsonElement > >      JsonParserState::GetElements() const {
 
     return this->m_Elements;
 
@@ -435,7 +435,7 @@ bool JsonStringParserOperator::operator()( JsonParserState& state ) {
 
             }
 
-            libcommon::SharedPtr< JsonElement >  element( new JsonElement() );
+            std::shared_ptr< JsonElement >  element( new JsonElement() );
 
             element->SetType( JsonValueType::String );
             element->SetValue( std::string( beginContents, endContents ) );
@@ -483,7 +483,7 @@ bool JsonElementSeperatorParserOperator::operator()( JsonParserState& state ) {
                 }
             }
 
-            libcommon::SharedPtr< JsonElement > last = state.GetLast();
+            std::shared_ptr< JsonElement > last = state.GetLast();
 
             last->SetValueType( JsonValueType::Unknown );
             last->SetType( JsonValueType::TemporaryElement );
@@ -521,7 +521,7 @@ bool JsonValueSeperatorParserOperator::operator()( JsonParserState& state ) {
                 return false;
             }
 
-            libcommon::SharedPtr< JsonElement > last = state.GetLast();
+            std::shared_ptr< JsonElement > last = state.GetLast();
 
             if( last->GetType() == JsonValueType::TemporaryElement ) {
                 state.Error( JSON_ERROR_SEMANTIC, "Invalid ','. Each named element needs a value!" );
@@ -554,7 +554,7 @@ bool JsonArrayBeginParserOperator::operator()( JsonParserState& state ) {
 
         if( *current == '[' ) {
 
-            libcommon::SharedPtr< JsonElement > last = state.GetLast();
+            std::shared_ptr< JsonElement > last = state.GetLast();
 
             if( last.get() != 0 && ( last->GetType() == JsonValueType::TemporaryElement ) ) {
 
@@ -565,7 +565,7 @@ bool JsonArrayBeginParserOperator::operator()( JsonParserState& state ) {
 
             } else {
 
-                libcommon::SharedPtr< JsonElement > elem( new JsonElement() );
+                std::shared_ptr< JsonElement > elem( new JsonElement() );
 
                 elem->SetType( JsonValueType::TemporaryArray );
                 elem->SetValueType( JsonValueType::Unknown );
@@ -601,7 +601,7 @@ bool JsonArrayEndParserOperator::operator()( JsonParserState& state ) {
 
         if( *current == ']' ) {
 
-            libcommon::SharedPtr< JsonElement > scope = state.GetScope();
+            std::shared_ptr< JsonElement > scope = state.GetScope();
 
             if( scope.get() == 0 ) {
                 state.Error( JSON_ERROR_SEMANTIC, "']' needs an '['" );
@@ -646,7 +646,7 @@ bool JsonObjectBeginParserOperator::operator()( JsonParserState& state ) {
 
         if( *current == '{' ) {
 
-            libcommon::SharedPtr< JsonElement > last = state.GetLast();
+            std::shared_ptr< JsonElement > last = state.GetLast();
 
             if( last.get() != 0 && ( last->GetType() == JsonValueType::TemporaryElement ) ) {
 
@@ -657,7 +657,7 @@ bool JsonObjectBeginParserOperator::operator()( JsonParserState& state ) {
 
             } else {
 
-                libcommon::SharedPtr< JsonElement > elem( new JsonElement() );
+                std::shared_ptr< JsonElement > elem( new JsonElement() );
 
                 elem->SetType( JsonValueType::TemporaryObject );
                 elem->SetValueType( JsonValueType::Unknown );
@@ -694,7 +694,7 @@ bool JsonObjectEndParserOperator::operator()( JsonParserState& state ) {
 
         if( *current == '}' ) {
 
-            libcommon::SharedPtr< JsonElement > scope = state.GetScope();
+            std::shared_ptr< JsonElement > scope = state.GetScope();
 
             if( scope.get() == 0 ) {
                 state.Error( JSON_ERROR_SEMANTIC, "'}' needs an '{'" );
@@ -794,7 +794,7 @@ bool JsonIntegerParserOperator::operator()( JsonParserState& state ) {
 
             }
 
-            libcommon::SharedPtr< JsonElement >  element( new JsonElement() );
+            std::shared_ptr< JsonElement >  element( new JsonElement() );
 
             element->SetType( JsonValueType::Integer );
             element->SetValue( std::string( beginContents, endContents ) );
@@ -884,7 +884,7 @@ bool JsonFloatParserOperator::operator()( JsonParserState& state ) {
 
             }
 
-            libcommon::SharedPtr< JsonElement >  element( new JsonElement() );
+            std::shared_ptr< JsonElement >  element( new JsonElement() );
 
             element->SetType( JsonValueType::Float );
             element->SetValue( std::string( beginContents, endContents ) );
@@ -919,19 +919,19 @@ bool        json::Parse( JsonParserState& state, const std::string& data ) {
 
     state.Setup( data );
 
-    std::vector< libcommon::SharedPtr< JsonElementParserOperator >  > operators;
+    std::vector< std::shared_ptr< JsonElementParserOperator >  > operators;
 
     {
 
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonStringParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonArrayBeginParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonArrayEndParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonObjectBeginParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonObjectEndParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonValueSeperatorParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonElementSeperatorParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonIntegerParserOperator() ) );
-        operators.push_back( libcommon::SharedPtr< JsonElementParserOperator >( new json::JsonFloatParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonStringParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonArrayBeginParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonArrayEndParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonObjectBeginParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonObjectEndParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonValueSeperatorParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonElementSeperatorParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonIntegerParserOperator() ) );
+        operators.push_back( std::shared_ptr< JsonElementParserOperator >( new json::JsonFloatParserOperator() ) );
 
     }
 
@@ -942,7 +942,7 @@ bool        json::Parse( JsonParserState& state, const std::string& data ) {
     while( state.Good() ) {
 
         for( auto st = operators.begin(); st != operators.end(); ++st ) {
-            libcommon::SharedPtr< JsonElementParserOperator >    op = *st;
+            std::shared_ptr< JsonElementParserOperator >    op = *st;
 
             state.PushState();
 

@@ -4,11 +4,11 @@ namespace libgraphics {
 
 void FilterCollection::add( Filter* filter ) {
     this->m_Filters.push_back(
-        libcommon::SharedPtr<Filter>( filter )
+        std::shared_ptr<Filter>( filter )
     );
 }
 
-void FilterCollection::add( const libcommon::SharedPtr<Filter>& filter ) {
+void FilterCollection::add( const std::shared_ptr<Filter>& filter ) {
     this->m_Filters.push_back(
         filter
     );
@@ -90,7 +90,7 @@ void FilterCollection::clear() {
     this->m_Filters.clear();
 }
 
-libcommon::SharedPtr<Filter> FilterCollection::byName( const std::string& name ) {
+std::shared_ptr<Filter> FilterCollection::byName( const std::string& name ) {
     for( auto it = this->m_Filters.begin(); it != this->m_Filters.end(); ++it ) {
         if( ( *it )->name() == name ) {
             return ( *it );
@@ -99,7 +99,7 @@ libcommon::SharedPtr<Filter> FilterCollection::byName( const std::string& name )
 
     assert( false );
 
-    return libcommon::SharedPtr<Filter>();
+    return {};
 }
 
 }

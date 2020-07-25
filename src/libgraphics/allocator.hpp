@@ -1,15 +1,13 @@
 #pragma once
 
-#include <libcommon/scopedptr.hpp>
+#include <libcommon/weakref.hpp>
 #include <libcommon/noncopyable.hpp>
 #include <libcommon/atomics.hpp>
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/mutex.hpp>
-#include <libcommon/guards.hpp>
 
 #include <algorithm>
 #include <vector>
-
+#include <memory>
+#include <mutex>
 
 namespace libgraphics {
 namespace detail {
@@ -225,12 +223,8 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
         template < class _t_other_policy >
         void assign( DynamicPoolAllocator<_t_other_policy>&& rhs ) {
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
-
-            libcommon::LockGuard _gOther( &rhs.m_Mutex );
-            ( void )_gOther;
-
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
+            std::lock_guard<std::recursive_mutex> other( rhs.m_Mutex );
 
             m_Entries   = std::move( rhs.m_Entries );
             m_Size      = rhs.m_Size;
@@ -284,34 +278,34 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         };
         friend struct Blob;
 
-        libcommon::SharedPtr<Blob> alloc( size_t length ) {
+        std::shared_ptr<Blob> alloc( size_t length ) {
             const auto& entry = acquireEntry(
                                     length
                                 );
-            return libcommon::SharedPtr<Blob>(
+            return std::shared_ptr<Blob>(
                        new Blob( entry.data, this )
                    );
         }
         template < class _t_type >
-        libcommon::SharedPtr<_t_type> emplace() {
+        std::shared_ptr<_t_type> emplace() {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc( entry.data )
                    );
         }
         template < class _t_type, class _t_arg0 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -320,13 +314,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -336,13 +330,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -353,13 +347,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -371,13 +365,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -390,13 +384,13 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                    );
         }
         template < class _t_type, class _t_arg0, class _t_arg1, class _t_arg2, class _t_arg3, class _t_arg4, class _t_arg5 >
-        libcommon::SharedPtr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4, _t_arg5 arg5 ) {
+        std::shared_ptr<_t_type> emplace( _t_arg0 arg0, _t_arg1 arg1, _t_arg2 arg2, _t_arg3 arg3, _t_arg4 arg4, _t_arg5 arg5 ) {
             static Allocator<_t_type> _allocator;
             const auto entry = acquireEntry(
                                    sizeof( _t_type )
                                );
 
-            return libcommon::SharedPtr<_t_type>(
+            return std::shared_ptr<_t_type>(
             [this]( _t_type * p ) { this->dealloc( p ); },
             _allocator.inplaceAlloc(
                 entry.data,
@@ -412,8 +406,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         void dealloc( void* p ) {
             assert( p );
 
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Entries.begin(); it != m_Entries.end(); ++it ) {
                 if( ( ( size_t )( *it ).data == ( size_t )p ) ) {
@@ -438,8 +431,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
 
         /// info
         size_t queryMemoryCapacity() {
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t capacity( 0 );
 
@@ -450,8 +442,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return capacity;
         }
         size_t queryMemoryConsumption() {
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t consumption( 0 );
 
@@ -473,8 +464,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
                 return;
             }
 
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( size_t i = 0; entryCount > i; ++i ) {
                 m_Entries.emplace_back(
@@ -487,8 +477,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             sort();
         }
         void ensureCapacity( size_t capacity, size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t totalCapacity = countUnusedOfSize( entrySize ) + countUsedOfSize( entrySize );
 
@@ -497,8 +486,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             }
         }
         void ensureUnused( size_t capacity, size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t unusedOfSize = countUnusedOfSize( entrySize );
 
@@ -508,8 +496,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t countUsedOfSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -522,8 +509,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return count;
         }
         size_t countUsedOfCompatibleSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -537,8 +523,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t countUnusedOfSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -551,8 +536,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return count;
         }
         size_t countUnusedOfCompatibleSize( size_t entrySize ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t count( 0 );
 
@@ -566,8 +550,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t releaseUnusedOfSize( size_t entries, size_t entryLength ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -589,8 +572,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             return freed;
         }
         size_t releaseUnusedOfCompatibleSize( size_t entries, size_t size ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -613,8 +595,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         }
 
         size_t releaseUnused( size_t entries = 0 ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -703,8 +684,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
             assert( defaultReallocationCount > 0 );
             assert( alignedLength != 0 );
 
-            libcommon::LockGuard _g( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             if( m_Capacity > m_Size ) {
                 if( fastAlloc ) {
@@ -741,7 +721,7 @@ struct DynamicPoolAllocator : libcommon::INonCopyable {
         libcommon::Int32  m_Capacity;
         Policy  m_AllocatorPolicy;
         std::vector<Entry>  m_Entries;
-        libcommon::RecursiveMutex m_Mutex;
+        std::recursive_mutex m_Mutex;
 };
 
 struct AllocatorPolicy {
@@ -789,7 +769,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
                 delete []( char* )data;
             }
         };
-        typedef libcommon::SharedPtr<_t_value>  InstanceType;
+        typedef std::shared_ptr<_t_value>  InstanceType;
 
         FixedPoolAllocator() : m_Size( 0 ),
             m_Capacity( 0 ) {}
@@ -871,8 +851,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
 
         /// manual dealloc
         void dealloc( Pointer p ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Entries.begin(); it != m_Entries.end(); ++it ) {
                 if( ( ( size_t )( *it ).data == ( size_t )p ) && ( libcommon::atomics::equal32( &( *it ).used, 1 ) ) ) {
@@ -898,8 +877,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
         }
 
         void reset() {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             m_Entries.clear();
             m_Size = 0;
@@ -910,29 +888,25 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
                 return;
             }
 
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             m_Entries.reserve( entries );
             libcommon::atomics::add32( &m_Capacity, ( int )entries );
         }
         void ensureCapacity( size_t capacity ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             reserve( ( capacity > m_Capacity ) ? ( capacity - m_Capacity ) : 0 );
         }
         void ensureUnsued( size_t capacity ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             reserve( ( capacity > ( m_Capacity - m_Size ) ) ? ( capacity - ( m_Capacity - m_Size ) ) : 0 );
         }
 
         size_t releaseUnused() { return releaseUnused( m_Capacity - m_Size ); }
         size_t releaseUnused( size_t entries ) {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             size_t freed( 0 );
 
@@ -955,8 +929,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
         }
     private:
         Entry& acquireEntry() {
-            libcommon::LockGuard    __guard( &m_Mutex );
-            ( void )__guard;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             while( m_Size >= m_Capacity ) {
                 reserve( 1 );
@@ -974,7 +947,7 @@ struct FixedPoolAllocator : detail::AllocatorBase<_t_value>,
             return m_Entries.front();
         }
 
-        libcommon::RecursiveMutex   m_Mutex;
+        std::recursive_mutex    m_Mutex;
         libcommon::atomics::type32  m_Size;
         libcommon::atomics::type32  m_Capacity;
         Allocator<_t_value>     m_Alloc;

@@ -234,7 +234,6 @@ void MainWindow::openImage( const QString& filename ) {
         // finish.
         ui->statusbar->showMessage( "Waiting for background tasks to complete..." );
         qApp->processEvents();
-        theApp()->backgroundTasks->waitForAll();
 
         // show pointless bar
         emit signalOccupied();
@@ -749,12 +748,6 @@ void MainWindow::setupWidgetsForPreview() {
     ui->glWidgetPreview->makeCurrent();
 
     setupHistograms();
-
-    if( theApp()->taskListener.empty() ) {
-        theApp()->initializeTaskListener(
-            ui->statusbar
-        );
-    }
 
     ui->glWidgetPreview->setupPreview();
     theApp()->triggerRendering();

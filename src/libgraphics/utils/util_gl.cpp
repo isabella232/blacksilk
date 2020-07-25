@@ -490,7 +490,7 @@ GL::t_sizei GL::getTextureFormatPixelSize( GL::ETextureDataFormat::t format ) {
 }
 
 /** GLDbgContext **/
-struct GLDbgContext::GLPriv : libcommon::PimplPrivate {
+struct GLDbgContext::GLPriv {
     std::vector< GLDbgContext::ErrInfo >    errors;
     std::vector< GLDbgContext::CallInfo >   calls;
 
@@ -716,7 +716,7 @@ void GLDbgContext::reportError( GL* ctx, GLErr* err ) {
 }
 
 /** GLTexture **/
-struct GLTexture::GLPriv : libcommon::PimplPrivate {
+struct GLTexture::GLPriv {
     GL::t_uint      textureId;
     GL::t_sizei     width;
     GL::t_sizei     height;
@@ -761,7 +761,7 @@ bool GLTexture::empty() const {
 }
 
 /** GLRawBuffer **/
-struct GLRawBuffer::GLPriv : libcommon::PimplPrivate {
+struct GLRawBuffer::GLPriv {
     GL::t_uint      bufferId;
     GL::t_sizei     size;
     GL::ERawBufferHint::t hint;
@@ -787,7 +787,7 @@ const bool          GLRawBuffer::empty() const {
 }
 
 /** GLErr **/
-struct GLErr::GLPriv : libcommon::PimplPrivate {
+struct GLErr::GLPriv {
     GL*  context;
     std::string errorMessage;
     std::string errorType;
@@ -808,11 +808,11 @@ const std::string& GLErr::errorType() const {
 }
 
 /** GL **/
-struct GL::GLPriv : libcommon::PimplPrivate {
+struct GL::GLPriv {
     bool    initialized;
-    libcommon::ScopedPtr<GLDbgContext>  dbgContext;
-    libcommon::ScopedPtr< libgraphics::SystemInfo > sysInfo;
-    std::vector< libcommon::ScopedPtr< GLErr > > errors;
+    std::unique_ptr<GLDbgContext>  dbgContext;
+    std::unique_ptr< libgraphics::SystemInfo > sysInfo;
+    std::vector< std::unique_ptr< GLErr > > errors;
 
     bool texture1DEnabled;
     bool texture2DEnabled;
@@ -888,7 +888,7 @@ GLDbgContext* GL::currentDbgContext() {
 }
 
 bool GL::hasDbgContext() const {
-    return !d->dbgContext.empty();
+    return !!d->dbgContext;
 }
 
 void GL::newError( t_int errorType, const std::string& errorMessage ) {
@@ -942,7 +942,7 @@ void GL::newError( t_int errorType, const std::string& errorMessage ) {
 
 void GL::newError( const std::string& errorType, const std::string& errorMessage ) {
     this->d->errors.push_back(
-        libcommon::ScopedPtr<GLErr>( new GLErr() )
+        std::unique_ptr<GLErr>( new GLErr() )
     );
     this->d->errors.back()->d->errorMessage = errorMessage;
     this->d->errors.back()->d->errorType = errorType;
@@ -952,7 +952,7 @@ void GL::newError( const std::string& errorType, const std::string& errorMessage
     qDebug() << "OpenGL Error: " << errorType.c_str() << ": " << errorMessage.c_str();
 #endif
 
-    if( !d->dbgContext.empty() ) {
+    if( d->dbgContext ) {
         d->dbgContext->reportError(
             this,
             d->errors.back().get()
@@ -2991,7 +2991,7 @@ bool GL::activeTexture( GL* ctx, t_enum texturePort ) {
 /// FRAMEBUFFER MANAGEMENT
 ///
 
-struct GLFrameBuffer::GLPriv : libcommon::PimplPrivate {
+struct GLFrameBuffer::GLPriv {
     ::GLuint    id;
     ::GLuint    rid;
     GLTexture*  associatedTexture;
@@ -3169,7 +3169,7 @@ bool GL::unbindFrameBuffer( GL* ctx, GLFrameBuffer* fbo ) {
 }
 
 /** GLShader **/
-struct GLShader::GLPriv : libcommon::PimplPrivate {
+struct GLShader::GLPriv {
     std::string     source;
     std::vector<std::string>    errors;
     GLuint  id;
@@ -3316,7 +3316,7 @@ bool GL::createFragmentShader( GL* ctx, GLShader** outRef, const std::string& so
 
 /** GLProgram **/
 
-struct GLProgram::GLPriv : libcommon::PimplPrivate {
+struct GLProgram::GLPriv {
     GLuint  id;
     GLShader*   vertexShader;
     GLShader*   fragmentShader;

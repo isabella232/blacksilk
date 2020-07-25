@@ -24,57 +24,57 @@ void filmgrain_GEN(
 ) {
     ( void )isMonoGrain;
 
-    libcommon::ScopedPtr<ImageLayer> grainOverlay( makeImageLayer( device, destination ) );
-    libcommon::ScopedPtr<ImageLayer> weightedLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<ImageLayer> grainOverlay( makeImageLayer( device, destination ) );
+    std::unique_ptr<ImageLayer> weightedLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::adjustBrightness(
-            weightedLayer,
+            weightedLayer.get(),
             source,
             area,
             ( float* )curveData.data(),
             curveData.size()
         );
         libgraphics::fx::operations::overlay(
-            grainOverlay,
+            grainOverlay.get(),
             source,
             grainLayer,
             area
         );
     }
 
-    libcommon::ScopedPtr<ImageLayer> negatedWeightedLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<ImageLayer> negatedWeightedLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::negate(
-            negatedWeightedLayer,
-            weightedLayer,
+            negatedWeightedLayer.get(),
+            weightedLayer.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<ImageLayer> upperLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<ImageLayer> upperLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::multiply(
-            upperLayer,
+            upperLayer.get(),
             source,
-            negatedWeightedLayer,
+            negatedWeightedLayer.get(),
             area
         );
     }
 
-    libcommon::ScopedPtr<ImageLayer> lowerLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<ImageLayer> lowerLayer( makeImageLayer( device, destination ) );
     {
         libgraphics::fx::operations::multiply(
-            lowerLayer,
-            grainOverlay,
-            weightedLayer,
+            lowerLayer.get(),
+            grainOverlay.get(),
+            weightedLayer.get(),
             area
         );
     }
 
     libgraphics::fx::operations::add(
         destination,
-        upperLayer,
-        lowerLayer,
+        upperLayer.get(),
+        lowerLayer.get(),
         area
     );
 

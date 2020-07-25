@@ -6,10 +6,8 @@
 #include <algorithm>
 #include <sstream>
 #include <string>
-#include <thread>
 #include <mutex>
 #include <cstdlib>
-#include <regex>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -152,15 +150,6 @@ void logging::customMessageHandler( QtMsgType type, const QMessageLogContext& co
 
     // remove class and arguments
     std::string function( cfunction );
-
-    /** slows down debug mode by multiple magnitudes **/
-    /*
-    #ifdef _WIN32
-    function = std::regex_replace( function, std::regex( "\\<.*\\>.*" ), "[]{}" ); // shorten lambdas
-    function = std::regex_replace( function, std::regex( "\\(.*\\)" ), "" );       // clean arguments
-    function = std::regex_replace( function, std::regex( ".*\\s{1}" ), "" );       // clean return values
-    function = std::regex_replace( function, std::regex( ".*::" ), "" );           // clean namespaces
-    #endif*/
 
     switch( type ) {
         case QtDebugMsg:

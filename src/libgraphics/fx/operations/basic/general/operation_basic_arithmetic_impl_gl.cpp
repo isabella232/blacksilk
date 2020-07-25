@@ -172,7 +172,7 @@ void applyGrainSubtract_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -197,7 +197,7 @@ void applyGrainAdd_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -223,7 +223,7 @@ void grainMultiply_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -247,7 +247,7 @@ void grainMultiply_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -272,7 +272,7 @@ void normalize_GL(
                               dst,
                               src,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -298,7 +298,7 @@ void minThreshold_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -324,7 +324,7 @@ void maxThreshold_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -349,7 +349,7 @@ void negate_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -374,7 +374,7 @@ void min_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -399,7 +399,7 @@ void min_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -424,7 +424,7 @@ void max_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -449,7 +449,7 @@ void max_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -474,7 +474,7 @@ void add_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -499,7 +499,7 @@ void add_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -527,7 +527,7 @@ void add_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -552,7 +552,7 @@ void subtract_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -577,7 +577,7 @@ void subtract_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -605,7 +605,7 @@ void subtract_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -631,7 +631,7 @@ void multiply_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -656,7 +656,7 @@ void multiply_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -685,7 +685,7 @@ void multiply_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -710,7 +710,7 @@ void divide_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -735,7 +735,7 @@ void divide_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -763,7 +763,7 @@ void divide_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -787,7 +787,7 @@ void grainMerge_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -832,7 +832,7 @@ void screen_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -856,7 +856,7 @@ void overlay_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -884,7 +884,7 @@ void overlay_GL(
                               dst,
                               src0,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -908,7 +908,7 @@ void dodge_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -932,7 +932,7 @@ void burn_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -956,7 +956,7 @@ void hardLight_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -980,7 +980,7 @@ void grainExtract_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -1004,7 +1004,7 @@ void difference_GL(
                               src0,
                               src1,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 

@@ -173,7 +173,7 @@ void splittone_GL(
                               destination,
                               source,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <libcommon/scopedptr.hpp>
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/allocator.hpp>
+
+#include <memory>
 
 #define FXAPI_BACKEND_OPENGL        0x10
 #define FXAPI_BACKEND_CPU           0x20
@@ -565,8 +566,8 @@ class ApiBackendDevice {
         /// released objects.
         virtual size_t  cleanUp() = 0;
 
-        virtual libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  allocator() = 0;
-        virtual void setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator ) = 0;
+        virtual std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator() = 0;
+        virtual void setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator ) = 0;
 };
 
 /// interface: ApiImageOperation

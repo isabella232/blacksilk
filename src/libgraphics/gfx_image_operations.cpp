@@ -6,7 +6,7 @@
 
 namespace libgraphics {
 
-struct ImageLayerMask::Private : libcommon::PimplPrivate {
+struct ImageLayerMask::Private {
     struct BackendImageObj {
         const int backendId;
         libgraphics::fxapi::ApiBackendDevice* device;

@@ -112,21 +112,21 @@ bool FilmGrain::process(
         );
     }
 
-    libcommon::ScopedPtr<ImageLayer> blurredGrainLayer( makeImageLayer( device, destination ) );
+    std::unique_ptr<ImageLayer> blurredGrainLayer( makeImageLayer( device, destination ) );
 
     if( ( ( this->m_GrainBlurRadius >= 0.05f ) ) ||
             ( ( this->m_GrainBlurRadius >= 0.05f ) && !isCompatibleGrainImage ) ) {
         libgraphics::fx::operations::gaussianBlur(
             device,
-            blurredGrainLayer,
-            this->m_GrainLayer,
+            blurredGrainLayer.get(),
+            this->m_GrainLayer.get(),
             this->m_GrainLayer->size(),
             this->m_GrainBlurRadius
         );
     } else {
         libgraphics::fx::operations::blit(
-            blurredGrainLayer,
-            m_GrainLayer,
+            blurredGrainLayer.get(),
+            m_GrainLayer.get(),
             m_GrainLayer->size(),
             m_GrainLayer->size()
         );
@@ -138,7 +138,7 @@ bool FilmGrain::process(
         destination,
         source,
         source->size(),
-        blurredGrainLayer,
+        blurredGrainLayer.get(),
         this->m_CurveData,
         this->m_MonoGrain
     );
@@ -310,7 +310,7 @@ struct grain_render {
 
 void FilmGrain::calculateGrainImage() {
 
-    if( !this->m_GrainLayer.empty() ) {
+    if( this->m_GrainLayer ) {
 
         const auto grainFormat  = this->m_GrainLayer->format();
         const auto grainWidth   = this->m_GrainLayer->width();
@@ -347,7 +347,7 @@ void FilmGrain::calculateGrainImage() {
 
         bool grainBufferWasLocallyAllocated( false );
         void* grainBuffer( nullptr );
-        libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator::Blob> grainBufferAllocBlob;
+        std::shared_ptr<libgraphics::StdDynamicPoolAllocator::Blob> grainBufferAllocBlob;
 
         if( m_GrainLayer->containsDataForBackend( FXAPI_BACKEND_CPU ) ) {
             grainBufferAllocBlob = m_GrainLayer->internalDeviceForBackend( FXAPI_BACKEND_CPU )->allocator()->alloc(
@@ -549,17 +549,11 @@ void FilmGrain::resetGrain(
     return;
 }
 
-void FilmGrain::resetGrain(
-    libcommon::ScopedPtr<libgraphics::ImageLayer>& rhs
-) {
-    this->m_GrainLayer.assign( rhs );
-}
-
-libcommon::ScopedPtr<libgraphics::ImageLayer>&  FilmGrain::grainLayer() {
+std::unique_ptr<libgraphics::ImageLayer>&  FilmGrain::grainLayer() {
     return this->m_GrainLayer;
 }
 
-const libcommon::ScopedPtr<libgraphics::ImageLayer>&   FilmGrain::grainLayer() const {
+const std::unique_ptr<libgraphics::ImageLayer>&   FilmGrain::grainLayer() const {
     return this->m_GrainLayer;
 }
 
@@ -699,7 +693,7 @@ void FilmGrain::setGrainBlurRadius( float radius ) {
 }
 
 void FilmGrain::deleteGrainForBackend( int backendId ) {
-    if( !this->m_GrainLayer.empty() ) {
+    if( this->m_GrainLayer ) {
         this->m_GrainLayer->deleteDataForBackend( backendId );
 
         this->m_ModifiedCurve   = true;

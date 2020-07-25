@@ -35,7 +35,7 @@ bool checkIsMonoFormat( fxapi::EPixelFormat::t format ) {
     }
 }
 
-struct ImageObject::Private : libcommon::PimplPrivate {
+struct ImageObject::Private {
     struct Tile {
         Tile() : x( 0 ), y( 0 ), realWidth( 0 ),
             realHeight( 0 ), texture( nullptr ), renderTarget( nullptr ) {}
@@ -976,7 +976,7 @@ bool ImageObject::isMonoFormat() const {
 /** IMPL: StreamLinedImageObject
 */
 
-struct StreamLinedImageObject::Private : libcommon::PimplPrivate {
+struct StreamLinedImageObject::Private {
     gl::BackendDevice*                              device;
 
     libgraphics::fxapi::EPixelFormat::t             format;

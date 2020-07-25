@@ -4,7 +4,7 @@ namespace libgraphics {
 namespace backend {
 namespace cpu {
 
-struct ImageOperation::Private : libcommon::PimplPrivate {
+struct ImageOperation::Private {
     const std::string   name;
     Private( const char* _name ) : name( _name ) {}
 };

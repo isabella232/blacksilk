@@ -7,19 +7,19 @@ size_t  FilterStack::count() const {
     return this->m_Filters.size();
 }
 
-libcommon::SharedPtr<Filter>    FilterStack::top() {
+std::shared_ptr<Filter>    FilterStack::top() {
     return this->m_Filters.front();
 }
 
-const libcommon::SharedPtr<Filter>&    FilterStack::top() const {
+const std::shared_ptr<Filter>&    FilterStack::top() const {
     return this->m_Filters.front();
 }
 
-libcommon::SharedPtr<Filter>    FilterStack::bottom() {
+std::shared_ptr<Filter>    FilterStack::bottom() {
     return this->m_Filters.back();
 }
 
-const libcommon::SharedPtr<Filter>&    FilterStack::bottom() const {
+const std::shared_ptr<Filter>&    FilterStack::bottom() const {
     return this->m_Filters.back();
 }
 
@@ -30,11 +30,11 @@ void FilterStack::clear() {
 void FilterStack::pushFront( Filter* filter ) {
     this->m_Filters.insert(
         this->m_Filters.begin(),
-        libcommon::SharedPtr<Filter>( filter )
+        std::shared_ptr<Filter>( filter )
     );
 }
 
-void FilterStack::pushFront( const libcommon::SharedPtr<Filter>& filter ) {
+void FilterStack::pushFront( const std::shared_ptr<Filter>& filter ) {
     this->m_Filters.insert(
         this->m_Filters.begin(),
         filter
@@ -43,11 +43,11 @@ void FilterStack::pushFront( const libcommon::SharedPtr<Filter>& filter ) {
 
 void FilterStack::pushBack( Filter* filter ) {
     this->m_Filters.push_back(
-        libcommon::SharedPtr<Filter>( filter )
+        std::shared_ptr<Filter>( filter )
     );
 }
 
-void FilterStack::pushBack( const libcommon::SharedPtr<Filter>& filter ) {
+void FilterStack::pushBack( const std::shared_ptr<Filter>& filter ) {
     this->m_Filters.push_back(
         filter
     );
@@ -56,11 +56,11 @@ void FilterStack::pushBack( const libcommon::SharedPtr<Filter>& filter ) {
 void FilterStack::insert( ContainerType::iterator it, Filter* filter ) {
     this->m_Filters.insert(
         it,
-        libcommon::SharedPtr<Filter>( filter )
+        std::shared_ptr<Filter>( filter )
     );
 }
 
-void FilterStack::insert( ContainerType::iterator it, const libcommon::SharedPtr<Filter>& filter ) {
+void FilterStack::insert( ContainerType::iterator it, const std::shared_ptr<Filter>& filter ) {
     this->m_Filters.insert(
         it,
         filter
@@ -91,19 +91,19 @@ FilterStack::ContainerType::const_iterator FilterStack::constEnd() const {
     return this->m_Filters.end();
 }
 
-libcommon::SharedPtr<Filter>    FilterStack::byIndex( size_t index ) const {
+std::shared_ptr<Filter>    FilterStack::byIndex( size_t index ) const {
     assert( this->m_Filters.size() > index );
     return *( this->m_Filters.begin() + index );
 }
 
-libcommon::SharedPtr<Filter>    FilterStack::byName( const std::string& name ) const {
+std::shared_ptr<Filter>    FilterStack::byName( const std::string& name ) const {
     for( auto it = this->m_Filters.begin(); it != this->m_Filters.end(); ++it ) {
         if( ( *it )->name() == name ) {
             return ( *it );
         }
     }
 
-    return libcommon::SharedPtr<Filter>();
+    return {};
 }
 
 bool FilterStack::remove( ContainerType::iterator it ) {
@@ -113,7 +113,7 @@ bool FilterStack::remove( ContainerType::iterator it ) {
     return true;
 }
 
-bool FilterStack::remove( const libcommon::SharedPtr<Filter>& filter ) {
+bool FilterStack::remove( const std::shared_ptr<Filter>& filter ) {
     for( auto it = this->m_Filters.begin(); it != this->m_Filters.end(); ++it ) {
         if( ( *it ) == filter ) {
             this->m_Filters.erase(
@@ -128,7 +128,7 @@ bool FilterStack::remove( const libcommon::SharedPtr<Filter>& filter ) {
 
 bool FilterStack::remove( Filter* filter ) {
     for( auto it = this->m_Filters.begin(); it != this->m_Filters.end(); ++it ) {
-        if( ( *it ) == filter ) {
+        if( it->get() == filter ) {
             this->m_Filters.erase(
                 it
             );

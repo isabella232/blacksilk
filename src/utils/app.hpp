@@ -1,9 +1,5 @@
 #pragma once
 
-/// common stuff
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/scopedptr.hpp>
-
 /// basic graphics stuff
 #include <libgraphics/base.hpp>
 #include <libgraphics/bitmap.hpp>
@@ -20,17 +16,10 @@
 
 /// libfoundation stuff
 #include <libfoundation/app/application.hpp>
-#include <libfoundation/app/backgroundtask.hpp>
-#include <libfoundation/app/backgroundtaskgroup.hpp>
-#include <libfoundation/app/backgroundtasklistener.hpp>
-
-#include <libfoundation/app/tasks/preparesharpen.hpp>
-#include <libfoundation/app/tasks/rendergrain.hpp>
 
 /// core stuff
 #include <utils/hostmachine.hpp>
 #include <utils/graphicsview.hpp>
-#include <utils/responsivebackgroundtasklistener.hpp>
 
 #include <QElapsedTimer>
 
@@ -61,13 +50,13 @@ struct App {
 
         /// core application
         /// objects
-        libcommon::ScopedPtr<libfoundation::app::Application>                                   app;
+        std::unique_ptr<libfoundation::app::Application>                                   app;
         libfoundation::app::ApplicationBackend*                                                 appBackend;
         libfoundation::app::ApplicationSession*                                                 currentSession;
-        libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview>                actionRenderPreview;
+        std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview>                actionRenderPreview;
 
         /// ui
-        libcommon::ScopedPtr<blacksilk::GraphicsView>                       view;
+        std::unique_ptr<blacksilk::GraphicsView>                       view;
         bool                                                                shouldRender;
 
         /// image properties
@@ -86,11 +75,6 @@ struct App {
                 currentImageSize( 0 ), shouldRenderStats( false ) {}
 
         } preview;
-
-        /// background tasks and
-        /// status reports
-        libcommon::ScopedPtr<libfoundation::app::BackgroundTaskGroup>       backgroundTasks;
-        libcommon::ScopedPtr<blacksilk::ResponsiveBackgroundTaskListener>   taskListener;
 
         /// filter objects
         libgraphics::fx::filters::BWAdaptiveMixer*                      filterBWMixer;
@@ -118,16 +102,6 @@ struct App {
                 initialized.
         */
         bool initialized() const;
-
-        /**
-            \fn initializeTaskListener
-            \since 1.0
-            \brief Initializes the internal background task listener, which reports to the
-                specified QStaturBar control.
-        */
-        void initializeTaskListener(
-            QStatusBar* statusBar
-        );
 
         /**
             \fn initialize
@@ -172,17 +146,6 @@ struct App {
                 central subsystems(rendering,image management,plugins, etc.)
         */
         bool shutdown();
-
-        /**
-            \fn enqueBackgroundTask
-            \since 1.0
-            \brief Enques a new global background
-                task.
-        */
-        void enqueBackgroundTask(
-            libfoundation::app::BackgroundTask* task,
-            libfoundation::app::BackgroundTaskListener* listener = nullptr
-        );
 
         /**
             \fn loadIoPluginFromPath

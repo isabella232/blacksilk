@@ -2,9 +2,6 @@
 
 #include <assert.h>
 
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/scopedptr.hpp>
-
 #include <libgraphics/fxapi.hpp>
 
 #include <libgraphics/backend/gl/gl_resource.hpp>
@@ -122,7 +119,7 @@ class ImageObject : public fxapi::ApiImageObject {
 
         virtual bool empty();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 class StreamLinedImageObject : public ImageObject {
@@ -232,7 +229,7 @@ class StreamLinedImageObject : public ImageObject {
 
         virtual bool empty();
     protected:
-        libcommon::PimplPtr<Private>    d;
+        std::shared_ptr<Private>    d;
 };
 
 

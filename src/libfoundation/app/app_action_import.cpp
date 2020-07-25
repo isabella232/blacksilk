@@ -20,7 +20,7 @@
 namespace libfoundation {
 namespace app {
 
-struct ApplicationActionImport::Private : libcommon::PimplPrivate {
+struct ApplicationActionImport::Private {
     const EImageFormat::t format;
     ApplicationSession* session;
     libgraphics::fxapi::ApiBackendDevice* backend;
@@ -143,7 +143,7 @@ bool ApplicationActionImport::process() {
 }
 
 bool ApplicationActionImport::finished() {
-    return this->m_FinishedMutex.tryLock();
+    return this->m_FinishedMutex.try_lock();
 }
 
 }

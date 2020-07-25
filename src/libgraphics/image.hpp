@@ -397,18 +397,18 @@ class ImageLayerMask {
             int backendId
         ) const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// high-level image layer class
 /// management.
 class ImageLayerGroup {
     public:
-        struct Private : libcommon::PimplPrivate {
-            std::vector<libcommon::SharedPtr<ImageLayer> >  layers;
+        struct Private {
+            std::vector<std::shared_ptr<ImageLayer> >  layers;
         };
 
-        typedef std::vector<libcommon::SharedPtr<ImageLayer> > VectorType;
+        typedef std::vector<std::shared_ptr<ImageLayer> > VectorType;
         typedef VectorType::iterator Iterator;
         typedef VectorType::const_iterator ConstIterator;
 
@@ -423,7 +423,7 @@ class ImageLayerGroup {
             ImageLayer* layer
         );
         void append(
-            libcommon::SharedPtr<ImageLayer> layer
+            std::shared_ptr<ImageLayer> layer
         );
 
 
@@ -467,12 +467,12 @@ class ImageLayerGroup {
         ConstIterator end() const;
         ConstIterator constEnd() const;
 
-        libcommon::SharedPtr<ImageLayer>    front() const;
-        libcommon::SharedPtr<ImageLayer>    back() const;
+        std::shared_ptr<ImageLayer>    front() const;
+        std::shared_ptr<ImageLayer>    back() const;
 
-        libcommon::SharedPtr<ImageLayer>    at( size_t index ) const;
+        std::shared_ptr<ImageLayer>    at( size_t index ) const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// high-level image class
@@ -643,7 +643,7 @@ class Image {
         size_t      height() const;
         fxapi::EPixelFormat::t  format() const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// high-level image layer class implementation
@@ -965,7 +965,7 @@ class ImageLayer {
         bool deleteDataForBackend( int backendId );
         bool deleteDataForDevice( libgraphics::fxapi::ApiBackendDevice* device );
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
     private:
         ImageLayer();
 };

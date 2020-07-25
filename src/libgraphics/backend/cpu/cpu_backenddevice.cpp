@@ -9,7 +9,7 @@ namespace backend {
 namespace cpu {
 
 /// PixelArray
-struct PixelArray::Private : libcommon::PimplPrivate {
+struct PixelArray::Private {
     void*                       data;
     size_t                      length;
     fxapi::EPixelFormat::t      format;
@@ -156,25 +156,21 @@ unsigned short* PixelArray::get16Bit( size_t pos ) {
 }
 
 /// DataRegion
-struct DataRegion::Private : libcommon::PimplPrivate {
-    std::vector<libcommon::ScopedPtr<DataRegionEntry> > entries;
-    libcommon::atomics::type32  used;
+struct DataRegion::Private {
+    std::vector<std::unique_ptr<DataRegionEntry> > entries;
+    std::atomic_uint32_t used;;
 
     Private( size_t count, size_t length, void* buffer ) : used( 0 ) {
         for( size_t i = 0; count > i; ++i ) {
-            entries.push_back( libcommon::ScopedPtr<DataRegionEntry>( new DataRegionEntry( buffer, length * i ) ) );
+            entries.push_back( std::unique_ptr<DataRegionEntry>( new DataRegionEntry( buffer, length * i ) ) );
         }
     }
 
     inline bool tryAcquire() {
-        auto threadId = libcommon::getCurrentThreadId();
+        libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+        libcommon::UInt32 zero = 0;
 
-        if( ( libcommon::atomics::exchange32( &used, 0, threadId ) == 0 ) ||
-                libcommon::atomics::equal32( &used, threadId ) ) {
-            return true;
-        }
-
-        return false;
+        return used.compare_exchange_weak( zero, threadId );
     }
     inline void acquire() {
         volatile bool acquired( tryAcquire() );
@@ -182,7 +178,7 @@ struct DataRegion::Private : libcommon::PimplPrivate {
         while( !acquired ) {
             acquired = tryAcquire();
 
-            libcommon::sleep( 1 );
+            std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
         }
     }
 };
@@ -238,16 +234,16 @@ bool DataRegion::tryAcquire() {
 }
 
 bool DataRegion::isUsed() {
-    return !libcommon::atomics::equal32( &d->used, 0 );
+    return d->used != 0;
 }
 
 
 /// BackendDevice
-struct BackendDevice::Private : libcommon::PimplPrivate {
-    std::vector< libcommon::ScopedPtr<DataRegion> >         dataRegions;
-    std::vector< libcommon::ScopedPtr<PixelArray> >         pixelArrays;
-    std::vector< libcommon::ScopedPtr<ImageObject> >        imageObjects;
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator> allocator;
+struct BackendDevice::Private {
+    std::vector< std::unique_ptr<DataRegion> >         dataRegions;
+    std::vector< std::unique_ptr<PixelArray> >         pixelArrays;
+    std::vector< std::unique_ptr<ImageObject> >        imageObjects;
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator>   allocator;
     QThreadPool threadPool;
 
     Private() : allocator( new libgraphics::StdDynamicPoolAllocator() ) {}
@@ -304,14 +300,14 @@ fxapi::ApiResource* BackendDevice::createTexture1D( const fxapi::EPixelFormat::t
 
 ///\todo clean up image object management!11
 fxapi::ApiImageObject* BackendDevice::createTexture2D() {
-    if( this->allocator().empty() ) {
+    if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject();
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     } else {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject( d->allocator.get() );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     }
@@ -319,13 +315,13 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D() {
 }
 
 fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat::t& format, size_t width, size_t height ) {
-    if( this->allocator().empty() ) {
+    if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject(
                                          format,
                                          width,
                                          height
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     } else {
@@ -335,21 +331,21 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
                                          width,
                                          height
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     }
 }
 
 fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat::t& format, size_t width, size_t height, void* data ) {
-    if( this->allocator().empty() ) {
+    if( !this->allocator() ) {
         fxapi::ApiImageObject* obj = ( fxapi::ApiImageObject* ) new libgraphics::backend::cpu::ImageObject(
                                          format,
                                          width,
                                          height,
                                          data
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     } else {
@@ -360,7 +356,7 @@ fxapi::ApiImageObject* BackendDevice::createTexture2D( const fxapi::EPixelFormat
                                          height,
                                          data
                                      );
-        this->d->imageObjects.push_back( libcommon::ScopedPtr<ImageObject>( ( ImageObject* )obj ) );
+        this->d->imageObjects.push_back( std::unique_ptr<ImageObject>( ( ImageObject* )obj ) );
 
         return obj;
     }
@@ -464,7 +460,7 @@ DataRegion*    BackendDevice::newDataRegion(
     );
 
     d->dataRegions.push_back(
-        libcommon::ScopedPtr<DataRegion>(
+        std::unique_ptr<DataRegion>(
             region
         )
     );
@@ -523,11 +519,11 @@ int BackendDevice::backendId() {
     return FXAPI_BACKEND_CPU;
 }
 
-libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  BackendDevice::allocator() {
+std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  BackendDevice::allocator() {
     return d->allocator;
 }
 
-void BackendDevice::setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator ) {
+void BackendDevice::setAllocator( const std::shared_ptr<StdDynamicPoolAllocator>& newAllocator ) {
     d->allocator = newAllocator;
 }
 

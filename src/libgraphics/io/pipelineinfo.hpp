@@ -2,12 +2,12 @@
 
 #include <libgraphics/base.hpp>
 
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace libgraphics {
 namespace io {
@@ -41,7 +41,7 @@ class PipelineInfo {
         void addImporterExtension( const char* extension );
         void addExporterExtension( const char* extension );
 
-        libcommon::SharedPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 }

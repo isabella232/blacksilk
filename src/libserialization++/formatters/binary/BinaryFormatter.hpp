@@ -20,8 +20,6 @@
 #include <libserialization++/Collections.hpp>
 #include <libserialization++/SerializationProvider.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 namespace spp {
 namespace formatters {
 namespace binary {
@@ -53,7 +51,7 @@ class   Provider : public spp::Provider {
                 Constructs a new serialization info instance from the
                 given existing provider.
         */
-        virtual libcommon::SharedPtr<SerializationInfo>      CreateSerialization( spp::Stream* stream );
+        virtual std::shared_ptr<SerializationInfo>      CreateSerialization( spp::Stream* stream );
 };
 
 

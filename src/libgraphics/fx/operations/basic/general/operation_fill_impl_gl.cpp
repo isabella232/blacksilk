@@ -21,7 +21,7 @@ struct FillOperation : public libgraphics::backend::gl::ImageOperation {
         backend::gl::EffectParameterVec4        color;
     };
 
-    libcommon::ScopedPtr<backend::gl::Effect>   effect;
+    std::unique_ptr<backend::gl::Effect>   effect;
     Params                                      params;
     bool                                        initialized;
     float                                       r;
@@ -34,7 +34,7 @@ struct FillOperation : public libgraphics::backend::gl::ImageOperation {
     virtual ~FillOperation() {}
 
     void initializeKernel() {
-        if( !effect.empty() ) {
+        if( effect ) {
             return;
         }
 
@@ -118,7 +118,7 @@ void fill_GL(
                               dst,
                               dst,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 
@@ -156,7 +156,7 @@ struct FillChannelOperation : public libgraphics::backend::gl::ImageOperation {
         backend::gl::EffectParameterInt         channelIndex;
     };
 
-    libcommon::ScopedPtr<backend::gl::Effect>   effect;
+    std::unique_ptr<backend::gl::Effect>   effect;
     Params                                      params;
     bool                                        initialized;
     float                                       r;
@@ -170,7 +170,7 @@ struct FillChannelOperation : public libgraphics::backend::gl::ImageOperation {
     virtual ~FillChannelOperation() {}
 
     void initializeKernel() {
-        if( !effect.empty() ) {
+        if( effect ) {
             return;
         }
 
@@ -265,9 +265,9 @@ void fill_GL(
     assert( dst );
     assert( color );
 
-    static libcommon::ScopedPtr<FillOperation> filter;
+    static std::unique_ptr<FillOperation> filter;
 
-    if( filter.empty() ) {
+    if( !filter ) {
         filter.reset( new FillOperation() );
     }
 
@@ -450,7 +450,7 @@ void fill_GL(
     device->destroyTexture2D( temporaryObject );
 }
 
-static libcommon::ScopedPtr<FillChannelOperation> channelFilter;
+static std::unique_ptr<FillChannelOperation> channelFilter;
 
 template < class _t_any >
 void fillChannelHelper(
@@ -463,7 +463,7 @@ void fillChannelHelper(
     assert( device );
     assert( dst );
 
-    if( channelFilter.empty() ) {
+    if( !channelFilter ) {
         channelFilter.reset( new FillChannelOperation );
     }
 

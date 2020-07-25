@@ -9,10 +9,10 @@ namespace libgraphics {
 namespace fxapi {
 
 struct Backend {
-    libcommon::ScopedPtr<libgraphics::fxapi::ApiBackendDevice>  cpuBackend;
-    libcommon::ScopedPtr<libgraphics::fxapi::ApiBackendDevice>  glBackend;
+    std::shared_ptr<libgraphics::fxapi::ApiBackendDevice>  cpuBackend;
+    std::shared_ptr<libgraphics::fxapi::ApiBackendDevice>  glBackend;
 };
-static libcommon::ScopedPtr<Backend>    backend;
+static std::shared_ptr<Backend>    backend;
 
 void initialize() {
     backend.reset(

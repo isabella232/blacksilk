@@ -3,7 +3,6 @@
 #include <libgraphics/base.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
-#include <libcommon/scopedptr.hpp>
 
 #include <libgraphics/bitmap.hpp>
 
@@ -344,7 +343,7 @@ struct GL : libcommon::INonCopyable {
         /// internal stuff
         GL();
 
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLTexture {
@@ -360,7 +359,7 @@ struct GLTexture {
         bool empty() const;
     private:
         GLTexture();
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLFrameBuffer {
@@ -372,7 +371,7 @@ struct GLFrameBuffer {
         bool empty() const;
     private:
         GLFrameBuffer();
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLShader {
@@ -386,7 +385,7 @@ struct GLShader {
         GL::EShaderType::t type() const;
     private:
         GLShader();
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLProgram {
@@ -400,7 +399,7 @@ struct GLProgram {
         GLShader* attachedFragmentShader() const;
     private:
         GLProgram();
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLErr {
@@ -412,7 +411,7 @@ struct GLErr {
         const std::string& errorType() const;
     private:
         GLErr();
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLRawBuffer {
@@ -425,7 +424,7 @@ struct GLRawBuffer {
         const GL::ERawBufferHint::t hint() const;
     private:
         GLRawBuffer();
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 struct GLDbgContext {
@@ -486,7 +485,7 @@ struct GLDbgContext {
         void reportInvalidCall( GL* ctx, const std::string& function, const std::map<std::string, std::string>& parameters = ( std::map<std::string, std::string>() ) );
         void reportError( GL* ctx, GLErr* err );
     private:
-        libcommon::PimplPtr<GLPriv> d;
+        std::shared_ptr<GLPriv> d;
 };
 
 }

@@ -1,11 +1,10 @@
 #pragma once
 
-#include <libcommon/mutex.hpp>
-#include <libcommon/lockable.hpp>
 #include <libcommon/noncopyable.hpp>
-#include <libcommon/scopedptr.hpp>
+
 #include <string>
 #include <vector>
+#include <mutex>
 
 #include <libgraphics/fxapi.hpp>
 #include <libgraphics/io/pipeline.hpp>
@@ -244,7 +243,7 @@ class ApplicationAction : public libcommon::INonCopyable {
 
         void waitForFinished();
     protected:
-        libcommon::Mutex    m_FinishedMutex;
+        std::mutex      m_FinishedMutex;
 };
 
 /// base class for session committable actions
@@ -288,7 +287,7 @@ class ApplicationActionRenderPreview : public SessionCommitableApplicationAction
         virtual bool process();
         virtual bool finished();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// import action
@@ -307,7 +306,7 @@ class ApplicationActionImport : public SessionCommitableApplicationAction {
         virtual bool process();
         virtual bool finished();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// export action
@@ -335,7 +334,7 @@ class ApplicationActionExport : public SessionCommitableApplicationAction {
         bool doCpuRendering( const ApplicationBackend* currentSessionBackend, libgraphics::Bitmap& outBitmap );
         bool applyAlphaChannel( const ApplicationBackend* currentSessionBackend, libgraphics::ImageLayer* destinationLayer, libgraphics::Bitmap* alphaLayer );
 
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// serialization action
@@ -383,12 +382,12 @@ class ApplicationBackend : public libcommon::INonCopyable {
         libgraphics::fxapi::ApiBackendDevice* cpuBackend() const;
 
         /// allocator management
-        libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& allocator();
-        const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& allocator() const;
+        std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& allocator();
+        const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& allocator() const;
     private:
         void initializeAllocators();
 
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// manages basic hardware info
@@ -407,8 +406,7 @@ struct ApplicationConfig {
 };
 
 /// user session management
-class ApplicationSession : public libcommon::INonCopyable,
-    public libcommon::ILockable {
+class ApplicationSession : public libcommon::INonCopyable {
     public:
         struct Private;
         friend class ApplicationActionRenderPreview;
@@ -427,7 +425,7 @@ class ApplicationSession : public libcommon::INonCopyable,
         libgraphics::io::Pipeline*          pipeline();
         const libgraphics::io::Pipeline*    pipeline() const;
         void setPipeline( libgraphics::io::Pipeline* pipelineObject );
-        void setPipeline( const libcommon::SharedPtr<libgraphics::io::Pipeline>& pipelineObject );
+        void setPipeline( const std::shared_ptr<libgraphics::io::Pipeline>& pipelineObject );
 
         const libgraphics::Image* previewImage() const;
         const libgraphics::Image* originalImage() const;
@@ -624,13 +622,8 @@ class ApplicationSession : public libcommon::INonCopyable,
 
         ApplicationSession* clone();
 
-        /// from ILockable
-        virtual void    lock();
-        virtual bool    tryLock();
-        virtual void    unlock();
-
     private:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// base system layer
@@ -706,7 +699,7 @@ class Application : public libcommon::INonCopyable {
         bool makeCurrentSession( const std::string& name );
 
     protected:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };
 
 

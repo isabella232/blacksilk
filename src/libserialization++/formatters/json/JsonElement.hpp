@@ -15,8 +15,6 @@
 #include <libserialization++/TypeInfo.hpp>
 #include <libserialization++/SerializationStream.hpp>
 
-#include <libcommon/sharedptr.hpp>
-
 namespace spp {
 namespace formatters {
 namespace json {
@@ -192,7 +190,7 @@ class   JsonElement {
                 Returns the iterator to the first
                 JsonElement sibling vector.
         */
-        std::vector< libcommon::SharedPtr< JsonElement > >::iterator ChildBegin();
+        std::vector< std::shared_ptr< JsonElement > >::iterator ChildBegin();
 
         /**
             \fn         ChildEnd
@@ -201,7 +199,7 @@ class   JsonElement {
                 Returns the iterator to the last
                 JsonElement sibling vector.
         */
-        std::vector< libcommon::SharedPtr< JsonElement > >::iterator ChildEnd();
+        std::vector< std::shared_ptr< JsonElement > >::iterator ChildEnd();
 
         /**
             \fn         SiblingBegin
@@ -210,7 +208,7 @@ class   JsonElement {
                 Returns the iterator to the first
                 JsonElement sibling vector.
         */
-        std::vector< libcommon::SharedPtr< JsonElement > >::iterator SiblingBegin();
+        std::vector< std::shared_ptr< JsonElement > >::iterator SiblingBegin();
 
         /**
             \fn         SiblingEnd
@@ -219,7 +217,7 @@ class   JsonElement {
                 Returns the iterator to the last
                 JsonElement sibling vector.
         */
-        std::vector< libcommon::SharedPtr< JsonElement > >::iterator SiblingEnd();
+        std::vector< std::shared_ptr< JsonElement > >::iterator SiblingEnd();
 
         /**
             \fn         SetValue
@@ -285,7 +283,7 @@ class   JsonElement {
                 Adds a new sibling reference to the
                 current JsonElement instance.
         */
-        void            AddSiblingRef( const libcommon::SharedPtr< JsonElement >& sibling );
+        void            AddSiblingRef( const std::shared_ptr< JsonElement >& sibling );
         void            AddSiblingRef( JsonElement* sibling );
 
         /**
@@ -304,7 +302,7 @@ class   JsonElement {
                 Removes  a specific sibling from the current
                 state.
         */
-        bool            RemoveSibling( const libcommon::SharedPtr< JsonElement >& sibling );
+        bool            RemoveSibling( const std::shared_ptr< JsonElement >& sibling );
         bool            RemoveSibling( JsonElement* sibling );
 
         /**
@@ -322,7 +320,7 @@ class   JsonElement {
                 Adds a new child element to the current
                 JsonElement instance.
         */
-        void            AddChild( const libcommon::SharedPtr< JsonElement >& child );
+        void            AddChild( const std::shared_ptr< JsonElement >& child );
         void            AddChild( JsonElement* child );
 
         /**
@@ -341,7 +339,7 @@ class   JsonElement {
                 Removes a specified Child instance from
                 the current state.
         */
-        bool            RemoveChild( const libcommon::SharedPtr< JsonElement >& sibling );
+        bool            RemoveChild( const std::shared_ptr< JsonElement >& sibling );
         bool            RemoveChild( JsonElement* sibling );
 
         /**
@@ -398,8 +396,8 @@ class   JsonElement {
         std::wstring                                        m_Value;
         JsonValueType::t                                    m_Type;
         JsonValueType::t                                    m_ValueType;
-        std::vector< libcommon::SharedPtr< JsonElement > >       m_Siblings;
-        std::vector< libcommon::SharedPtr< JsonElement > >       m_Children;
+        std::vector< std::shared_ptr< JsonElement > >       m_Siblings;
+        std::vector< std::shared_ptr< JsonElement > >       m_Children;
 };
 
 

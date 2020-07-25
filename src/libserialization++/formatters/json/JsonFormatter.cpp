@@ -16,9 +16,9 @@
 using namespace spp;
 using namespace spp::formatters::json;
 
-bool        BaseReflectElementTreeContainer( libcommon::SharedPtr<JsonElement> root, spp::PropertyContainer* container );
+bool        BaseReflectElementTreeContainer( std::shared_ptr<JsonElement> root, spp::PropertyContainer* container );
 
-bool        BaseReflectElementTree( libcommon::SharedPtr<JsonElement> root, spp::Property& property ) {
+bool        BaseReflectElementTree( std::shared_ptr<JsonElement> root, spp::Property& property ) {
 
     if( root->GetType() == JsonValueType::Object || root->GetType() == JsonValueType::Array ) {
 
@@ -88,7 +88,7 @@ bool        BaseReflectElementTree( libcommon::SharedPtr<JsonElement> root, spp:
 }
 
 
-bool        BaseReflectElementTreeContainer( libcommon::SharedPtr<JsonElement> root, spp::PropertyContainer* container ) {
+bool        BaseReflectElementTreeContainer( std::shared_ptr<JsonElement> root, spp::PropertyContainer* container ) {
 
     if( root->GetType() == JsonValueType::Object || root->GetType() == JsonValueType::Array ) {
 
@@ -132,7 +132,7 @@ bool        BaseReflectElementTreeContainer( libcommon::SharedPtr<JsonElement> r
 
 }
 
-bool        BaseReflectElementTree( libcommon::SharedPtr<JsonElement> root, spp::PropertyContainer* container ) {
+bool        BaseReflectElementTree( std::shared_ptr<JsonElement> root, spp::PropertyContainer* container ) {
 
     bool    result( true );
 
@@ -144,7 +144,7 @@ bool        BaseReflectElementTree( libcommon::SharedPtr<JsonElement> root, spp:
 
 }
 
-bool        BaseReflectElementTree( libcommon::SharedPtr<JsonElement> root, spp::PropertyCollection& collection ) {
+bool        BaseReflectElementTree( std::shared_ptr<JsonElement> root, spp::PropertyCollection& collection ) {
 
     bool    result( true );
 
@@ -165,8 +165,8 @@ bool        BaseReflectElementTree( libcommon::SharedPtr<JsonElement> root, spp:
 
 }
 
-void        BaseReflectPropertyCollection( libcommon::SharedPtr<JsonElement> element, spp::Property& property ) {
-    libcommon::SharedPtr<JsonElement>     child( new JsonElement() );
+void        BaseReflectPropertyCollection( std::shared_ptr<JsonElement> element, spp::Property& property ) {
+    std::shared_ptr<JsonElement>     child( new JsonElement() );
 
     child->SetName( property.GetDesc().GetName() );
 
@@ -240,9 +240,9 @@ void        BaseReflectPropertyCollection( libcommon::SharedPtr<JsonElement> ele
     }
 }
 
-libcommon::SharedPtr<JsonElement>        spp::formatters::json::ReflectPropertyCollection( spp::Property& property ) {
+std::shared_ptr<JsonElement>        spp::formatters::json::ReflectPropertyCollection( spp::Property& property ) {
 
-    libcommon::SharedPtr<JsonElement> root( new JsonElement() );
+    std::shared_ptr<JsonElement> root( new JsonElement() );
 
     BaseReflectPropertyCollection( root, property );
 
@@ -251,19 +251,19 @@ libcommon::SharedPtr<JsonElement>        spp::formatters::json::ReflectPropertyC
 }
 
 
-void        spp::formatters::json::ReflectPropertyCollection( libcommon::SharedPtr<JsonElement> root, spp::Property& property ) {
+void        spp::formatters::json::ReflectPropertyCollection( std::shared_ptr<JsonElement> root, spp::Property& property ) {
 
     BaseReflectPropertyCollection( root, property );
 
 }
 
-libcommon::SharedPtr<SerializationInfo>      spp::formatters::json::Provider::CreateSerialization( spp::Stream* stream ) {
+std::shared_ptr<SerializationInfo>      spp::formatters::json::Provider::CreateSerialization( spp::Stream* stream ) {
 
     SerializationInfo* info = new SerializationInfo( stream, new spp::formatters::json::Formatter() );
 
     info->GetFormatter()->Reset( stream );
 
-    return libcommon::SharedPtr< SerializationInfo >( info );
+    return std::shared_ptr< SerializationInfo >( info );
 
 }
 
@@ -296,7 +296,7 @@ bool spp::formatters::json::Formatter::Deserialize( spp::Property property ) {
 
         if( result ) {
 
-            libcommon::SharedPtr< JsonElement >                  root     = state.GetRoot();
+            std::shared_ptr< JsonElement >                  root     = state.GetRoot();
 
             BaseReflectElementTree( root, property );
 
@@ -337,7 +337,7 @@ bool spp::formatters::json::Formatter::Deserialize( spp::PropertyContainer* cont
 
         if( result ) {
 
-            libcommon::SharedPtr< JsonElement >                  root     = state.GetRoot();
+            std::shared_ptr< JsonElement >                  root     = state.GetRoot();
 
             BaseReflectElementTree( root, container );
 
@@ -378,7 +378,7 @@ bool spp::formatters::json::Formatter::Deserialize( spp::PropertyCollection coll
 
         if( result ) {
 
-            libcommon::SharedPtr< JsonElement >                  root     = state.GetRoot();
+            std::shared_ptr< JsonElement >                  root     = state.GetRoot();
 
             BaseReflectElementTree( root, collection );
 
@@ -399,7 +399,7 @@ bool spp::formatters::json::Formatter::Deserialize( spp::PropertyCollection coll
 
 bool spp::formatters::json::Formatter::Serialize( spp::Property property ) {
 
-    libcommon::SharedPtr<JsonElement> element = ReflectPropertyCollection( property );
+    std::shared_ptr<JsonElement> element = ReflectPropertyCollection( property );
 
     ( *( element->ChildBegin() ) )->Write( this->m_Stream, true );
 
@@ -410,7 +410,7 @@ bool spp::formatters::json::Formatter::Serialize( spp::Property property ) {
 bool spp::formatters::json::Formatter::Serialize( spp::PropertyCollection collection ) {
 
     bool                                 result( true );
-    libcommon::SharedPtr<JsonElement>         root( new JsonElement() );
+    std::shared_ptr<JsonElement>         root( new JsonElement() );
 
     root->SetType( JsonValueType::Object );
     root->SetName( collection.GetName() );

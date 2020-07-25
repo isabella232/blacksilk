@@ -1,9 +1,9 @@
 #pragma once
 
 #include <libgraphics/base.hpp>
-#include <libcommon/scopedptr.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/atomics.hpp>
+
+#include <memory>
 
 namespace libgraphics {
 namespace io {
@@ -32,7 +32,7 @@ class PipelinePluginInfo {
         void addImporterExtension( const char* extension );
         void addExporterExtension( const char* extension );
     protected:
-        libcommon::SharedPtr<Private> d;
+        std::shared_ptr<Private> d;
 };
 
 }

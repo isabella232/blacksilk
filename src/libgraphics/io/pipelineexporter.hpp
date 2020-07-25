@@ -5,7 +5,6 @@
 #include <libgraphics/io/pipelineobject.hpp>
 #include <libgraphics/io/pipelineobjectgroup.hpp>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 
@@ -31,10 +30,6 @@ class PipelineExporter : public libgraphics::io::PipelineObject  {
             libgraphics::Bitmap* toSave
         ) = 0;
 
-        /// from: libcommon::ILockable
-        virtual void lock() = 0;
-        virtual bool tryLock() = 0;
-        virtual void unlock() = 0;
 };
 typedef libgraphics::io::PipelineObjectGroup<PipelineExporter> PipelineExporterGroup;
 

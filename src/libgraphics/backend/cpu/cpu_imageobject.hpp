@@ -5,8 +5,6 @@
 #include <libgraphics/fxapi.hpp>
 
 #include <libcommon/atomics.hpp>
-#include <libcommon/scopedptr.hpp>
-#include <libcommon/sharedptr.hpp>
 
 #include <libgraphics/allocator.hpp>
 
@@ -121,7 +119,7 @@ class ImageObject : public libgraphics::fxapi::ApiImageObject {
         );
         void clearAllocator();
     private:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };
 
 }

@@ -50,7 +50,7 @@ class GenericFilterPlugin : public FilterPlugin {
         virtual ~GenericFilterPlugin() {}
 
         void registerFactory( FilterFactory* factory );
-        void registerFactory( const libcommon::SharedPtr<FilterFactory>& factory );
+        void registerFactory( const std::shared_ptr<FilterFactory>& factory );
 
         void clearFactories();
 
@@ -68,7 +68,7 @@ class GenericFilterPlugin : public FilterPlugin {
         /// object
         virtual std::string pluginName() const;
     protected:
-        std::vector<libcommon::SharedPtr<FilterFactory> > m_FilterFactories;
+        std::vector<std::shared_ptr<FilterFactory> > m_FilterFactories;
         std::string m_Name;
 };
 
@@ -86,15 +86,15 @@ typedef libgraphics::FilterPlugin* ( *CallbackCreateFilterPlugin )( void );
 ///  objects
 class FilterPluginGroup : public libcommon::INonCopyable {
     public:
-        typedef std::vector<libcommon::SharedPtr<FilterPlugin> > ContainerType;
+        typedef std::vector<std::shared_ptr<FilterPlugin> > ContainerType;
 
         virtual ~FilterPluginGroup() {}
 
         void add( FilterPlugin* plugin );
-        void add( const libcommon::SharedPtr<FilterPlugin>& plugin );
+        void add( const std::shared_ptr<FilterPlugin>& plugin );
 
         bool remove( FilterPlugin* plugin );
-        bool remove( const libcommon::SharedPtr<FilterPlugin>& plugin );
+        bool remove( const std::shared_ptr<FilterPlugin>& plugin );
         bool removeByName( const std::string& pluginName );
         bool removeByIndex( size_t index );
 

@@ -2,9 +2,6 @@
 
 #include <assert.h>
 
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/scopedptr.hpp>
-
 #include <libgraphics/fxapi.hpp>
 #include <libgraphics/backend/gl/gl_resource.hpp>
 #include <libgraphics/backend/gl/gl_resourcepool.hpp>
@@ -60,7 +57,7 @@ class RenderTarget : public backend::gl::Resource {
         virtual void acquire();
         virtual bool release();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// class: RenderTargetPool

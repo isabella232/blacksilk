@@ -7,7 +7,7 @@ namespace libgraphics {
 namespace backend {
 namespace gl {
 
-struct PixelArray::Private : libcommon::PimplPrivate {
+struct PixelArray::Private {
     utils::GLTexture*                       texture;
     size_t                                  length;
     libgraphics::fxapi::EPixelFormat::t     format;
@@ -180,11 +180,11 @@ utils::GLTexture*    PixelArray::texture() {
     return this->d->texture;
 }
 
-struct BackendDevice::Private : libcommon::PimplPrivate {
-    libcommon::ScopedPtr<gl::EffectPool>    effectPool;
-    libcommon::ScopedPtr<gl::TexturePool>   texturePool;
-    libcommon::ScopedPtr<gl::RenderTargetPool>  renderTargetPool;
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  allocator;
+struct BackendDevice::Private {
+    std::unique_ptr<gl::EffectPool>    effectPool;
+    std::unique_ptr<gl::TexturePool>   texturePool;
+    std::unique_ptr<gl::RenderTargetPool>  renderTargetPool;
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator;
 
     BackendDevice::ERenderingMode                  renderingMode;
 
@@ -357,11 +357,11 @@ int BackendDevice::backendId() {
     return FXAPI_BACKEND_OPENGL;
 }
 
-libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  BackendDevice::allocator() {
+std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  BackendDevice::allocator() {
     return d->allocator;
 }
 
-void BackendDevice::setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator ) {
+void BackendDevice::setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator ) {
     d->allocator = newAllocator;
 }
 
@@ -394,11 +394,11 @@ size_t  BackendDevice::cleanUp() {
 }
 
 /// returns the global gl object
-libcommon::ScopedPtr<utils::GL> ctx;
+std::unique_ptr<utils::GL> ctx;
 
 
 void initializeGlobalCtx() {
-    if( ctx.empty() ) {
+    if( !ctx ) {
         ctx.reset( utils::GL::construct() );
 
         ctx->assignDbgContext( new utils::GLDbgContext() );
@@ -406,7 +406,7 @@ void initializeGlobalCtx() {
 }
 
 void resetGlobalCtx() {
-    if( !ctx.empty() ) {
+    if( ctx ) {
         ctx.reset( nullptr );
     }
 }

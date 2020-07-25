@@ -12,9 +12,6 @@
 #include <libgraphics/backend/gl/gl_backenddevice.hpp>
 #include <libgraphics/backend/cpu/cpu_backenddevice.hpp>
 #include <libgraphics/backend/cpu/cpu_imageobject.hpp>
-#include <libcommon/scopedptr.hpp>
-#include <libcommon/scopeguard.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/fileutils.hpp>
 #include <libgraphics/fx/operations/basic.hpp>
 #include <libgraphics/fx/operations/complex.hpp>
@@ -29,6 +26,7 @@
 #include <QProcess>
 #include <QCoreApplication>
 
+#include <filesystem>
 #include <cstdlib>
 
 namespace libfoundation {
@@ -57,14 +55,14 @@ struct ActionRunnable : QRunnable {
         libfoundation::app::ApplicationAction* m_Action;
 };
 
-struct ApplicationSession::Private : libcommon::PimplPrivate {
-    libcommon::SharedPtr<ApplicationBackend>        backend;
-    libcommon::SharedPtr<libgraphics::Image>        originalImage;
-    libcommon::SharedPtr<libgraphics::Image>        previewImage;
+struct ApplicationSession::Private {
+    std::shared_ptr<ApplicationBackend>             backend;
+    std::shared_ptr<libgraphics::Image>             originalImage;
+    std::shared_ptr<libgraphics::Image>             previewImage;
 
     libgraphics::fxapi::ApiBackendDevice*           previewBackend;
 
-    libcommon::SharedPtr<libgraphics::io::Pipeline> pipeline;
+    std::shared_ptr<libgraphics::io::Pipeline>      pipeline;
 
     std::string     name;
     int             maxThreadCount;
@@ -90,7 +88,7 @@ struct ApplicationSession::Private : libcommon::PimplPrivate {
 
     QThreadPool                     appThreadPool;
 
-    libcommon::RecursiveMutex       mutex;
+    std::recursive_mutex       mutex;
 
     Private() : maxThreadCount( 0 ), imageOrigin( EImageOrigin::Unknown ), previewBackend( nullptr ) {}
 
@@ -290,10 +288,10 @@ const libgraphics::io::Pipeline*  ApplicationSession::pipeline() const {
 }
 
 void ApplicationSession::setPipeline( libgraphics::io::Pipeline* pipelineObject ) {
-    this->d->pipeline.assign( pipelineObject );
+    this->d->pipeline.reset( pipelineObject );
 }
 
-void ApplicationSession::setPipeline( const libcommon::SharedPtr<libgraphics::io::Pipeline>& pipelineObject ) {
+void ApplicationSession::setPipeline( const std::shared_ptr<libgraphics::io::Pipeline>& pipelineObject ) {
     this->d->pipeline = pipelineObject;
 }
 
@@ -312,7 +310,7 @@ void ApplicationSession::updateBackend( ApplicationBackend* backend ) {
     ///     resources. this is currently only a fast pointer
     ///     exchange.
     if( this->d->backend.get() != backend ) {
-        this->d->backend.assign( backend );
+        this->d->backend.reset( backend );
     }
 }
 
@@ -535,7 +533,7 @@ bool ApplicationSession::addFilter(
         return false;
     }
 
-    libcommon::SharedPtr<libgraphics::Filter>    filterPtr( filter );
+    std::shared_ptr<libgraphics::Filter>    filterPtr( filter );
     this->d->filterCollection.add(
         filterPtr
     );
@@ -897,12 +895,12 @@ bool ApplicationSession::importImageFromPath(
     const std::string& path
 ) {
 
-    if( !libcommon::fileutils::fileExists( path ) ) {
+    if( !std::filesystem::exists( path ) ) {
         LOG_WARNING( "Import file does not exist : " + path );
         return false;
     }
 
-    libcommon::ScopedPtr<ApplicationActionImport> importAction(
+    std::unique_ptr<ApplicationActionImport> importAction(
         new ApplicationActionImport(
             this,
             this->d->backend->cpuBackend(),
@@ -928,7 +926,7 @@ bool ApplicationSession::importImageFromPath(
 ) {
     ( void )format;
 
-    libcommon::ScopedPtr<ApplicationActionImport> importAction(
+    std::unique_ptr<ApplicationActionImport> importAction(
         new ApplicationActionImport(
             this,
             this->d->backend->cpuBackend(),
@@ -1001,7 +999,7 @@ bool ApplicationSession::exportImage(
         qDebug() << "Exporting current image to output buffer";
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionExport>   action(
+    std::unique_ptr<libfoundation::app::ApplicationActionExport>   action(
         new libfoundation::app::ApplicationActionExport(
             this,
             "",
@@ -1053,7 +1051,7 @@ bool ApplicationSession::exportImage(
         qDebug() << "Exporting current image to " << path.c_str();
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionExport>   action(
+    std::unique_ptr<libfoundation::app::ApplicationActionExport>   action(
         new libfoundation::app::ApplicationActionExport(
             this,
             path,
@@ -1088,7 +1086,7 @@ bool ApplicationSession::exportImage(
     /// recalculate all filter states
     this->updateAllFilters();
 
-    if( !libcommon::fileutils::fileExists( path ) ) {
+    if( !std::filesystem::exists( path ) ) {
         LOG_WARNING( "Export file does not exist : " + path );
         return false;
     }
@@ -1114,7 +1112,7 @@ bool ApplicationSession::updatePreview( bool _force ) {
         this->updateAllFilters();
     }
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview>   action(
+    std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview>   action(
         new libfoundation::app::ApplicationActionRenderPreview(
             this,
             this->previewBackend(),
@@ -1167,7 +1165,7 @@ bool ApplicationSession::renderToBitmap(
     libgraphics::Bitmap* destination,
     libgraphics::fxapi::ApiBackendDevice* backendDevice
 ) {
-    libcommon::ScopedPtr<libgraphics::ImageLayer> imageObject(
+    std::unique_ptr<libgraphics::ImageLayer> imageObject(
         new libgraphics::ImageLayer(
             backendDevice
         )
@@ -1185,7 +1183,7 @@ bool ApplicationSession::renderToBitmap(
         return false;
     }
 
-    if( !renderToLayer( imageObject, backendDevice ) ) {
+    if( !renderToLayer( imageObject.get(), backendDevice ) ) {
         assert( false );
 #if LIBFOUNDATION_DEBUG_OUTPUT
         qDebug() << "Error: Failed to render to bitmap.";
@@ -1209,7 +1207,7 @@ bool ApplicationSession::renderToLayer(
 ) {
     assert( destination );
 
-    libcommon::ScopedPtr<libfoundation::app::ApplicationActionRenderPreview> preview( new libfoundation::app::ApplicationActionRenderPreview(
+    std::unique_ptr<libfoundation::app::ApplicationActionRenderPreview> preview( new libfoundation::app::ApplicationActionRenderPreview(
                 this,
                 backendDevice,
                 destination,
@@ -1332,7 +1330,7 @@ ApplicationSession* ApplicationSession::clone() {
     clonedSession->d->filterMetaInfo            = this->d->filterMetaInfo;
 
     for( auto it = this->d->filterStack.begin(); it != this->d->filterStack.end(); ++it ) {
-        libcommon::SharedPtr<libgraphics::Filter> clonedFilter( ( *it )->clone() );
+        std::shared_ptr<libgraphics::Filter> clonedFilter( ( *it )->clone() );
 
         clonedSession->d->filterStack.pushBack( clonedFilter );
         clonedSession->d->filterCollection.add( clonedFilter );
@@ -1392,20 +1390,8 @@ void ApplicationSession::resetImageState(
     this->d->imagePath = path;
 }
 
-void ApplicationSession::lock() {
-    this->d->mutex.lock();
-}
-
-bool ApplicationSession::tryLock() {
-    return this->d->mutex.tryLock();
-}
-
-void ApplicationSession::unlock() {
-    this->d->mutex.unlock();
-}
-
 /** ApplicationActionRenderPreview **/
-struct ApplicationActionRenderPreview::Private : libcommon::PimplPrivate {
+struct ApplicationActionRenderPreview::Private {
     ApplicationSession*     session;
     libgraphics::fxapi::ApiBackendDevice*   backendDevice;
     libgraphics::ImageLayer*    destination;
@@ -1461,9 +1447,7 @@ bool ApplicationActionRenderPreview::commit() {
 }
 
 bool ApplicationActionRenderPreview::process() {
-    libcommon::LockGuard    _g( &this->m_FinishedMutex );
-    ( void )_g;
-
+    std::lock_guard<std::mutex> lock( this->m_FinishedMutex );
 
 #ifdef _DEBUG
     const unsigned int currentThreadId = libcommon::getCurrentThreadId();
@@ -1514,7 +1498,7 @@ bool ApplicationActionRenderPreview::process() {
             return successfullyRendered;
         }
 
-        libcommon::ScopedPtr<libgraphics::ImageLayer>   temporaryLayer( libgraphics::makeImageLayer( this->d->backendDevice, this->d->destination ) );
+        std::unique_ptr<libgraphics::ImageLayer>   temporaryLayer( libgraphics::makeImageLayer( this->d->backendDevice, this->d->destination ) );
         const auto successfullyInitializedTemporaryLayer = !temporaryLayer->empty();
 
         assert( successfullyInitializedTemporaryLayer );
@@ -1580,7 +1564,7 @@ bool ApplicationActionRenderPreview::process() {
 }
 
 bool ApplicationActionRenderPreview::finished() {
-    const auto locked = this->m_FinishedMutex.tryLock();
+    const auto locked = this->m_FinishedMutex.try_lock();
 
     if( locked ) {
         this->m_FinishedMutex.unlock();

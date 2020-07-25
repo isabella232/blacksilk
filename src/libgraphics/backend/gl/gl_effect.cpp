@@ -153,7 +153,7 @@ void applyEffectParameterToEffect( Effect* effect, EffectParameterPixelArray& pa
     }
 }
 
-struct Effect::Private : libcommon::PimplPrivate {
+struct Effect::Private {
     utils::GLProgram*   program;
     utils::GLShader*    pixelShader;
     std::string         name;
@@ -226,9 +226,9 @@ struct StandardVertexProgram {
 
     utils::GLShader*    shader;
 };
-static libcommon::ScopedPtr<StandardVertexProgram>  svprogram;
+static std::unique_ptr<StandardVertexProgram>  svprogram;
 utils::GLShader*    getStandardVertexShader() {
-    if( svprogram.empty() ) {
+    if( !svprogram ) {
         svprogram.reset( new StandardVertexProgram() );
     }
 

@@ -17,10 +17,6 @@ LIBCOMMON_API libcommon::Boolean    isUnixSystem();
 /// returns the current system as enum value
 LIBCOMMON_API libcommon::ESystem::t getSystem();
 
-/// stops execution of the current thread for the specified
-/// amount of milliseconds
-LIBCOMMON_API void    sleep( libcommon::UInt32 length );
-
 /// exits the current process
 LIBCOMMON_API void    exit( libcommon::UInt32 code );
 

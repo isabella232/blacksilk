@@ -1,9 +1,5 @@
 #pragma once
 
-/// common stuff
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/scopedptr.hpp>
-
 #include <vector>
 #include <string>
 #include <map>

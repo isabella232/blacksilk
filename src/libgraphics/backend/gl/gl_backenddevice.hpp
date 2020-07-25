@@ -41,7 +41,7 @@ class PixelArray : public fxapi::ApiResource {
         /// returns the current tex
         utils::GLTexture*    texture();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 class BackendDevice : public fxapi::ApiBackendDevice {
@@ -80,8 +80,8 @@ class BackendDevice : public fxapi::ApiBackendDevice {
         virtual const char* name();
         virtual int backendId();
 
-        virtual libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>  allocator();
-        virtual void setAllocator( const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
+        virtual std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator();
+        virtual void setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
 
         /// common resource pools
         libgraphics::backend::gl::EffectPool* effectPool();
@@ -104,7 +104,7 @@ class BackendDevice : public fxapi::ApiBackendDevice {
         );
 
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// returns the global gl object

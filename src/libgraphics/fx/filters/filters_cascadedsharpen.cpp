@@ -25,7 +25,7 @@ void CascadedSharpen::generateBlurBuffer(
         return;
     }
 
-    if( ( this->m_Cascades[index].buffer.empty() ) || ( !this->m_Cascades[index].buffer->containsDataForBackend( device->backendId() ) ) ) {
+    if( ( !this->m_Cascades[index].buffer ) || ( !this->m_Cascades[index].buffer->containsDataForBackend( device->backendId() ) ) ) {
         this->m_Cascades[index].buffer.reset(
             new libgraphics::ImageLayer(
                 device
@@ -295,7 +295,7 @@ const float& CascadedSharpen::cascadeBlurRadius( size_t index ) const {
 
 void CascadedSharpen::deleteBlurBuffersForBackend( int backendId ) {
     for( auto it = this->m_Cascades.begin(); it != this->m_Cascades.end(); ++it ) {
-        if( !( *it ).buffer.empty() ) {
+        if( ( *it ).buffer ) {
             ( *it ).buffer->deleteDataForBackend( backendId );
         }
     }
@@ -320,13 +320,13 @@ void CascadedSharpen::setCascadeBlurBuffer( size_t index, libgraphics::fxapi::EP
 #endif
 }
 
-void CascadedSharpen::setCascadeBlurBuffer( size_t index, const libcommon::SharedPtr<libgraphics::ImageLayer>& buffer ) {
+void CascadedSharpen::setCascadeBlurBuffer( size_t index, const std::shared_ptr<libgraphics::ImageLayer>& buffer ) {
     assert( this->m_Cascades.size() > index );
 
     this->m_Cascades[index].buffer = buffer;
 }
 
-const libcommon::SharedPtr<libgraphics::ImageLayer>& CascadedSharpen::cascadeBlurBuffer( size_t index ) {
+const std::shared_ptr<libgraphics::ImageLayer>& CascadedSharpen::cascadeBlurBuffer( size_t index ) {
     return this->m_Cascades[index].buffer;
 }
 

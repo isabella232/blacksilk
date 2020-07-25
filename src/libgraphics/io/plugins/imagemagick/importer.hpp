@@ -31,10 +31,6 @@ class MagickImporter : public libgraphics::io::PipelineImporter {
             libgraphics::Bitmap* out
         );
 
-        /// from: libcommon::ILockable
-        virtual void lock();
-        virtual bool tryLock();
-        virtual void unlock();
     protected:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };

@@ -1,9 +1,10 @@
 #pragma once
 
 #include <libgraphics/base.hpp>
-#include <libcommon/scopedptr.hpp>
-#include <libcommon/sharedptr.hpp>
 #include <libcommon/atomics.hpp>
+#include <libcommon/noncopyable.hpp>
+
+#include <memory>
 
 namespace libgraphics {
 namespace io {
@@ -24,7 +25,7 @@ class PipelinePluginLoader : public libcommon::INonCopyable {
         bool load( const char* path );
         PipelinePlugin* instantiatePlugin();
     private:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };
 
 }

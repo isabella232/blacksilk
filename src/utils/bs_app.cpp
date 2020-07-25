@@ -34,8 +34,6 @@ App::App() :
     app( nullptr ),
     appBackend( nullptr ),
     currentSession( nullptr ),
-    backgroundTasks( nullptr ),
-    taskListener( nullptr ),
     filterBWMixer( nullptr ),
     filterCurves( nullptr ),
     filterVignette( nullptr ),
@@ -94,14 +92,6 @@ size_t&         App::maxFPS() {
 
 const size_t&   App::maxFPS() const {
     return this->m_MaxFPS;
-}
-
-void App::initializeTaskListener(
-    QStatusBar* statusBar
-) {
-    if( this->taskListener.empty() ) {
-        this->taskListener.reset( new blacksilk::ResponsiveBackgroundTaskListener( statusBar ) );
-    }
 }
 
 bool App::initialized() const {
@@ -229,9 +219,9 @@ bool setPresetByIndex( libfoundation::app::ApplicationSession* session, const li
         const libgraphics::FilterPreset& selectedPreset( ( *( filterPresetCollection.constBegin() + index ) ).preset );
         auto filterObj = session->filters()->byName( filterName );
 
-        assert( filterObj.valid() );
+        assert( filterObj );
 
-        if( !filterObj.valid() ) {
+        if( !filterObj ) {
             return false;
         }
 
@@ -524,7 +514,6 @@ bool App::initialize(
 ) {
 
     if( currentSession == nullptr ) {
-        this->backgroundTasks.reset( new libfoundation::app::BackgroundTaskGroup() );
 
         /// reinitialize session
         if( this->app.get() == nullptr ) {
@@ -699,7 +688,6 @@ bool App::shutdown() {
         success = false;
     }
 
-    this->backgroundTasks.reset();
     this->app.reset();
 
     this->currentSession = nullptr;
@@ -715,22 +703,6 @@ bool App::shutdown() {
     this->m_InitializedGraphicsPreview = false;
 
     return success;
-}
-
-void App::enqueBackgroundTask(
-    libfoundation::app::BackgroundTask* task,
-    libfoundation::app::BackgroundTaskListener* listener
-) {
-    assert( currentSession != nullptr );
-    assert( task != nullptr );
-
-    listener = ( listener == nullptr ) ? ( libfoundation::app::BackgroundTaskListener* )this->taskListener.get() : listener;
-
-    this->backgroundTasks->enqueTask(
-        task,
-        currentSession,
-        listener
-    );
 }
 
 bool App::loadIoPluginFromPath(
@@ -760,7 +732,7 @@ bool App::loadIoExporterFromPath(
 bool App::writeImage(
     void* destinationBuffer
 ) {
-    libcommon::ScopedPtr<libgraphics::ImageLayer> destinationLayer( currentSession->originalImage()->topLayer()->duplicate() );
+    std::unique_ptr<libgraphics::ImageLayer> destinationLayer( currentSession->originalImage()->topLayer()->duplicate() );
     assert( destinationLayer.get() );
 
     const auto successfullyRendered = currentSession->renderToLayer(
@@ -1021,7 +993,7 @@ bool App::updatePreview() {
 
         this->shouldRender = false;
 
-        if( this->actionRenderPreview.empty() ) {
+        if( !this->actionRenderPreview ) {
             assert( false );
             this->m_FrameTimer.restart();
             return false; /** no initialized preview object **/
@@ -1216,16 +1188,16 @@ std::string         App::retrieveCurrentLog() {
     return std::string( ( std::istreambuf_iterator<char>( logFile ) ), ( std::istreambuf_iterator<char>() ) );
 }
 
-static libcommon::ScopedPtr<App>    appObject;
+static std::unique_ptr<App>    appObject;
 App* theApp() {
-    if( appObject.empty() ) {
+    if( !appObject ) {
         appObject.reset( new App() );
     }
 
     return appObject.get();
 }
 void resetApp() {
-    if( !appObject.empty() ) {
+    if( appObject ) {
         appObject.reset( nullptr );
     }
 }

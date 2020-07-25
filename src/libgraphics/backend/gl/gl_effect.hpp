@@ -4,7 +4,6 @@
 #include <libgraphics/backend/gl/gl_resourcepool.hpp>
 #include <libgraphics/utils/gl.hpp>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 
 namespace libgraphics {
@@ -193,7 +192,7 @@ class Effect : public backend::gl::Resource {
         /// internals
         utils::GLProgram*   internalProgram() const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 

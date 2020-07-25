@@ -1148,12 +1148,11 @@ class BitmapMemoryContainer {
 
 class BitmapMemoryAllocator {
     public:
-        typedef std::vector< libcommon::SharedPtr<BitmapMemoryContainer > >
+        typedef std::vector< std::shared_ptr<BitmapMemoryContainer > >
         VectorType;
 
         bool free( void* buf ) {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Containers.begin(); it != m_Containers.end(); ++it ) {
                 if( ( *it )->address() == ( libcommon::AddressType )buf ) {
@@ -1167,8 +1166,7 @@ class BitmapMemoryAllocator {
         }
 
         void* find( const libcommon::SizeType& length, libcommon::SizeType allocationBase = 1024 ) {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             for( auto it = m_Containers.begin(); it != m_Containers.end(); ++it ) {
                 if( ( *it )->size() >= length && !( *it )->used() ) {
@@ -1185,8 +1183,7 @@ class BitmapMemoryAllocator {
             return NULL;
         }
         void freeUnused() {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             VectorType ret;
 
@@ -1199,11 +1196,10 @@ class BitmapMemoryAllocator {
             }
         }
         void reserve( const libcommon::SizeType& length ) {
-            auto _g = libcommon::LockGuard( &m_Mutex );
-            ( void )_g;
+            std::lock_guard<std::recursive_mutex> lock( m_Mutex );
 
             m_Containers.push_back(
-                libcommon::SharedPtr<BitmapMemoryContainer>(
+                std::shared_ptr<BitmapMemoryContainer>(
                     new BitmapMemoryContainer( length )
                 )
             );
@@ -1220,7 +1216,7 @@ class BitmapMemoryAllocator {
             return ( libcommon::SizeType )m_Containers.size();
         }
     protected:
-        libcommon::RecursiveMutex       m_Mutex;
+        std::recursive_mutex       m_Mutex;
         VectorType                      m_Containers;
 };
 
@@ -1567,9 +1563,9 @@ Bitmap& Bitmap::operator = ( const Bitmap& rhs ) {
 
 }
 
-libcommon::SharedPtr<Bitmap>    Bitmap::clone() const {
+std::shared_ptr<Bitmap>    Bitmap::clone() const {
 
-    auto ptr = libcommon::SharedPtr<Bitmap>(
+    auto ptr = std::shared_ptr<Bitmap>(
                    new Bitmap()
                );
 
@@ -2035,33 +2031,6 @@ bool Bitmap::write( void* destination, const Rect64UI& dstRect, size_t dstPlaneW
     return true;
 }
 
-libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height ) {
-
-    if( format.family != formats::family::Invalid && format.byteSize != 0 && format.channels != 0 && width != 0 && height != 0 ) {
-        return libcommon::just( libcommon::SharedPtr<Bitmap>( new Bitmap( format, width, height ) ) );
-    }
-
-    return libcommon::nothing();
-
-}
-
-libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height, void* data ) {
-
-    if( format.family != formats::family::Invalid && format.byteSize != 0 && format.channels != 0 && width != 0 && height != 0 && data != 0 ) {
-        return libcommon::just( libcommon::SharedPtr<Bitmap>( new Bitmap( format, width, height, data ) ) );
-    }
-
-    return libcommon::nothing();
-
-}
-
-
-libcommon::Maybe< libcommon::SharedPtr<Bitmap> > Bitmap::create( const BitmapInfo& info ) {
-
-    return create( info.format(), info.width(), info.height() );
-
-}
-
 bool Bitmap::reset( const libgraphics::Format& format, const libcommon::UInt64& width, const libcommon::UInt64& height ) {
     assert( width * height != 0 );
 
@@ -2340,16 +2309,13 @@ BitmapInfo Bitmap::info() const {
            );
 }
 
-libcommon::LockGuard    Bitmap::manualLock() {
-
-    return libcommon::LockGuard( &this->m_AccessLock );
-
+std::lock_guard<std::recursive_mutex> Bitmap::manualLock() {
+    this->m_AccessLock.lock();
+    return { this->m_AccessLock, std::adopt_lock };
 }
 
 void    Bitmap::synchronize() {
-    volatile auto guard = manualLock();
-
-    ( void )guard;
+    std::lock_guard<std::recursive_mutex> lock( this->m_AccessLock );
 }
 
 
@@ -2397,10 +2363,10 @@ bool Bitmap::reset( libgraphics::StdDynamicPoolAllocator* allocator, const libgr
     this->m_InternalMemoryBlob      = this->m_InternalAllocator->alloc(
                                           blob_size
                                       );
-    assert( !this->m_InternalMemoryBlob.empty() );
+    assert( this->m_InternalMemoryBlob );
     assert( !this->m_InternalMemoryBlob->empty() );
 
-    if( this->m_InternalMemoryBlob.empty() || this->m_InternalMemoryBlob->empty() ) {
+    if( !this->m_InternalMemoryBlob || this->m_InternalMemoryBlob->empty() ) {
 #ifdef LIBGRAPHICS_DEBUG
         qDebug() << "Failed to allocate memory blob of size=" << ( blob_size / 1024 ) << "kb";
 #endif
@@ -2460,10 +2426,10 @@ bool Bitmap::reset( libgraphics::StdDynamicPoolAllocator* allocator, const libgr
     this->m_InternalMemoryBlob      = this->m_InternalAllocator->alloc(
                                           blob_size
                                       );
-    assert( !this->m_InternalMemoryBlob.empty() );
+    assert( this->m_InternalMemoryBlob );
     assert( !this->m_InternalMemoryBlob->empty() );
 
-    if( this->m_InternalMemoryBlob.empty() || this->m_InternalMemoryBlob->empty() ) {
+    if( !this->m_InternalMemoryBlob || this->m_InternalMemoryBlob->empty() ) {
 #ifdef LIBGRAPHICS_DEBUG
         qDebug() << "Failed to allocate memory blob of size=" << ( blob_size / 1024 ) << "kb";
 #endif
@@ -2511,9 +2477,9 @@ bool Bitmap::assignAllocator(
         auto new_allocator_blob         = _allocator->alloc(
                                               blob_size
                                           );
-        assert( new_allocator_blob.empty() || new_allocator_blob->empty() );
+        assert( !new_allocator_blob || new_allocator_blob->empty() );
 
-        if( new_allocator_blob.empty() || new_allocator_blob->empty() ) {
+        if( !new_allocator_blob || new_allocator_blob->empty() ) {
 #ifdef LIBGRAPHICS_DEBUG
             qDebug() << "Failed to assign allocator to bitmap. Couldn't allocate new shared memory blob.";
 #endif

@@ -1,5 +1,4 @@
 
-#include <libcommon/sharedptr.hpp>
 #include <libgraphics/allocator.hpp>
 #include <libfoundation/app/application.hpp>
 #include <libgraphics/fxapi.hpp>
@@ -10,8 +9,8 @@
 namespace libfoundation {
 namespace app {
 
-struct ApplicationBackend::Private : libcommon::PimplPrivate {
-    libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>      alloc;
+struct ApplicationBackend::Private {
+    std::shared_ptr<libgraphics::StdDynamicPoolAllocator>      alloc;
     libgraphics::fxapi::ApiBackendDevice*   gpuBackend;
     libgraphics::fxapi::ApiBackendDevice*   cpuBackend;
     bool cpuInitialized;
@@ -41,7 +40,7 @@ ApplicationBackend::~ApplicationBackend() {
 }
 
 void ApplicationBackend::initializeAllocators() {
-    if( d->alloc.empty() ) {
+    if( !d->alloc ) {
         d->alloc.reset( new libgraphics::StdDynamicPoolAllocator() );
     }
 }
@@ -208,11 +207,11 @@ libgraphics::fxapi::ApiBackendDevice* ApplicationBackend::cpuBackend() const {
     return d->cpuBackend;
 }
 
-libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& ApplicationBackend::allocator() {
+std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& ApplicationBackend::allocator() {
     return this->d->alloc;
 }
 
-const libcommon::SharedPtr<libgraphics::StdDynamicPoolAllocator>& ApplicationBackend::allocator() const {
+const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& ApplicationBackend::allocator() const {
     return this->d->alloc;
 }
 

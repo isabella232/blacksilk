@@ -2,9 +2,6 @@
 
 #include <assert.h>
 
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/scopedptr.hpp>
-
 #include <libgraphics/fxapi.hpp>
 
 namespace libgraphics {
@@ -51,50 +48,8 @@ class Resource : public libgraphics::fxapi::ApiResource,
         virtual void forceRelease();
 
     private:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
-
-/// impl: ScopedResourceGuard
-template < class _t_resource >
-struct ScopedResourceGuard {
-        typedef _t_resource ResourceType;
-        struct _guard_impl {
-            _guard_impl( ResourceType* _resource ) : resource( _resource ) {
-                assert( resource );
-                resource->acquire();
-            }
-            ~_guard_impl() {
-                resource->release();
-            }
-
-            ResourceType*   resource;
-        };
-        explicit ScopedResourceGuard( ResourceType* resource ) : d( new _guard_impl( resource ) ) {}
-    private:
-        libcommon::ScopedPtr< _guard_impl > d;
-};
-typedef ScopedResourceGuard<backend::gl::Resource>  BaseScopedResourceGuard;
-
-/// impl: SharedResourceGuard
-template < class _t_resource >
-struct SharedResourceGuard {
-        typedef _t_resource ResourceType;
-        struct _guard_impl {
-            _guard_impl( ResourceType* _resource ) : resource( _resource ) {
-                assert( resource );
-                resource->acquire();
-            }
-            ~_guard_impl() {
-                resource->release();
-            }
-
-            ResourceType*   resource;
-        };
-        explicit SharedResourceGuard( ResourceType* resource ) : d( new _guard_impl( resource ) ) {}
-    private:
-        libcommon::SharedPtr< _guard_impl > d;
-};
-typedef SharedResourceGuard<backend::gl::Resource>  BaseSharedResourceGuard;
 
 }
 }

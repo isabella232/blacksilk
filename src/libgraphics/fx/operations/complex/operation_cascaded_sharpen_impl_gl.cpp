@@ -285,7 +285,7 @@ void cascadedSharpenWith4_GL(
                               destination,
                               source,
                               area,
-                              filter
+                              filter.get()
                           );
     assert( rendered );
 

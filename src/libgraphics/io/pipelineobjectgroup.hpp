@@ -4,7 +4,6 @@
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/io/pipelineobject.hpp>
 
-#include <libcommon/scopedptr.hpp>
 #include <libcommon/atomics.hpp>
 #include <libcommon/noncopyable.hpp>
 
@@ -21,7 +20,7 @@ struct PipelineObjectGroup {
         typedef _t_any* Pointer;
         typedef const _t_any* ConstPointer;
 
-        typedef libcommon::SharedPtr<ValueType> ElementType;
+        typedef std::shared_ptr<ValueType> ElementType;
         typedef std::vector<ElementType> ContainerType;
         typedef typename ContainerType::iterator Iterator;
         typedef typename ContainerType::const_iterator ConstIterator;
@@ -174,7 +173,7 @@ struct PipelineObjectGroup {
         }
         bool contains( ConstPointer ptr ) const {
             for( auto it = m_Container.begin(); it != m_Container.end(); ++it ) {
-                if( ( *it ) == ptr ) {
+                if( it->get() == ptr ) {
                     return true;
                 }
             }

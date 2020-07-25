@@ -12,8 +12,6 @@
 #include <memory>
 
 #include <libserialization++/TypeInfo.hpp>
-#include <libcommon/sharedptr.hpp>
-#include <libcommon/scopedptr.hpp>
 
 namespace spp {
 
@@ -1287,7 +1285,7 @@ class PropertyGetter {
 
         }
     protected:
-        libcommon::SharedPtr<spp::AbstractPropertyGetter>            m_Getter;
+        std::shared_ptr<spp::AbstractPropertyGetter>            m_Getter;
         spp::PropertyTypeInfo                                   m_OwnerTypeInfo;
         spp::PropertyTypeInfo                                   m_ValueTypeInfo;
         spp::PropertyObjectHandle                               m_ObjectHandle;
@@ -1426,7 +1424,7 @@ class PropertySetter {
 
         }
     protected:
-        libcommon::SharedPtr<spp::AbstractPropertySetter>    m_Setter;
+        std::shared_ptr<spp::AbstractPropertySetter>    m_Setter;
         spp::PropertyTypeInfo                           m_OwnerTypeInfo;
         spp::PropertyTypeInfo                           m_ValueTypeInfo;
         spp::PropertyObjectHandle                       m_ObjectHandle;

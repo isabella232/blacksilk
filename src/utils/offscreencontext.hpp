@@ -1,6 +1,5 @@
 #pragma once
 
-#include <libcommon/pimpl.hpp>
 #include <libfoundation/app/application.hpp>
 
 namespace blacksilk {
@@ -14,7 +13,7 @@ class OffscreenContext {
 
         bool    valid() const;
     protected:
-        libcommon::PimplPtr<Private>        d;
+        std::shared_ptr<Private>        d;
 };
 
 
