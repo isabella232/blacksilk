@@ -1,6 +1,7 @@
 #include <libgraphics/io/pipelineimporter.hpp>
 
 #include <atomic>
+#include <thread>
 
 namespace libgraphics {
 namespace io {
@@ -11,7 +12,7 @@ struct GenericPipelineImporter : public libgraphics::io::PipelineImporter {
 
         virtual void lock()  {
             while( !tryLock() ) {
-                libcommon::sleep( 1 );
+                std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
             }
         }
         virtual bool tryLock() {
@@ -34,7 +35,7 @@ struct GenericPipelineImporter : public libgraphics::io::PipelineImporter {
             libcommon::UInt32 zero = 0;
 
             while( !m_Atomic.compare_exchange_weak( threadId, zero ) ) {
-                libcommon::sleep( 1 );
+                std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
             }
         }
         virtual const char* name() {

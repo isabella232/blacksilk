@@ -38,10 +38,6 @@ LIBCOMMON_API void    stdDump( const libcommon::Char* msg ) {
 
 #if ( LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_MAC ) || ( LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_LINUX )
 
-LIBCOMMON_API void    sleep( libcommon::UInt32 length ) {
-    ( void ) ::sleep( length );
-}
-
 #if ( LIBCOMMON_SYSTEM == LIBCOMMON_SYSTEM_MAC )
 LIBCOMMON_API libcommon::UInt32     getCurrentThreadId() {
     ::mach_port_t threadId( ::pthread_mach_thread_np( pthread_self() ) );
@@ -67,10 +63,6 @@ LIBCOMMON_API libcommon::ESystem::t getSystem() {
 }
 
 #elif ( LIBCOMMON_SYSTEM == LIBCOMMON_WINDOWS )
-
-LIBCOMMON_API void    sleep( libcommon::UInt32 length ) {
-    ( void ) ::Sleep( ( DWORD )length );
-}
 
 LIBCOMMON_API libcommon::UInt32     getCurrentThreadId() {
 
