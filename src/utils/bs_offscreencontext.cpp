@@ -7,7 +7,7 @@
 
 namespace blacksilk {
 
-struct OffscreenContext::Private : libcommon::PimplPrivate {
+struct OffscreenContext::Private {
     Private() : widget( nullptr ) {}
     virtual ~Private() {
         ( void )destroy();

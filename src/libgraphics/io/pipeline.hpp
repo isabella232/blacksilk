@@ -176,7 +176,7 @@ class Pipeline : public libcommon::INonCopyable {
 /// impl: StdPipeline
 class StdPipeline : public Pipeline {
     public:
-        struct Private : libcommon::PimplPrivate {
+        struct Private {
             std::vector< std::unique_ptr< PipelineProcessingStage > >  stages;
             PipelineImporterGroup importers;
             PipelineExporterGroup exporters;
@@ -320,7 +320,7 @@ class StdPipeline : public Pipeline {
             libgraphics::Bitmap* toSave
         );
     private:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };
 
 }

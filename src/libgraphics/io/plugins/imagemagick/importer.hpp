@@ -32,5 +32,5 @@ class MagickImporter : public libgraphics::io::PipelineImporter {
         );
 
     protected:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };

@@ -3,7 +3,7 @@
 namespace libgraphics {
 namespace io {
 
-struct GenericPipelinePlugin::Private : libcommon::PimplPrivate {
+struct GenericPipelinePlugin::Private {
     PipelineExporterGroup       exporters;
     PipelineImporterGroup       importers;
     std::string                 name;

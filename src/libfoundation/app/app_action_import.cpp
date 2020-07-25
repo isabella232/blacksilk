@@ -20,7 +20,7 @@
 namespace libfoundation {
 namespace app {
 
-struct ApplicationActionImport::Private : libcommon::PimplPrivate {
+struct ApplicationActionImport::Private {
     const EImageFormat::t format;
     ApplicationSession* session;
     libgraphics::fxapi::ApiBackendDevice* backend;

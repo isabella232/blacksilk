@@ -98,7 +98,7 @@ class Texture : public backend::gl::Resource {
         virtual void acquire();
         virtual bool release();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// class: TexturePool

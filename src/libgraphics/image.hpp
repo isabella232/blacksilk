@@ -397,14 +397,14 @@ class ImageLayerMask {
             int backendId
         ) const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// high-level image layer class
 /// management.
 class ImageLayerGroup {
     public:
-        struct Private : libcommon::PimplPrivate {
+        struct Private {
             std::vector<std::shared_ptr<ImageLayer> >  layers;
         };
 
@@ -472,7 +472,7 @@ class ImageLayerGroup {
 
         std::shared_ptr<ImageLayer>    at( size_t index ) const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// high-level image class
@@ -643,7 +643,7 @@ class Image {
         size_t      height() const;
         fxapi::EPixelFormat::t  format() const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// high-level image layer class implementation
@@ -965,7 +965,7 @@ class ImageLayer {
         bool deleteDataForBackend( int backendId );
         bool deleteDataForDevice( libgraphics::fxapi::ApiBackendDevice* device );
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
     private:
         ImageLayer();
 };

@@ -41,7 +41,7 @@ class PixelArray : public fxapi::ApiResource {
         /// returns the current tex
         utils::GLTexture*    texture();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 class BackendDevice : public fxapi::ApiBackendDevice {
@@ -104,7 +104,7 @@ class BackendDevice : public fxapi::ApiBackendDevice {
         );
 
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// returns the global gl object

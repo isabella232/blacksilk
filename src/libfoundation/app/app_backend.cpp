@@ -9,7 +9,7 @@
 namespace libfoundation {
 namespace app {
 
-struct ApplicationBackend::Private : libcommon::PimplPrivate {
+struct ApplicationBackend::Private {
     std::shared_ptr<libgraphics::StdDynamicPoolAllocator>      alloc;
     libgraphics::fxapi::ApiBackendDevice*   gpuBackend;
     libgraphics::fxapi::ApiBackendDevice*   cpuBackend;

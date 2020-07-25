@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include <libgraphics/fxapi.hpp>
-#include <libcommon/pimpl.hpp>
 
 namespace libgraphics {
 namespace backend {
@@ -49,7 +48,7 @@ class Resource : public libgraphics::fxapi::ApiResource,
         virtual void forceRelease();
 
     private:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 }

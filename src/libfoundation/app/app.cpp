@@ -13,7 +13,7 @@ void ApplicationAction::waitForFinished() {
     std::lock_guard<std::mutex> lock( this->m_FinishedMutex );
 }
 
-struct Application::Private : libcommon::PimplPrivate {
+struct Application::Private {
     ApplicationSession*                                     currentSession;
     std::vector<std::shared_ptr<ApplicationSession> >       sessions;
     ApplicationConfig                                       config;

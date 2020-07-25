@@ -5,7 +5,7 @@
 namespace libgraphics {
 namespace io {
 
-struct PipelineProcessingStage::Private : libcommon::PimplPrivate {
+struct PipelineProcessingStage::Private {
     std::string name;
     bool enabled;
     std::vector<std::shared_ptr<PipelineProcessor> > processors;

@@ -7,7 +7,7 @@ namespace libgraphics {
 namespace backend {
 namespace gl {
 
-struct PixelArray::Private : libcommon::PimplPrivate {
+struct PixelArray::Private {
     utils::GLTexture*                       texture;
     size_t                                  length;
     libgraphics::fxapi::EPixelFormat::t     format;
@@ -180,7 +180,7 @@ utils::GLTexture*    PixelArray::texture() {
     return this->d->texture;
 }
 
-struct BackendDevice::Private : libcommon::PimplPrivate {
+struct BackendDevice::Private {
     std::unique_ptr<gl::EffectPool>    effectPool;
     std::unique_ptr<gl::TexturePool>   texturePool;
     std::unique_ptr<gl::RenderTargetPool>  renderTargetPool;

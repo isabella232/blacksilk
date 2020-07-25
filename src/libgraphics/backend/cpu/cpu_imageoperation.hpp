@@ -5,7 +5,6 @@
 #include <libgraphics/fxapi.hpp>
 
 #include <libcommon/atomics.hpp>
-#include <libcommon/pimpl.hpp>
 
 namespace libgraphics {
 namespace backend {
@@ -26,7 +25,7 @@ class ImageOperation : fxapi::ApiImageOperation {
         virtual bool working();
         virtual long backendId();
     private:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 }

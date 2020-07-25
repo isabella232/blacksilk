@@ -192,7 +192,7 @@ class Effect : public backend::gl::Resource {
         /// internals
         utils::GLProgram*   internalProgram() const;
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 

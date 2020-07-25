@@ -153,7 +153,7 @@ void applyEffectParameterToEffect( Effect* effect, EffectParameterPixelArray& pa
     }
 }
 
-struct Effect::Private : libcommon::PimplPrivate {
+struct Effect::Private {
     utils::GLProgram*   program;
     utils::GLShader*    pixelShader;
     std::string         name;

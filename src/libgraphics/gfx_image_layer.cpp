@@ -15,7 +15,7 @@ extern void copyChannelData( void* dst, void* src, libgraphics::Rect32I area, in
 extern bool copyData( fxapi::ApiBackendDevice* device, fxapi::ApiImageObject* dst, fxapi::ApiImageObject* src, libgraphics::Rect32I area, int destX, int destY );
 
 //// impl
-struct ImageLayer::Private : libcommon::PimplPrivate {
+struct ImageLayer::Private {
     struct BackendImageObj {
         const int backendId;
         libgraphics::fxapi::ApiBackendDevice* device;

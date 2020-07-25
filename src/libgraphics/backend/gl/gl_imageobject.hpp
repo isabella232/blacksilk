@@ -119,7 +119,7 @@ class ImageObject : public fxapi::ApiImageObject {
 
         virtual bool empty();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 class StreamLinedImageObject : public ImageObject {
@@ -229,7 +229,7 @@ class StreamLinedImageObject : public ImageObject {
 
         virtual bool empty();
     protected:
-        libcommon::PimplPtr<Private>    d;
+        std::shared_ptr<Private>    d;
 };
 
 

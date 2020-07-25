@@ -2,7 +2,6 @@
 
 #include <libgraphics/base.hpp>
 #include <libcommon/atomics.hpp>
-#include <libcommon/pimpl.hpp>
 
 #include <libgraphics/io/pipelineexporter.hpp>
 #include <libgraphics/io/pipelineimporter.hpp>
@@ -80,7 +79,7 @@ class GenericPipelinePlugin : public PipelinePlugin {
 
         void setName( const char* name );
     private:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 }
 }

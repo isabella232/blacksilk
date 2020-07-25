@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-struct MagickImporter::Private : libcommon::PimplPrivate {
+struct MagickImporter::Private {
     std::string     extension;
 };
 

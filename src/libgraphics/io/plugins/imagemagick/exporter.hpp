@@ -32,5 +32,5 @@ class MagickExporter : public libgraphics::io::PipelineExporter {
         );
 
     protected:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };

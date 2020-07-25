@@ -9,7 +9,7 @@ namespace backend {
 namespace cpu {
 
 /// PixelArray
-struct PixelArray::Private : libcommon::PimplPrivate {
+struct PixelArray::Private {
     void*                       data;
     size_t                      length;
     fxapi::EPixelFormat::t      format;
@@ -156,7 +156,7 @@ unsigned short* PixelArray::get16Bit( size_t pos ) {
 }
 
 /// DataRegion
-struct DataRegion::Private : libcommon::PimplPrivate {
+struct DataRegion::Private {
     std::vector<std::unique_ptr<DataRegionEntry> > entries;
     libcommon::atomics::type32  used;
 
@@ -243,7 +243,7 @@ bool DataRegion::isUsed() {
 
 
 /// BackendDevice
-struct BackendDevice::Private : libcommon::PimplPrivate {
+struct BackendDevice::Private {
     std::vector< std::unique_ptr<DataRegion> >         dataRegions;
     std::vector< std::unique_ptr<PixelArray> >         pixelArrays;
     std::vector< std::unique_ptr<ImageObject> >        imageObjects;

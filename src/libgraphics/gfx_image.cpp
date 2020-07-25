@@ -942,7 +942,7 @@ ImageLayer* Image::layerByIndex( size_t index ) {
 }
 
 bool Image::empty() const {
-    if( d.empty() ) { return true; }
+    if( !d ) { return true; }
 
     return d->layers.empty();
 }

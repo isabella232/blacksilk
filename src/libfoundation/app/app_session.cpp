@@ -55,7 +55,7 @@ struct ActionRunnable : QRunnable {
         libfoundation::app::ApplicationAction* m_Action;
 };
 
-struct ApplicationSession::Private : libcommon::PimplPrivate {
+struct ApplicationSession::Private {
     std::shared_ptr<ApplicationBackend>             backend;
     std::shared_ptr<libgraphics::Image>             originalImage;
     std::shared_ptr<libgraphics::Image>             previewImage;
@@ -1391,7 +1391,7 @@ void ApplicationSession::resetImageState(
 }
 
 /** ApplicationActionRenderPreview **/
-struct ApplicationActionRenderPreview::Private : libcommon::PimplPrivate {
+struct ApplicationActionRenderPreview::Private {
     ApplicationSession*     session;
     libgraphics::fxapi::ApiBackendDevice*   backendDevice;
     libgraphics::ImageLayer*    destination;

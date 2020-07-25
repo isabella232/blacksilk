@@ -10,7 +10,7 @@ namespace libgraphics {
 namespace backend {
 namespace gl {
 
-struct Texture::Private : libcommon::PimplPrivate {
+struct Texture::Private {
     libgraphics::utils::GLTexture*      tex;
     libgraphics::fxapi::EPixelFormat::t format;
 
@@ -31,7 +31,7 @@ struct Texture::Private : libcommon::PimplPrivate {
     }
 };
 
-struct RenderTarget::Private : libcommon::PimplPrivate {
+struct RenderTarget::Private {
     utils::GLFrameBuffer*   frameBuffer;
     Texture*                texture;
 
@@ -39,7 +39,7 @@ struct RenderTarget::Private : libcommon::PimplPrivate {
         texture( nullptr ) {}
 };
 
-struct Resource::Private : libcommon::PimplPrivate {
+struct Resource::Private {
     libcommon::atomics::type32  used;
     Private() : used( 0 ) {}
 };

@@ -28,7 +28,7 @@
 namespace libfoundation {
 namespace app {
 
-struct ApplicationActionExport::Private : libcommon::PimplPrivate {
+struct ApplicationActionExport::Private {
     ApplicationSession*         session;
     const std::string           path;
     const EImageFormat::t       format;

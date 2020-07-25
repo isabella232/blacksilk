@@ -490,7 +490,7 @@ GL::t_sizei GL::getTextureFormatPixelSize( GL::ETextureDataFormat::t format ) {
 }
 
 /** GLDbgContext **/
-struct GLDbgContext::GLPriv : libcommon::PimplPrivate {
+struct GLDbgContext::GLPriv {
     std::vector< GLDbgContext::ErrInfo >    errors;
     std::vector< GLDbgContext::CallInfo >   calls;
 
@@ -716,7 +716,7 @@ void GLDbgContext::reportError( GL* ctx, GLErr* err ) {
 }
 
 /** GLTexture **/
-struct GLTexture::GLPriv : libcommon::PimplPrivate {
+struct GLTexture::GLPriv {
     GL::t_uint      textureId;
     GL::t_sizei     width;
     GL::t_sizei     height;
@@ -761,7 +761,7 @@ bool GLTexture::empty() const {
 }
 
 /** GLRawBuffer **/
-struct GLRawBuffer::GLPriv : libcommon::PimplPrivate {
+struct GLRawBuffer::GLPriv {
     GL::t_uint      bufferId;
     GL::t_sizei     size;
     GL::ERawBufferHint::t hint;
@@ -787,7 +787,7 @@ const bool          GLRawBuffer::empty() const {
 }
 
 /** GLErr **/
-struct GLErr::GLPriv : libcommon::PimplPrivate {
+struct GLErr::GLPriv {
     GL*  context;
     std::string errorMessage;
     std::string errorType;
@@ -808,7 +808,7 @@ const std::string& GLErr::errorType() const {
 }
 
 /** GL **/
-struct GL::GLPriv : libcommon::PimplPrivate {
+struct GL::GLPriv {
     bool    initialized;
     std::unique_ptr<GLDbgContext>  dbgContext;
     std::unique_ptr< libgraphics::SystemInfo > sysInfo;
@@ -2991,7 +2991,7 @@ bool GL::activeTexture( GL* ctx, t_enum texturePort ) {
 /// FRAMEBUFFER MANAGEMENT
 ///
 
-struct GLFrameBuffer::GLPriv : libcommon::PimplPrivate {
+struct GLFrameBuffer::GLPriv {
     ::GLuint    id;
     ::GLuint    rid;
     GLTexture*  associatedTexture;
@@ -3169,7 +3169,7 @@ bool GL::unbindFrameBuffer( GL* ctx, GLFrameBuffer* fbo ) {
 }
 
 /** GLShader **/
-struct GLShader::GLPriv : libcommon::PimplPrivate {
+struct GLShader::GLPriv {
     std::string     source;
     std::vector<std::string>    errors;
     GLuint  id;
@@ -3316,7 +3316,7 @@ bool GL::createFragmentShader( GL* ctx, GLShader** outRef, const std::string& so
 
 /** GLProgram **/
 
-struct GLProgram::GLPriv : libcommon::PimplPrivate {
+struct GLProgram::GLPriv {
     GLuint  id;
     GLShader*   vertexShader;
     GLShader*   fragmentShader;

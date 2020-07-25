@@ -7,7 +7,6 @@
 #include <libgraphics/fxapi.hpp>
 
 #include <libcommon/atomics.hpp>
-#include <libcommon/pimpl.hpp>
 
 class QThreadPool;
 
@@ -54,7 +53,7 @@ class PixelArray : public fxapi::ApiResource {
         unsigned char* get8Bit( size_t pos );
         unsigned short* get16Bit( size_t pos );
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 class BackendDevice : public libgraphics::fxapi::ApiBackendDevice {
@@ -119,7 +118,7 @@ class BackendDevice : public libgraphics::fxapi::ApiBackendDevice {
         virtual std::shared_ptr<libgraphics::StdDynamicPoolAllocator>  allocator();
         virtual void setAllocator( const std::shared_ptr<libgraphics::StdDynamicPoolAllocator>& newAllocator );
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 struct DataRegionEntry {
@@ -177,7 +176,7 @@ class DataRegion : public libcommon::INonCopyable {
         void reset();
         void* alloc( size_t _count, size_t _length );
 
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 

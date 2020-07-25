@@ -8,7 +8,7 @@
 namespace libgraphics {
 namespace io {
 
-struct PipelinePluginLoader::Private : libcommon::PimplPrivate {
+struct PipelinePluginLoader::Private {
     CallbackCreatePipelinePlugin*   callback;
     std::string path;
 

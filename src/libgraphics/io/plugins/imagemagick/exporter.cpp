@@ -1,7 +1,7 @@
 #include <libgraphics/io/plugins/imagemagick/exporter.hpp>
 #include <libgraphics/io/plugins/imagemagick/pluginmain.hpp>
 
-struct MagickExporter::Private : libcommon::PimplPrivate {
+struct MagickExporter::Private {
     std::string ext;
 
     bool copyFromBitmap(

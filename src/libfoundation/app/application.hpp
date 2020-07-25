@@ -287,7 +287,7 @@ class ApplicationActionRenderPreview : public SessionCommitableApplicationAction
         virtual bool process();
         virtual bool finished();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// import action
@@ -306,7 +306,7 @@ class ApplicationActionImport : public SessionCommitableApplicationAction {
         virtual bool process();
         virtual bool finished();
     protected:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// export action
@@ -334,7 +334,7 @@ class ApplicationActionExport : public SessionCommitableApplicationAction {
         bool doCpuRendering( const ApplicationBackend* currentSessionBackend, libgraphics::Bitmap& outBitmap );
         bool applyAlphaChannel( const ApplicationBackend* currentSessionBackend, libgraphics::ImageLayer* destinationLayer, libgraphics::Bitmap* alphaLayer );
 
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// serialization action
@@ -387,7 +387,7 @@ class ApplicationBackend : public libcommon::INonCopyable {
     private:
         void initializeAllocators();
 
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// manages basic hardware info
@@ -623,7 +623,7 @@ class ApplicationSession : public libcommon::INonCopyable {
         ApplicationSession* clone();
 
     private:
-        libcommon::PimplPtr<Private>   d;
+        std::shared_ptr<Private>   d;
 };
 
 /// base system layer
@@ -699,7 +699,7 @@ class Application : public libcommon::INonCopyable {
         bool makeCurrentSession( const std::string& name );
 
     protected:
-        libcommon::PimplPtr<Private> d;
+        std::shared_ptr<Private> d;
 };
 
 
