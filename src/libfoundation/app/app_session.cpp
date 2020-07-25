@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QCoreApplication>
 
+#include <filesystem>
 #include <cstdlib>
 
 namespace libfoundation {
@@ -894,7 +895,7 @@ bool ApplicationSession::importImageFromPath(
     const std::string& path
 ) {
 
-    if( !libcommon::fileutils::fileExists( path ) ) {
+    if( !std::filesystem::exists( path ) ) {
         LOG_WARNING( "Import file does not exist : " + path );
         return false;
     }
@@ -1085,7 +1086,7 @@ bool ApplicationSession::exportImage(
     /// recalculate all filter states
     this->updateAllFilters();
 
-    if( !libcommon::fileutils::fileExists( path ) ) {
+    if( !std::filesystem::exists( path ) ) {
         LOG_WARNING( "Export file does not exist : " + path );
         return false;
     }
