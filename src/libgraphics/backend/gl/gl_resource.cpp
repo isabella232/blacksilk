@@ -22,16 +22,14 @@ Resource::~Resource() {
 }
 
 bool Resource::acquired() {
-    return !libcommon::atomics::equal32(
-               &d->used,
-               0
-           );
+    return d->used != 0;
 }
 
 bool Resource::tryAcquire() {
-    const auto threadId = ( libcommon::atomics::type32 )libcommon::getCurrentThreadId();
+    libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+    libcommon::UInt32 zero = 0;
 
-    if( libcommon::atomics::exchange32( &d->used, 0, threadId ) == 0 ) {
+    if( d->used.compare_exchange_weak( zero, threadId ) ) {
         return true;
     }
 
@@ -50,8 +48,6 @@ void Resource::acquire() {
 }
 
 bool Resource::release() {
-    const auto threadId = ( libcommon::atomics::type32 )libcommon::getCurrentThreadId();
-
     assert( d->used != 0 );
 #if LIBGRAPHICS_DEBUG_RESOURCE
 
@@ -61,7 +57,10 @@ bool Resource::release() {
 
 #endif
 
-    const auto successfullyReleased = ( libcommon::atomics::exchange32( &d->used, threadId, 0 ) == threadId );
+    libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+    libcommon::UInt32 zero = 0;
+    bool successfullyReleased = d->used.compare_exchange_strong( threadId, zero );
+
 #if LIBGRAPHICS_DEBUG_RESOURCE
 
     if( !successfullyReleased ) {
@@ -73,7 +72,7 @@ bool Resource::release() {
 }
 
 void Resource::forceRelease() {
-    libcommon::atomics::assign32( &d->used, 0 );
+    d->used = 0;
 }
 
 

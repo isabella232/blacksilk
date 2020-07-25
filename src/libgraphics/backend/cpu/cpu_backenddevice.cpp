@@ -158,7 +158,7 @@ unsigned short* PixelArray::get16Bit( size_t pos ) {
 /// DataRegion
 struct DataRegion::Private {
     std::vector<std::unique_ptr<DataRegionEntry> > entries;
-    libcommon::atomics::type32  used;
+    std::atomic_uint32_t used;;
 
     Private( size_t count, size_t length, void* buffer ) : used( 0 ) {
         for( size_t i = 0; count > i; ++i ) {
@@ -167,14 +167,10 @@ struct DataRegion::Private {
     }
 
     inline bool tryAcquire() {
-        auto threadId = libcommon::getCurrentThreadId();
+        libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+        libcommon::UInt32 zero = 0;
 
-        if( ( libcommon::atomics::exchange32( &used, 0, threadId ) == 0 ) ||
-                libcommon::atomics::equal32( &used, threadId ) ) {
-            return true;
-        }
-
-        return false;
+        return used.compare_exchange_weak( zero, threadId );
     }
     inline void acquire() {
         volatile bool acquired( tryAcquire() );
@@ -238,7 +234,7 @@ bool DataRegion::tryAcquire() {
 }
 
 bool DataRegion::isUsed() {
-    return !libcommon::atomics::equal32( &d->used, 0 );
+    return d->used != 0;
 }
 
 

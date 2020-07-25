@@ -6,7 +6,7 @@
 #include <libgraphics/bitmap.hpp>
 #include <libgraphics/fxapi.hpp>
 
-#include <libcommon/atomics.hpp>
+#include <atomic>
 
 class QThreadPool;
 
@@ -130,11 +130,11 @@ struct DataRegionEntry {
             return ( void* )( ( const char* )buf + offset );
         }
         inline bool tryAcquire() {
-            if( libcommon::atomics::exchange32( &used, 0, libcommon::getCurrentThreadId() ) ) {
-                return true;
-            }
 
-            return false;
+            libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+            libcommon::UInt32 zero = 0;
+
+            return used.compare_exchange_weak( zero, threadId );
         }
         inline void acquire() {
             volatile bool acquired( false );
@@ -147,7 +147,7 @@ struct DataRegionEntry {
         const size_t  offset;
         const void*   buffer;
     private:
-        libcommon::atomics::type32  used;
+        std::atomic_uint32_t used;
 };
 
 class DataRegion : public libcommon::INonCopyable {

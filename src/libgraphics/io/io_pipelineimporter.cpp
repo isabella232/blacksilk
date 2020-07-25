@@ -1,5 +1,7 @@
 #include <libgraphics/io/pipelineimporter.hpp>
 
+#include <atomic>
+
 namespace libgraphics {
 namespace io {
 
@@ -13,23 +15,25 @@ struct GenericPipelineImporter : public libgraphics::io::PipelineImporter {
             }
         }
         virtual bool tryLock() {
-            const auto threadId = libcommon::getCurrentThreadId();
+            libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+            libcommon::UInt32 zero = 0;
 
-            if( ( libcommon::atomics::exchange32( &m_Atomic, 0, threadId ) == 0 ) ||
-                    ( libcommon::atomics::equal32( &m_Atomic, threadId ) ) ) {
+            if( m_Atomic.compare_exchange_weak( zero, threadId ) ||
+                    ( m_Atomic == threadId ) ) {
                 return true;
             }
 
             return false;
         }
         virtual void unlock() {
-            if( libcommon::atomics::equal32( &m_Atomic, 0 ) ) {
+            if( m_Atomic == 0 ) {
                 return;
             }
 
-            const auto threadId = libcommon::getCurrentThreadId();
+            libcommon::UInt32 threadId = libcommon::getCurrentThreadId();
+            libcommon::UInt32 zero = 0;
 
-            while( !( libcommon::atomics::exchange32( &m_Atomic, threadId, 0 ) == threadId ) ) {
+            while( !m_Atomic.compare_exchange_weak( threadId, zero ) ) {
                 libcommon::sleep( 1 );
             }
         }
@@ -47,7 +51,7 @@ struct GenericPipelineImporter : public libgraphics::io::PipelineImporter {
     private:
         std::string m_Name;
         std::string m_Extension;
-        libcommon::atomics::type32  m_Atomic;
+        std::atomic_uint32_t m_Atomic;
 };
 
 struct CallbackPipelineImporter : public GenericPipelineImporter {

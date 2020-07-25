@@ -6,6 +6,8 @@
 #include <libgraphics/backend/common/formats.hpp>
 #include <libgraphics/utils/gl.hpp>
 
+#include <atomic>
+
 namespace libgraphics {
 namespace backend {
 namespace gl {
@@ -40,7 +42,7 @@ struct RenderTarget::Private {
 };
 
 struct Resource::Private {
-    libcommon::atomics::type32  used;
+    std::atomic_uint32_t used;
     Private() : used( 0 ) {}
 };
 
