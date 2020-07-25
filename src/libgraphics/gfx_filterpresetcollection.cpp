@@ -2,8 +2,6 @@
 #include <libcommon/fileutils.hpp>
 #include <utils/preset.hpp>
 
-#include <filesystem>
-
 #include <QDebug>
 
 namespace libgraphics {
@@ -36,7 +34,7 @@ bool FilterPresetCollection::reloadAll() {
             continue;
         }
 
-        if( !std::filesystem::exists( it->path ) ) {
+        if( !libcommon::fileutils::fileExists( it->path ) ) {
             return false;
         }
 
@@ -53,7 +51,7 @@ bool FilterPresetCollection::reloadByPath( const std::string& path ) {
         return false;
     }
 
-    if( !std::filesystem::exists( path ) ) {
+    if( !libcommon::fileutils::fileExists( path ) ) {
         return false;
     }
 
@@ -92,7 +90,7 @@ bool FilterPresetCollection::loadPresetFromFile( const std::string& path ) {
     if( !containsByPath( path ) ) {
         FilterPresetEntry entry;
 
-        if( !std::filesystem::exists( path ) ) {
+        if( !libcommon::fileutils::fileExists( path ) ) {
             return false;
         }
 

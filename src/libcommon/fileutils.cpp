@@ -1,7 +1,10 @@
 #include <fstream>
-#include <filesystem>
-
 #include <libcommon/fileutils.hpp>
+
+bool libcommon::fileutils::fileExists( const std::string& filename ) {
+    std::ifstream file( filename.c_str() );
+    return file.is_open();
+}
 
 std::string libcommon::fileutils::fromFile( const std::string& filename ) {
     std::ifstream file( filename.c_str(), std::ios_base::in | std::ios_base::binary );

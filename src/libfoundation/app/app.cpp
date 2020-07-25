@@ -3,7 +3,6 @@
 #include <QDebug>
 
 #include <memory>
-#include <filesystem>
 
 #include <libcommon/fileutils.hpp>
 
@@ -133,7 +132,7 @@ bool Application::loadIoPluginFromPath(
     const std::string& path
 ) {
 
-    if( !std::filesystem::exists( path ) ) {
+    if( !libcommon::fileutils::fileExists( path ) ) {
         qWarning() << "Plugin file does not exist '" << path.c_str() << "'.";
         return false;
     }
