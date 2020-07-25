@@ -8,7 +8,6 @@
 
 #include <utils/app.hpp>
 #include <utils/preset.hpp>
-#include <libcommon/scopeguard.hpp>
 #include <libgraphics/filterstack.hpp>
 #include <libgraphics/filtercollection.hpp>
 #include <log/log.hpp>
@@ -109,42 +108,41 @@ void FilterWidget::initPresets( QComboBox* cb, QPushButton* pb ) {
 
     size_t currentIndex( 0 );
 
-    libcommon::ScopeGuard guard( [ = ]() {
-        this->mComboPresets->blockSignals( true );
-    }, [ = ]() {
-        this->mComboPresets->blockSignals( false );
-    } );
+    this->mComboPresets->blockSignals( true );
+    {
 
-    if( this->m_DefaultFilterPresets.count() != 0 ) {
-        std::string currentCategory( this->m_DefaultFilterPresets.front().category() );
+        if( this->m_DefaultFilterPresets.count() != 0 ) {
+            std::string currentCategory( this->m_DefaultFilterPresets.front().category() );
 
-        for( auto it = this->m_DefaultFilterPresets.begin(); it != this->m_DefaultFilterPresets.end(); ++it ) {
-            this->mComboPresets->insertItem(
-                currentIndex,
-                ( *it ).preset.name().c_str(),
-                QVariant::fromValue(
-                    std::distance( this->m_DefaultFilterPresets.begin(), it )
-                )
-            );
+            for( auto it = this->m_DefaultFilterPresets.begin(); it != this->m_DefaultFilterPresets.end(); ++it ) {
+                this->mComboPresets->insertItem(
+                    currentIndex,
+                    ( *it ).preset.name().c_str(),
+                    QVariant::fromValue(
+                        std::distance( this->m_DefaultFilterPresets.begin(), it )
+                    )
+                );
 
-            if( ( *it ).preset.category() != currentCategory ) {
-                this->mComboPresets->insertSeparator( currentIndex );
+                if( ( *it ).preset.category() != currentCategory ) {
+                    this->mComboPresets->insertSeparator( currentIndex );
+                    ++currentIndex;
+
+                    currentCategory = ( *it ).preset.category();
+                }
+
                 ++currentIndex;
-
-                currentCategory = ( *it ).preset.category();
             }
 
-            ++currentIndex;
         }
 
-    }
-
-    connect( mComboPresets, SIGNAL( currentIndexChanged( int ) ), this, SLOT( on_comboPresets_currentIndexChanged( int ) ), Qt::UniqueConnection );
-    connect( mButtonReset, SIGNAL( clicked() ), this, SLOT( reset() ) );
+        connect( mComboPresets, SIGNAL( currentIndexChanged( int ) ), this, SLOT( on_comboPresets_currentIndexChanged( int ) ), Qt::UniqueConnection );
+        connect( mButtonReset, SIGNAL( clicked() ), this, SLOT( reset() ) );
 
 #ifdef LIBGRAPHICS_DEBUG_OUTPUT
-    qDebug() << "Added " << currentIndex << " default presets for filter '" << name().c_str() << "'...";
+        qDebug() << "Added " << currentIndex << " default presets for filter '" << name().c_str() << "'...";
 #endif
+    }
+    this->mComboPresets->blockSignals( false );
 }
 
 void FilterWidget::reset() {
